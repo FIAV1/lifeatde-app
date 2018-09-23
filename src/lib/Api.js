@@ -1,6 +1,8 @@
+import LocalStorage from './LocalStorage';
+
 class Api {
     static headers() {
-        let token = null;
+        let user = LocalStorage.get('user')
 
         let headers = {
             'Accept': 'application/json',
@@ -9,30 +11,30 @@ class Api {
             'X-Request-With': 'XMLHttpRequest',
         }
 
-        if(token = localStorage.getItem('token')) {
-            headers['Authorization'] = `Bearer ${token}`;
+        if(user) {
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
         }
 
         return headers;
     }
 
-    static get(route) {
-        return this.xhr(route, null, 'GET')
+    static get(history, route) {
+        return this.xhr(history, route, null, 'GET')
     }
 
-    static put(route, params) {
-        return this.xhr(route, params, 'PUT')
+    static put(history, route, params) {
+        return this.xhr(history, route, params, 'PUT')
     }
 
-    static post(route, params) {
-        return this.xhr(route, params, 'POST')
+    static post(history, route, params) {
+        return this.xhr(history, route, params, 'POST')
     }
 
-    static delete(route, params) {
-        return this.xhr(route, params, 'DELETE')
+    static delete(history, route, params) {
+        return this.xhr(history, route, params, 'DELETE')
     }
 
-    static xhr (route, params, verb) {
+    static xhr (history, route, params, verb) {
         const scope = '/api'
         const url = `${scope}${route}`
 
@@ -44,6 +46,10 @@ class Api {
             let json = resp.json()
             if (resp.ok) {
                 return json;
+            }
+            if([401, 403].indexOf(resp.status) > -1 ) {
+                LocalStorage.delete('user');
+                history.push('/');
             }
             return json.then(err => {throw err})
         })
