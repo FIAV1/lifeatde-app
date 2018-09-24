@@ -26,6 +26,8 @@ let showNotifierFn;
 let Icon = variantIcon['none'];
 
 class Notifier extends Component {
+    queue = [];
+
     state = {
         open: false,
         variant: 'none',
@@ -33,15 +35,43 @@ class Notifier extends Component {
     };
     
     componentDidMount() {
-        showNotifierFn = this.showNotifier;
+        showNotifierFn = this.createSnackbar;
     }
     
-    showNotifier = ({ message, variant }) => {
-        this.setState({
-            open: true,
-            variant,
-            message
-        }, () => Icon = variantIcon[this.state.variant]);
+    createSnackbar = ({ messages, variant }) => {
+        if(variant === 'error'){
+            this.queue = messages.map(message => ({
+                variant,
+                message: message.detail,
+                key: new Date().getTime()
+            }))
+        } else if(variant === 'success'){
+            this.queue = messages.map(message => ({
+                variant,
+                message,
+                key: new Date().getTime()
+            }))
+        }
+      
+        if (this.state.open) {
+            // immediately begin dismissing current message
+            // to start showing new one
+            this.setState({ open: false });
+        } else {
+            this.processQueue();
+        }
+    };
+
+    processQueue = () => {
+        if (this.queue.length > 0) {
+            let { variant, message, key } = this.queue.shift();
+            this.setState({
+                open: true,
+                variant,
+                message,
+                key
+            }, () => Icon = variantIcon[this.state.variant]);
+        }
     };
     
     handleClose = () => {
@@ -49,19 +79,25 @@ class Notifier extends Component {
             open: false,
         });
     };
+
+    handleExited = () => {
+        this.processQueue();
+    };
     
     render() {
         const { classes } = this.props;
 
         return (
             <Snackbar
+                key={this.state.key}
                 anchorOrigin={{
-                    vertical: 'bottom',
+                    vertical: 'top',
                     horizontal: 'center',
                 }}
                 open={this.state.open}
-                autoHideDuration={6000}
+                autoHideDuration={3000}
                 onClose={this.handleClose}
+                onExited={this.handleExited}
             >
                 <SnackbarContent
                     className={classNames(classes[this.state.variant], classes.margin)}
@@ -123,8 +159,8 @@ Notifier.propTypes = {
     message: PropTypes.node,
 };
         
-export function showNotifier({ message, variant }) {
-    showNotifierFn({ message, variant });
-}
+export function showNotifier({ messages, variant }){
+    showNotifierFn({messages, variant});
+};
 
 export default withStyles(styles)(Notifier);

@@ -41,16 +41,16 @@ class Login extends Component {
 			password: this.state.password
 		};
 
-		Authentication.login(this.props.history, credentials).then(user => {
-			this.setState({ redirectToPreviousRoute: true });
-		}).catch(({errors}) => {
-			showNotifier({ message: errors[0].detail, variant: 'error' });
+		Authentication.login(credentials).then(() =>
+			this.setState({ redirectToPreviousRoute: true })
+		).catch(({errors}) => {
+			showNotifier({ messages: errors, variant: 'error' });
 		});
 	};
 
     render() {
 		const { classes } = this.props;
-		const { from } = this.props.state || { from: { pathname: "/" } };
+		const { from } = this.props.location.state || { from: { pathname: "/" } };
 		const { redirectToPreviousRoute } = this.state;
 
 		if (redirectToPreviousRoute || Authentication.isAuthenticated()) {
@@ -60,7 +60,7 @@ class Login extends Component {
         return(
 			<Grid className={classes.container} container >
 				<Grid item xs={10} sm={4} xl={2}>
-					<form className={classes.form} noValidate autoComplete="off" onSubmit={this.handleSubmit}>
+					<form className={classes.form} autoComplete="off" onSubmit={this.handleSubmit}>
 						<Typography variant="display2" align="center">
 							LifeAtDe
 						</Typography>
@@ -75,6 +75,7 @@ class Login extends Component {
 							variant="outlined"
 							value={this.state.email}
 							onChange={this.handleChange('email')}
+							required
 						/>
 						<TextField
 							id="outlined-password-input"
@@ -86,6 +87,7 @@ class Login extends Component {
 							variant="outlined"
 							value={this.state.password}
 							onChange={this.handleChange('password')}
+							required
 							InputProps={{
 								endAdornment: (
 								<InputAdornment position="end">

@@ -12,6 +12,7 @@ class App extends Component {
 			<Switch>
 				<Route exact path='/login' component={Login}/>
 				<PrivateRoute exact path='/' component={ProjectContainer}/>
+				<PrivateRoute exact path='/test' component={ProjectContainer}/>
 				<Route component={NoMatch} />
 			</Switch>
 		);

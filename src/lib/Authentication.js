@@ -1,6 +1,7 @@
 import Api from './Api';
 import LocalStorage from './LocalStorage';
 import jwt_decode from 'jwt-decode';
+import history from '../lib/history';
 
 class Authentication {
     static isAuthenticated() {
@@ -18,23 +19,15 @@ class Authentication {
         return false;
     }
 
-    static invalidToken({errors}, history) {
-        if(errors.some(error => [401, 403].indexOf(error.status) > -1)) {
-            LocalStorage.delete('user');
-            history.push('/');
-        }
-    }
-
-    static login(history, credentials) {
-        return Api.post(history, '/login', credentials).then(response => {
+    static login(credentials) {
+        return Api.post('/login', credentials).then(response => {
             LocalStorage.set('user', response);
-            return response;
         }).catch(e => {
             throw e
         });
     }
 
-    static logout(history) {
+    static logout() {
         LocalStorage.delete('user');
         history.push('/login');
     }

@@ -1,4 +1,5 @@
 import LocalStorage from './LocalStorage';
+import history from './history';
 
 class Api {
     static headers() {
@@ -12,29 +13,29 @@ class Api {
         }
 
         if(user) {
-            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}a`;
         }
 
         return headers;
     }
 
-    static get(history, route) {
-        return this.xhr(history, route, null, 'GET')
+    static get(route) {
+        return this.xhr(route, null, 'GET')
     }
 
-    static put(history, route, params) {
-        return this.xhr(history, route, params, 'PUT')
+    static put(route, params) {
+        return this.xhr(route, params, 'PUT')
     }
 
-    static post(history, route, params) {
-        return this.xhr(history, route, params, 'POST')
+    static post(route, params) {
+        return this.xhr(route, params, 'POST')
     }
 
-    static delete(history, route, params) {
-        return this.xhr(history, route, params, 'DELETE')
+    static delete(route, params) {
+        return this.xhr(route, params, 'DELETE')
     }
 
-    static xhr (history, route, params, verb) {
+    static xhr (route, params, verb) {
         const scope = '/api'
         const url = `${scope}${route}`
 
@@ -42,12 +43,12 @@ class Api {
 
         options.headers = Api.headers()
 
-        return fetch(url, options).then( resp => {
-            let json = resp.json()
-            if (resp.ok) {
+        return fetch(url, options).then( response => {
+            let json = response.json()
+            if (response.ok) {
                 return json;
             }
-            if([401, 403].indexOf(resp.status) > -1 ) {
+            if(response.status === 401 ) {
                 LocalStorage.delete('user');
                 history.push('/');
             }
@@ -56,4 +57,4 @@ class Api {
     }
 }
 
-export default Api
+export default Api;

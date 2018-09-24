@@ -13,10 +13,6 @@ import Footer from '../components/Footer';
 
 class AppContainer extends Component {
     render() {
-        if(!Authentication.isAuthenticated()) {
-            return null;
-        }
-
         const { classes } = this.props;
 
         return(
@@ -29,7 +25,7 @@ class AppContainer extends Component {
                         <Typography variant="title" color="inherit" className={classes.grow}>
                             News
                         </Typography>
-                        <Button color="inherit" onClick={() => Authentication.logout(this.props.history)}>Logout</Button>
+                        <Button color="inherit" onClick={() => Authentication.logout()}>Logout</Button>
                     </Toolbar>
                 </AppBar>
                 {this.props.children}

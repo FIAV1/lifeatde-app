@@ -6,7 +6,7 @@ import Api from '../lib/Api';
 
 class ProjectContainer extends Component {
     test = () => {
-        Api.get(this.props.history, '/users/11').then(res => console.log(res)).catch(({errors}) => showNotifier({message: errors[0].detail, variant: 'error'}))
+        Api.get('/users/11').then(res => console.log(res)).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}))
     }
     render() {
         return(
