@@ -3,28 +3,16 @@ import {
     withStyles,
     Typography
 } from '@material-ui/core'
-
-const biasme = [
-    'dio porco',
-    'dio can',
-    'dio mas-cio',
-    'madonna cagna',
-    'dio sgnagno',
-    'madonna véra',
-    'dio demone',
-    'salve salvino, dio fungo porcino',
-    'salve salvino, dio mostro assassino'
-]
+import notfound from '../img/404.gif'
 
 class NoMatch extends Component {
     render() {
         const { classes } = this.props;
         return(
             <div className={classes.container}>
-                <Typography variant="display4">
-                {
-                    biasme[Math.floor(Math.random() * biasme.length)]
-                }
+                <Typography className={classes.item} variant="display4">
+                    404 - Not found
+                    <img src={notfound} alt="loading..." />
                 </Typography>
             </div>
         )
@@ -34,9 +22,15 @@ class NoMatch extends Component {
 const styles = theme => ({
     container: {
         display: 'flex',
-        flex: 1,
+        height: '100vh',
+        width: '100vw',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    item: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column'
     }
 });
 

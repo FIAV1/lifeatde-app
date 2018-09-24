@@ -6,11 +6,11 @@ import {
 	withStyles,
 	Typography,
 	Grid,
-	TextField,
 	Button,
 	IconButton,
 	InputAdornment
 } from '@material-ui/core';
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import School from '@material-ui/icons/School';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -60,34 +60,38 @@ class Login extends Component {
         return(
 			<Grid className={classes.container} container >
 				<Grid item xs={10} sm={4} xl={2}>
-					<form className={classes.form} autoComplete="off" onSubmit={this.handleSubmit}>
+					<ValidatorForm
+						className={classes.form}
+						ref="form"
+						onSubmit={this.handleSubmit}
+						onError={errors => console.log(errors)}
+					>
 						<Typography variant="display2" align="center">
 							LifeAtDe
 						</Typography>
-						<TextField
-							id="outlined-email-input"
+						<TextValidator
 							label="Email"
 							className={classes.textField}
 							type="email"
 							name="email"
-							autoComplete="email"
 							margin="dense"
 							variant="outlined"
 							value={this.state.email}
 							onChange={this.handleChange('email')}
-							required
+							validators={['required', 'isEmail']}
+                    		errorMessages={['Questo campo è richiesto', 'Email non valida']}
 						/>
-						<TextField
-							id="outlined-password-input"
+						<TextValidator
 							label="Password"
+							name="password"
 							className={classes.textField}
 							type={this.state.showPassword ? 'text' : 'password'}
-							autoComplete="current-password"
 							margin="dense"
 							variant="outlined"
 							value={this.state.password}
 							onChange={this.handleChange('password')}
-							required
+							validators={['required']}
+                    		errorMessages={['Questo campo è richiesto']}
 							InputProps={{
 								endAdornment: (
 								<InputAdornment position="end">
@@ -111,7 +115,7 @@ class Login extends Component {
 							Login
 							<School className={classes.rightIcon} />
 						</Button>
-					</form>
+					</ValidatorForm>
 				</Grid>
 				<Footer />
 				<Notifier />
