@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import {
     withStyles,
-    Typography
+    Typography,
 } from '@material-ui/core'
-import notfound from '../img/404.gif'
+import notfound from '../img/404.png'
 
 class NoMatch extends Component {
     render() {
         const { classes } = this.props;
         return(
             <div className={classes.container}>
-                <Typography className={classes.item} variant="display4">
-                    404 - Not found
-                    <img src={notfound} alt="loading..." />
-                </Typography>
+                <img src={notfound} className={classes.image} alt="loading..." />
+                <Typography align="center" variant="headline" gutterBottom>404</Typography>
+                <Typography align="center" variant="subheading">"Questa non è la pagina che stai cercando..."</Typography>
             </div>
         )
     }
@@ -22,15 +21,14 @@ class NoMatch extends Component {
 const styles = theme => ({
     container: {
         display: 'flex',
-        height: '100vh',
-        width: '100vw',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    item: {
-        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
         justifyContent: 'center',
-        flexDirection: 'column'
+        alignItems: 'center'
+    },
+    image: {
+        maxWidth: '100%',
+        maxHeight: '100%'
     }
 });
 

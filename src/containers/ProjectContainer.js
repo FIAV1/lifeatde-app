@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
+import { withStyles, Button } from '@material-ui/core';
 import Notifier, { showNotifier } from '../components/Notifier';
 
 import Api from '../lib/Api';
@@ -9,6 +9,7 @@ class ProjectContainer extends Component {
         Api.get('/users/11').then(res => console.log(res)).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}))
     }
     render() {
+        const {classes} = this.props;
         return(
             <div>
                 <Button
@@ -16,10 +17,25 @@ class ProjectContainer extends Component {
                 >
                     clicca
                 </Button>
+                {this.props.history.location.pathname === '/studygroups' ?
+                    <div className={classes.test}>
+
+                    </div>
+                :
+                    null
+                }
                 <Notifier />
             </div>
         )
     }
 }
 
-export default ProjectContainer;
+const styles = {
+    test: {
+        width: '100px',
+        height: '100px',
+        backgroundColor: 'red'
+    }
+}
+
+export default withStyles(styles)(ProjectContainer);

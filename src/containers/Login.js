@@ -50,7 +50,7 @@ class Login extends Component {
 
     render() {
 		const { classes } = this.props;
-		const { from } = this.props.location.state || { from: { pathname: "/" } };
+		const { from } = this.props.location.state || { from: { pathname: "/projects" } };
 		const { redirectToPreviousRoute } = this.state;
 
 		if (redirectToPreviousRoute || Authentication.isAuthenticated()) {
@@ -64,7 +64,6 @@ class Login extends Component {
 						className={classes.form}
 						ref="form"
 						onSubmit={this.handleSubmit}
-						onError={errors => console.log(errors)}
 					>
 						<Typography variant="display2" align="center">
 							LifeAtDe
@@ -141,6 +140,7 @@ const styles = theme => ({
 	},
 	button: {
 		width: '100%',
+		backgroundColor: theme.palette.primary.dark,
 		marginTop: theme.spacing.unit
 	},
 	rightIcon: {

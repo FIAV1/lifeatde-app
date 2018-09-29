@@ -13,7 +13,7 @@ class Api {
         }
 
         if(user) {
-            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}a`;
         }
 
         return headers;
@@ -44,16 +44,30 @@ class Api {
         options.headers = Api.headers()
 
         return fetch(url, options).then( response => {
-            let json = response.json()
+
             if (response.ok) {
-                return json;
+                return response.json();
             }
-            if(response.status === 401 ) {
+
+            if(response.status === 401) {
                 LocalStorage.delete('user');
-                history.push('/');
+                history.push('/login');
             }
-            return json.then(err => {throw err})
-        })
+
+            if(response.status === 500) {
+                let error = {
+                    errors: [{
+                            detail: 'Server irraggiungibile, riprova più tardi :(',
+                            status: 500
+                        }]
+                };
+                LocalStorage.delete('user');
+                history.push('/login')
+                throw error;
+            }
+
+            return response.json().then(error => {throw error});
+        });
     }
 }
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+
 import {
     withStyles,
     Grid,
@@ -8,7 +9,6 @@ import {
     Divider,
 } from '@material-ui/core'
 import TeamModal from './TeamModal';
-
 import RailsIcon from './RailsIcon'
 
 class Footer extends Component {
@@ -19,24 +19,24 @@ class Footer extends Component {
     render() {
         const { classes } = this.props;
         return(
-            <div className={classes.footer} >
+            <footer className={classes.footer} >
                 <Grid container direction="row">
                     <Grid item xs={12}>
                         <Divider className={classes.divider} />
                     </Grid>
                 </Grid>
                 <Grid container direction="row" justify="space-around" className={classes.container}>
-                    <Grid item className={classes.item} xs={8} sm={4}>
-                        <Typography>Crafted with</Typography>
+                    <Grid item className={classes.item} xs={7} sm={6}>
+                        <Typography className={classes.typography}>Crafted with</Typography>
                         <RailsIcon color="action" className={classes.icon} />
                         <Icon color="action" className={classNames(classes.icon, 'fab fa-react')} />
                         <Icon color="action" className={classNames(classes.icon, 'fas fa-heart')} />
                     </Grid>
-                    <Grid item className={classes.item} xs={4} >
+                    <Grid item className={classes.item} xs={5} sm={6}>
                         <TeamModal />
                     </Grid>
                 </Grid>
-            </div>
+            </footer>
         )
     }
 }
@@ -48,7 +48,6 @@ const styles = theme => ({
         width: '100%',
         height: '80px',
         display: 'flex',
-        flexWrap: 'wrap',
         flexDirection: 'column',
     },
     container: {
@@ -62,13 +61,19 @@ const styles = theme => ({
     button: {
         textTransform: 'none'
     },
+    typography: {
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '12px'
+        },
+    },
     icon: {
         marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '14px',
+        },
     },
     divider: {
         display:'flex',
-        alignSelf: 'flex-start',
         marginLeft: '10%',
         marginRight: '10%',
     },

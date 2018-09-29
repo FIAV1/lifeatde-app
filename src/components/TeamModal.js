@@ -82,11 +82,16 @@ class TeamModal extends Component {
 
 const styles = theme => ({
     button: {
-        textTransform: 'none'
+        textTransform: 'none',
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '12px',
+        },
     },
     icon: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '14px',
+        },
     },
 });
 

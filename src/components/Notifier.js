@@ -150,6 +150,8 @@ const styles = theme => ({
         alignItems: 'center',
     },
     margin: {
+        display: 'flex',
+        flexWrap: 'nowrap',
         margin: theme.spacing.unit*2,
     }
 });

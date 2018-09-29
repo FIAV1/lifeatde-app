@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import AppContainer from '../containers/AppContainer';
 import Authentication from '../lib/Authentication';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -8,9 +7,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         {...rest}
         render = { props => (
             Authentication.isAuthenticated() ? (
-                <AppContainer {...props}>
-                    <Component {...props} />
-                </AppContainer>
+                <Component {...props} />
             ) : (
                 <Redirect
                     to={{

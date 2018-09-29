@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 
+import AppContainer from './containers/AppContainer';
 import Login from './containers/Login';
 import ProjectContainer from './containers/ProjectContainer';
 import NoMatch from './components/NoMatch';
@@ -9,12 +10,16 @@ import NoMatch from './components/NoMatch';
 class App extends Component {
 	render() {
 		return (
-			<Switch>
-				<Route exact path='/login' component={Login}/>
-				<PrivateRoute exact path='/' component={ProjectContainer}/>
-				<PrivateRoute exact path='/test' component={ProjectContainer}/>
-				<Route component={NoMatch} />
-			</Switch>
+			<AppContainer {...this.props}>
+				<Switch>
+					<Route exact path='/login' component={Login}/>
+					<Redirect exact from='/' to='/projects'/>
+					<PrivateRoute exact path='/projects' component={ProjectContainer}/>
+					<PrivateRoute exact path='/studygroups' component={ProjectContainer}/>
+					<PrivateRoute component={NoMatch} />
+					<Route exact path='/InternalServerError' component={NoMatch} />
+				</Switch>
+			</AppContainer>
 		);
 	}
 }

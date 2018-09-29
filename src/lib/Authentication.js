@@ -5,18 +5,22 @@ import history from '../lib/history';
 
 class Authentication {
     static isAuthenticated() {
-        let user = LocalStorage.get('user')
+        try {
+            let user = LocalStorage.get('user')
 
-        if(user) {
-            let token = user.data.attributes.token;
-            let decoded = jwt_decode(token);
+            if(user) {
+                let token = user.data.attributes.token;
+                let decoded = jwt_decode(token);
 
-            if(decoded.exp>(Date.now()/1000)){
-                return true;
+                if(decoded.exp>(Date.now()/1000)){
+                    return true;
+                }
             }
+            
+            return false;
+        } catch(error) {
+            return false
         }
-        
-        return false;
     }
 
     static login(credentials) {
@@ -28,8 +32,12 @@ class Authentication {
     }
 
     static logout() {
-        LocalStorage.delete('user');
-        history.push('/login');
+        try {
+            LocalStorage.delete('user');
+            history.push('/login');
+        } catch(error) {
+            history.push('/login');
+        }
     }
 }
 
