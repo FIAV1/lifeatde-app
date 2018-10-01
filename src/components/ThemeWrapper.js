@@ -55,7 +55,7 @@ class ThemeWrapper extends Component{
     }
 
     getThemeType = () => {
-        return LocalStorage.get('theme').palette.type;
+        return LocalStorage.get('theme').palette.type || lightTheme;
     }
 
     render() {
