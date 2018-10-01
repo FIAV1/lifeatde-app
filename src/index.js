@@ -7,6 +7,7 @@ import registerServiceWorker from './registerServiceWorker';
 import history from './lib/history'
 import ThemeWrapper from './components/ThemeWrapper';
 import App from './App';
+import './index.css';
 
 ReactDOM.render((
         <Router history={history}>

@@ -39,10 +39,6 @@ class ThemeWrapper extends Component{
         theme: LocalStorage.get('theme') || lightTheme
     }
 
-    componentDidMount() {
-        LocalStorage.set('theme', lightTheme);
-    }
-
     changeThemeType = () => {
         if(this.state.theme.palette.type === 'light') {
             LocalStorage.set('theme', darkTheme)
@@ -59,7 +55,10 @@ class ThemeWrapper extends Component{
     }
 
     getThemeType = () => {
-        return LocalStorage.get('theme').palette.type;
+        let theme = LocalStorage.get('theme');
+
+        if(theme) return theme.palette.type
+        return lightTheme
     }
 
     render() {

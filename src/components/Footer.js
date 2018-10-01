@@ -19,7 +19,7 @@ class Footer extends Component {
     render() {
         const { classes } = this.props;
         return(
-            <footer className={classes.footer} >
+            <footer className={classes.footer}>
                 <Grid container direction="row">
                     <Grid item xs={12}>
                         <Divider className={classes.divider} />
@@ -43,12 +43,10 @@ class Footer extends Component {
 
 const styles = theme => ({
     footer: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-        height: '80px',
         display: 'flex',
+        minHeight: '80px',
         flexDirection: 'column',
+        marginTop: '50px'
     },
     container: {
         flex: 1

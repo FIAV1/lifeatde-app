@@ -190,7 +190,6 @@ class Navbar extends Component {
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
         backgroundColor: theme.palette.primary.dark,
     },
     avatar: {

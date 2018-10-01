@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {
     withStyles,
     Typography,
+    Grid
 } from '@material-ui/core'
 import notfound from '../img/404.png'
 
@@ -10,26 +11,27 @@ class NoMatch extends Component {
     render() {
         const { classes } = this.props;
         return(
-            <div className={classes.container}>
-                <img src={notfound} className={classes.image} alt="loading..." />
-                <Typography align="center" variant="headline" gutterBottom>404</Typography>
-                <Typography align="center" variant="subheading">"Questa non è la pagina che stai cercando..."</Typography>
-            </div>
+            <Grid container className={classes.container}>
+                <Grid item xs={8} sm={4}>
+                    <img src={notfound} className={classes.image} alt="loading..." />
+                    <Typography align="center" variant="headline" gutterBottom>404</Typography>
+                    <Typography align="center" variant="subheading">"Questa non è la pagina che stai cercando..."</Typography>
+                </Grid>
+            </Grid>
         )
     }
 }
 
 const styles = theme => ({
     container: {
-        display: 'flex',
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     image: {
+        display: 'block',
+        margin: 'auto',
         maxWidth: '100%',
-        maxHeight: '100%'
     }
 });
 

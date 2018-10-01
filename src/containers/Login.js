@@ -60,78 +60,85 @@ class Login extends Component {
 		}
 
         return(
-			<Grid className={classes.container} container >
-				<Grid item xs={10} sm={4} xl={2}>
-					<ValidatorForm
-						className={classes.form}
-						ref="form"
-						onSubmit={this.handleSubmit}
-					>
-						<Typography variant="display2" align="center">
-							LifeAtDe
-						</Typography>
-						<TextValidator
-							label="Email"
-							className={classes.textField}
-							type="email"
-							name="email"
-							margin="dense"
-							variant="outlined"
-							value={this.state.email}
-							onChange={this.handleChange('email')}
-							validators={['required', 'isEmail']}
-                    		errorMessages={['Questo campo è richiesto', 'Email non valida']}
-						/>
-						<TextValidator
-							label="Password"
-							name="password"
-							className={classes.textField}
-							type={this.state.showPassword ? 'text' : 'password'}
-							margin="dense"
-							variant="outlined"
-							value={this.state.password}
-							onChange={this.handleChange('password')}
-							validators={['required']}
-                    		errorMessages={['Questo campo è richiesto']}
-							InputProps={{
-								endAdornment: (
-								<InputAdornment position="end">
-									<IconButton
-										type="button"
-										aria-label="Toggle password visibility"
-										onClick={this.handleClickShowPassword}
-									>
-										{this.state.showPassword ? <VisibilityOff /> : <Visibility />}
-									</IconButton>
-								</InputAdornment>
-								),
-							}}
-						/>
-						<Button
-							variant="contained"
-							color="primary"
-							className={classes.button}
-							type="submit"
+			<div className={classes.wrapper}>
+				<Grid container className={classes.content}>
+					<Grid item xs={10} sm={4} xl={2}>
+						<ValidatorForm
+							className={classes.form}
+							ref="form"
+							onSubmit={this.handleSubmit}
 						>
-							Login
-							<School className={classes.rightIcon} />
-						</Button>
-					</ValidatorForm>
+							<Typography variant="display2" align="center">
+								LifeAtDe
+							</Typography>
+							<TextValidator
+								label="Email"
+								className={classes.textField}
+								type="email"
+								name="email"
+								margin="dense"
+								variant="outlined"
+								value={this.state.email}
+								onChange={this.handleChange('email')}
+								validators={['required', 'isEmail']}
+								errorMessages={['Questo campo è richiesto', 'Email non valida']}
+							/>
+							<TextValidator
+								label="Password"
+								name="password"
+								className={classes.textField}
+								type={this.state.showPassword ? 'text' : 'password'}
+								margin="dense"
+								variant="outlined"
+								value={this.state.password}
+								onChange={this.handleChange('password')}
+								validators={['required']}
+								errorMessages={['Questo campo è richiesto']}
+								InputProps={{
+									endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											type="button"
+											aria-label="Toggle password visibility"
+											onClick={this.handleClickShowPassword}
+										>
+											{this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+									),
+								}}
+							/>
+							<Button
+								variant="contained"
+								color="primary"
+								className={classes.button}
+								type="submit"
+							>
+								Login
+								<School className={classes.rightIcon} />
+							</Button>
+						</ValidatorForm>
+					</Grid>
+					<Notifier />
 				</Grid>
 				<Footer />
-				<Notifier />
-			</Grid>
+			</div>
         )
     }
 }
 
 const styles = theme => ({
-	container: {
-		height: '100vh',
-		width: '100vw',
+	wrapper: {
 		display: 'flex',
+		flex: 1,
+		flexDirection: 'column'
+	},
+	content: {
+		display: 'flex',
+		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		minHeight: '250px'
 	},
 	form: {
 		flexWrap: 'wrap',
