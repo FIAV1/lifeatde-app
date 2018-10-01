@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Switch, Redirect } from 'react-router-dom';
+
+import AppContainer from './containers/AppContainer';
+import Login from './containers/Login';
+import ProjectContainer from './containers/ProjectContainer';
+import PrivateRoute from './components/PrivateRoute';
+import NoMatch from './components/NoMatch';
 
 class App extends Component {
 	render() {
 		return (
-			<div className="App">
-			<header className="App-header">
-			<img src={logo} className="App-logo" alt="logo" />
-			<h1 className="App-title">Welcome to React</h1>
-			</header>
-			<p className="App-intro">
-			To get started, edit <code>src/App.js</code> and save to reload.
-			</p>
-			</div>
-			);
-		}
+			<AppContainer {...this.props}>
+				<Switch>
+					<Route exact path='/login' component={Login}/>
+					<Redirect exact from='/' to='/projects'/>
+					<PrivateRoute exact path='/projects' component={ProjectContainer}/>
+					<PrivateRoute exact path='/studygroups' component={ProjectContainer}/>
+					<PrivateRoute component={NoMatch} />
+					<Route exact path='/InternalServerError' component={NoMatch} />
+				</Switch>
+			</AppContainer>
+		);
 	}
+}
 	
-	export default App;
+export default App;
 	

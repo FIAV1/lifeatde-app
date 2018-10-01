@@ -1,6 +1,9 @@
+import LocalStorage from './LocalStorage';
+import history from './history';
+
 class Api {
     static headers() {
-        let token = null;
+        let user = LocalStorage.get('user')
 
         let headers = {
             'Accept': 'application/json',
@@ -9,8 +12,8 @@ class Api {
             'X-Request-With': 'XMLHttpRequest',
         }
 
-        if(token = localStorage.getItem('token')) {
-            headers['Authorization'] = `Bearer ${token}`;
+        if(user) {
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
         }
 
         return headers;
@@ -40,14 +43,32 @@ class Api {
 
         options.headers = Api.headers()
 
-        return fetch(url, options).then( resp => {
-            let json = resp.json()
-            if (resp.ok) {
-                return json;
+        return fetch(url, options).then( response => {
+
+            if (response.ok) {
+                return response.json();
             }
-            return json.then(err => {throw err})
-        })
+
+            if(response.status === 401) {
+                LocalStorage.delete('user');
+                history.push('/login');
+            }
+
+            if(response.status === 500) {
+                let error = {
+                    errors: [{
+                            detail: 'Server irraggiungibile, riprova più tardi :(',
+                            status: 500
+                        }]
+                };
+                LocalStorage.delete('user');
+                history.push('/login')
+                throw error;
+            }
+
+            return response.json().then(error => {throw error});
+        });
     }
 }
 
-export default Api
+export default Api;
