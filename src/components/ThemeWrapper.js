@@ -40,7 +40,6 @@ class ThemeWrapper extends Component{
     }
 
     componentDidMount() {
-        
         LocalStorage.set('theme', lightTheme);
     }
 
