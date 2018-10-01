@@ -39,6 +39,11 @@ class ThemeWrapper extends Component{
         theme: LocalStorage.get('theme') || lightTheme
     }
 
+    componentDidMount() {
+        
+        LocalStorage.set('theme', lightTheme);
+    }
+
     changeThemeType = () => {
         if(this.state.theme.palette.type === 'light') {
             LocalStorage.set('theme', darkTheme)
@@ -55,13 +60,12 @@ class ThemeWrapper extends Component{
     }
 
     getThemeType = () => {
-        return LocalStorage.get('theme').palette.type || lightTheme;
+        return LocalStorage.get('theme').palette.type;
     }
 
     render() {
         return(
-            <MuiThemeProvider theme={createMuiTheme(this.state.theme)}
-            >
+            <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
                 <CssBaseline>
                     {React.cloneElement(this.props.children, {changeThemeType: this.changeThemeType, getThemeType: this.getThemeType})}
                 </CssBaseline>
