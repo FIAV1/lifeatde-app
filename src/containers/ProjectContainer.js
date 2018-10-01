@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { withStyles, Button } from '@material-ui/core';
-import Notifier, { showNotifier } from '../components/Notifier';
 
+import { withStyles, Button } from '@material-ui/core';
+
+import Notifier, { showNotifier } from '../components/Notifier';
 import Api from '../lib/Api';
 
 class ProjectContainer extends Component {

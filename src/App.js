@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
 
 import AppContainer from './containers/AppContainer';
 import Login from './containers/Login';
 import ProjectContainer from './containers/ProjectContainer';
+import PrivateRoute from './components/PrivateRoute';
 import NoMatch from './components/NoMatch';
 
 class App extends Component {

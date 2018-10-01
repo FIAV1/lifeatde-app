@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
+import {
+    withStyles,
+    Snackbar,
+    SnackbarContent,
+    IconButton
+} from '@material-ui/core';
+
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
+import WarningIcon from '@material-ui/icons/Warning';
+
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import WarningIcon from '@material-ui/icons/Warning';
-import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -54,8 +59,6 @@ class Notifier extends Component {
         }
       
         if (this.state.open) {
-            // immediately begin dismissing current message
-            // to start showing new one
             this.setState({ open: false });
         } else {
             this.processQueue();

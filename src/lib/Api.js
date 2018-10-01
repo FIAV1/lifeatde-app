@@ -13,7 +13,7 @@ class Api {
         }
 
         if(user) {
-            headers['Authorization'] = `Bearer ${user.data.attributes.token}a`;
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
         }
 
         return headers;

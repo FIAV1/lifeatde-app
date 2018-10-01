@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Authentication from '../lib/Authentication';
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 import {
 	withStyles,
@@ -10,10 +10,12 @@ import {
 	IconButton,
 	InputAdornment
 } from '@material-ui/core';
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+
 import School from '@material-ui/icons/School';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
+import Authentication from '../lib/Authentication';
 import Notifier, { showNotifier } from '../components/Notifier';
 import Footer from '../components/Footer';
 

@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 
-import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
 import LocalStorage from '../lib/LocalStorage';
 
-import { createMuiTheme } from '@material-ui/core/styles';
+import {
+    MuiThemeProvider,
+    CssBaseline,
+    createMuiTheme
+} from '@material-ui/core';
+
 import red from '@material-ui/core/colors/red';
 import blue from '@material-ui/core/colors/blue';
 import amber from '@material-ui/core/colors/amber';

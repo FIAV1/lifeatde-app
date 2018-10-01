@@ -1,7 +1,8 @@
+import jwt_decode from 'jwt-decode';
+
 import Api from './Api';
 import LocalStorage from './LocalStorage';
-import jwt_decode from 'jwt-decode';
-import history from '../lib/history';
+import history from './history';
 
 class Authentication {
     static isAuthenticated() {
