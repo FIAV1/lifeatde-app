@@ -60,13 +60,13 @@ const styles = theme => ({
         textTransform: 'none'
     },
     typography: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             fontSize: '12px'
         },
     },
     icon: {
         marginLeft: theme.spacing.unit,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             fontSize: '14px',
         },
     },

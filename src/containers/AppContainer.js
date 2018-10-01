@@ -34,7 +34,7 @@ const styles = {
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
-        minHeight: '500px'
+        minHeight: '390px'
     }
 }
 

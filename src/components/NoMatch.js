@@ -12,7 +12,7 @@ class NoMatch extends Component {
         const { classes } = this.props;
         return(
             <Grid container className={classes.container}>
-                <Grid item xs={8} sm={4}>
+                <Grid item xs={6} sm={4}>
                     <img src={notfound} className={classes.image} alt="loading..." />
                     <Typography align="center" variant="headline" gutterBottom>404</Typography>
                     <Typography align="center" variant="subheading">"Questa non è la pagina che stai cercando..."</Typography>

@@ -195,14 +195,14 @@ const styles = theme => ({
     avatar: {
         width: '35px',
         height: '35px',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             width: '20px',
             height: '20px',
         },
     },
     icon: {
         color: theme.palette.grey[50],
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             fontSize: '14px',
         },
     },
@@ -212,7 +212,7 @@ const styles = theme => ({
     },
     tabRoot: {
         flex:1,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             minWidth: 'unset',
             minHeight: '48px'
         },
@@ -221,7 +221,7 @@ const styles = theme => ({
         },
     },
     label: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             fontSize: '10px',
         },
     },
@@ -230,7 +230,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.grey[50]
     },
     labelContainer: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             padding: 0,
         },
     },
