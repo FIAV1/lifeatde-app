@@ -149,7 +149,6 @@ const styles = theme => ({
 	},
 	button: {
 		width: '100%',
-		backgroundColor: theme.palette.primary.dark,
 		marginTop: theme.spacing.unit
 	},
 	rightIcon: {
