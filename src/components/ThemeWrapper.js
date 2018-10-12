@@ -5,7 +5,7 @@ import LocalStorage from '../lib/LocalStorage';
 import {
     MuiThemeProvider,
     CssBaseline,
-    createMuiTheme
+    createMuiTheme,
 } from '@material-ui/core';
 
 import red from '@material-ui/core/colors/red';
@@ -15,7 +15,11 @@ import amber from '@material-ui/core/colors/amber';
 const lightTheme = {
     palette: {
         type: 'light',
-        primary: red,
+        primary: {
+            light: red[500],
+            main: red[700],
+            dark: red[900],
+        },
         secondary: blue,
         error: amber,
         contrastThreshold: 3,
@@ -26,7 +30,11 @@ const lightTheme = {
 const darkTheme = {
     palette: {
         type: 'dark',
-        primary: red,
+        primary: {
+            light: red[500],
+            main: red[700],
+            dark: red[900],
+        },
         secondary: blue,
         error: amber,
         contrastThreshold: 3,

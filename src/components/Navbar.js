@@ -142,7 +142,7 @@ class Navbar extends Component {
                         value={'/user/'+this.state.user.id}
                     />
                 </Tabs>
-                <Popper open={this.state.open} anchorEl={this.anchorEl} transition placement="bottom-end">
+                <Popper open={this.state.open} anchorEl={this.anchorEl} transition placement="bottom-start" className={classes.popper}>
                 {({ TransitionProps, placement }) => (
                     <Grow
                         {...TransitionProps}
@@ -150,35 +150,35 @@ class Navbar extends Component {
                         style={{ transformOrigin: placement === 'bottom' ? 'center bottom' : 'center top' }}
                     >
                         <Paper>
-                        <ClickAwayListener onClickAway={this.handleClose}>
-                            <MenuList className={classes.menuList}>
-                                <MenuItem onClick={this.handleClick((() => history.push('/user/'+this.state.user.id)))}>
-                                    <ListItemIcon>
-                                        <AccountIcon />
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Profilo" />
-                                </MenuItem>
-                                <MenuItem onClick={this.handleClick(Authentication.logout)}>
-                                    <ListItemIcon>
-                                        <ExitIcon />
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Logout" />
-                                </MenuItem>
-                                <MenuItem onClick={this.handleClick()}>
-                                    <ListItemIcon>
-                                        <PaletteIcon />
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Tema scuro" />
-                                    <ListItemSecondaryAction>
-                                        <Switch
-                                            checked={this.state.checked}
-                                            onChange={this.handleChange}
-                                            color="primary"
-                                        />
-                                    </ListItemSecondaryAction>
-                                </MenuItem>
-                            </MenuList>
-                        </ClickAwayListener>
+                            <ClickAwayListener onClickAway={this.handleClose}>
+                                <MenuList className={classes.menuList}>
+                                    <MenuItem onClick={this.handleClick((() => history.push('/user/'+this.state.user.id)))}>
+                                        <ListItemIcon>
+                                            <AccountIcon />
+                                        </ListItemIcon>
+                                        <ListItemText inset primary="Profilo" />
+                                    </MenuItem>
+                                    <MenuItem onClick={this.handleClick(Authentication.logout)}>
+                                        <ListItemIcon>
+                                            <ExitIcon />
+                                        </ListItemIcon>
+                                        <ListItemText inset primary="Logout" />
+                                    </MenuItem>
+                                    <MenuItem onClick={this.handleClick()}>
+                                        <ListItemIcon>
+                                            <PaletteIcon />
+                                        </ListItemIcon>
+                                        <ListItemText inset primary="Tema scuro" />
+                                        <ListItemSecondaryAction>
+                                            <Switch
+                                                checked={this.state.checked}
+                                                onChange={this.handleChange}
+                                                color="primary"
+                                            />
+                                        </ListItemSecondaryAction>
+                                    </MenuItem>
+                                </MenuList>
+                            </ClickAwayListener>
                         </Paper>
                     </Grow>
                 )}
@@ -190,19 +190,19 @@ class Navbar extends Component {
 
 const styles = theme => ({
     root: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.main,
     },
     avatar: {
         width: '35px',
         height: '35px',
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             width: '20px',
             height: '20px',
         },
     },
     icon: {
         color: theme.palette.grey[50],
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '14px',
         },
     },
@@ -212,8 +212,9 @@ const styles = theme => ({
     },
     tabRoot: {
         flex:1,
-        [theme.breakpoints.down('lg')]: {
-            minWidth: 'unset',
+        minWidth: 'unset',
+        minHeight: '60px',
+        [theme.breakpoints.down('md')]: {
             minHeight: '48px'
         },
         '&$tabSelected': {
@@ -221,7 +222,7 @@ const styles = theme => ({
         },
     },
     label: {
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '10px',
         },
     },
@@ -230,12 +231,15 @@ const styles = theme => ({
         backgroundColor: theme.palette.grey[50]
     },
     labelContainer: {
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 0,
         },
     },
+    popper: {
+        zIndex: 2
+    },
     menuList: {
-        minWidth: '250px'
+        minWidth: '250px',
     }
 });
 
