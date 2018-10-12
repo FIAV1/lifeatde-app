@@ -1,39 +1,48 @@
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core'
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import Avatar from '@material-ui/core/Avatar';
+import {
+    withStyles,
+    Card,
+    CardHeader,
+    CardContent,
+    Avatar,
+    Typography,
+    Grid
+} from '@material-ui/core';
 
 class StudyGroupCard extends Component {
 
     render() {
         const { classes, study_group, user } = this.props;
         return(
-            <div>
-                {console.log(study_group)}
-                <h1>{study_group.attributes.title + ' ' + user.attributes.firstname}</h1>
+            <Grid item xs={12}>
                 <Card className={classes.card}>
                     <CardHeader
-                    avatar={
-                        
-                        <Avatar aria-label="Recipe" src={user.attributes.avatar.url} className={classes.avatar}/>
-                    }
-                    title={study_group.attributes.title}
+                        avatar={
+                            <Avatar alt={`${user.attributes.firstname} ${user.attributes.lastname}`} src={user.attributes.avatar.url} className={classes.avatar} />
+                        }
+                        title={`${user.attributes.firstname} ${user.attributes.lastname}`}
+                        subheader={'12 Sept 12.45'}
                     />
+                    <CardContent>
+                        <Typography gutterBottom variant="title" component="h1">{study_group.attributes.title}</Typography>
+                        <Typography component="p">{study_group.attributes.description}</Typography>
+                    </CardContent>
                 </Card>
-            </div>
-        )
+            </Grid>
+        );
     }
 }
 
-const styles = {
+const styles = theme => ({
     card: {
-        width: '70%',
-        height: '20%',
+        margin: '0 auto 20px'
     }
-}
+});
+    
+StudyGroupCard.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(StudyGroupCard);
