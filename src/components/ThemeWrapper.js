@@ -62,18 +62,11 @@ class ThemeWrapper extends Component{
 
     }
 
-    getThemeType = () => {
-        let theme = LocalStorage.get('theme');
-
-        if(theme) return theme.palette.type
-        return lightTheme
-    }
-
     render() {
         return(
             <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
                 <CssBaseline>
-                    {React.cloneElement(this.props.children, {changeThemeType: this.changeThemeType, getThemeType: this.getThemeType})}
+                    {React.cloneElement(this.props.children, {changeThemeType: this.changeThemeType})}
                 </CssBaseline>
             </MuiThemeProvider>
         )

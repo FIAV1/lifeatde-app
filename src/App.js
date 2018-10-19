@@ -6,6 +6,7 @@ import Login from './containers/Login';
 import ProjectCardsContainer from './containers/ProjectCardsContainer';
 import PrivateRoute from './components/PrivateRoute';
 import NoMatch from './components/NoMatch';
+import SearchContainer from './containers/SearchContainer';
 
 class App extends Component {
 	render() {
@@ -16,8 +17,8 @@ class App extends Component {
 					<Redirect exact from='/' to='/projects'/>
 					<PrivateRoute exact path='/projects' component={ProjectCardsContainer}/>
 					<PrivateRoute exact path='/studygroups' component={ProjectCardsContainer}/>
+					<PrivateRoute exacts path='/search' component={SearchContainer}/>
 					<PrivateRoute component={NoMatch} />
-					<Route exact path='/InternalServerError' component={NoMatch} />
 				</Switch>
 			</AppContainer>
 		);
