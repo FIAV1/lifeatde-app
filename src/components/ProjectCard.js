@@ -42,7 +42,7 @@ class ProjectCard extends Component {
         const { classes, project, admin } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
+        
         return(
             <Grid item xs={12} md={6} xl={4}>
                 <Card className={classes.card}>
@@ -51,7 +51,7 @@ class ProjectCard extends Component {
                             <Avatar alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`} src={admin.attributes.avatar.url} className={classes.avatar} />
                         }
                         title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                        subheader={<Moment locale="it" fromNow>{project.attributes.created_at}</Moment>}
+                        subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{project.attributes.created_at}</Moment>}
                         action={
                             this.state.authUser.id === admin.id ?
                                 <IconButton

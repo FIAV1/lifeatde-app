@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import Api from '../lib/Api';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import {
     withStyles,
     CircularProgress,
     Typography,
-    Button
+    Button,
+    Divider
 } from '@material-ui/core';
+
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -28,6 +27,8 @@ class StudyGroupCardsContainer extends Component {
     }
 
     componentDidMount() {
+        document.title =  'LifeAtDe | Gruppi di Studio'
+
         Api.get('/courses/'+ this.state.course.id + '/study_groups').then(response =>{
             this.setState({
                 study_groups: response.data,
@@ -41,15 +42,15 @@ class StudyGroupCardsContainer extends Component {
 
     render() {
 
-        const {classes} = this.props;
         const {loading, study_groups, users} = this.state;
+        const {classes} = this.props;
 
         if(loading) {
             return <CircularProgress size={80} color='primary'/>
         }
 
         return (
-            <div id="project-cards-container">
+            <div id="studygroup-cards-container">
                 <Typography className={classes.header} component="h1" variant="display1">
                     Gruppi di Studio
                     <div>
@@ -61,11 +62,11 @@ class StudyGroupCardsContainer extends Component {
                         </Button>
                     </div>
                 </Typography>
-                <hr className={classes.hr} />
+                <Divider className={classes.hr} />
                 <StudyGroupCardList study_groups={study_groups} users={users}/>
-            <Notifier />
-        </div>
-        )
+                <Notifier />
+            </div>
+        );
     }
 }
 
@@ -81,7 +82,7 @@ const styles = theme => ({
     button: {
         width: '40px',
         height: '40px',
-        margin: theme.spacing.unit,
+        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px ${theme.spacing.unit}px`,
     },
 });
 
