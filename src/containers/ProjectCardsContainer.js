@@ -5,10 +5,13 @@ import {
     withStyles,
     CircularProgress,
     Typography,
-    Button
+    Button,
+    Divider
 } from '@material-ui/core';
+
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
+
 import Notifier, { showNotifier } from '../components/Notifier';
 import ProjectCardList from '../components/ProjectCardList';
 
@@ -20,6 +23,8 @@ class ProjectCardsContainer extends Component {
     };
 
     componentDidMount() {
+        document.title =  'LifeAtDe | Progetti'
+
         Api.get('/projects').then((response) => {
             this.setState({
                 projects: response.data,
@@ -52,7 +57,7 @@ class ProjectCardsContainer extends Component {
                         </Button>
                     </div>
                 </Typography>
-                <hr className={classes.hr} />
+                <Divider className={classes.hr} />
                 <ProjectCardList projects={projects} users={users} />
                 <Notifier />
             </div>
@@ -72,7 +77,7 @@ const styles = theme => ({
     button: {
         width: '40px',
         height: '40px',
-        margin: theme.spacing.unit,
+        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px ${theme.spacing.unit}px`,
     },
 });
 

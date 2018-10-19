@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
 import ProjectCard from './ProjectCard';
 
@@ -12,9 +12,28 @@ class ProjectCardList extends Component {
 
     render() {
         const { projects, users } = this.props;
-        
+        if((!projects || projects.length === 0) && (!users || users.length === 0)) {
+            return(
+                <Typography variant="subheading">
+                    Non ci sono progetti da visualizzare.
+                </Typography>
+            )
+        }
+
         return(
-            <Grid container>
+            <Grid container spacing={16}>
+                {
+                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
+                }
+                {
+                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
+                }
+                {
+                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
+                }
+                {
+                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
+                }
                 {
                     projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
                 }
