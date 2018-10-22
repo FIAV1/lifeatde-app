@@ -6,10 +6,8 @@ import StudyGroupCard from '../components/StudyGroupCard';
 
 class StudyGroupCardList extends Component {
 
-    getAdmin = (study_group, users) => {
-        console.log(study_group);
-        console.log(users);
-        return users.filter(user => study_group.relationships.user.data.id === user.id)[0]
+    getAdmin = (study_groups, users) => {
+        return users.filter(user => study_groups.relationships.user.data.id === user.id)[0]
     }
 
     render() {
