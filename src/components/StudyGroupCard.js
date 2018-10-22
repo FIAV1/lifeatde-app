@@ -95,7 +95,10 @@ class StudyGroupCard extends Component {
 const styles = theme => ({
     card: {
         margin: '0 auto 20px'
-    }
+    },
+    cardContent: {
+        width: '100%'
+    },
 });
     
 StudyGroupCard.propTypes = {

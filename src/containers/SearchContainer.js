@@ -17,6 +17,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import ProjectCardList from '../components/ProjectCardList';
 import Notifier, {showNotifier} from '../components/Notifier';
+import StudyGroupCardList from '../components/StudyGroupCardList';
 
 function TabContainer({ children, dir }) {
   return (
@@ -35,7 +36,8 @@ class SearchContainer extends Component {
         users: null,
         books: null,
         studygroups: null,
-        projects_users: null
+        projects_users: null,
+        studygroups_users: null,
     }
     
     handleChangeTab = (event, value) => {
@@ -68,7 +70,10 @@ class SearchContainer extends Component {
             this.setState({books: response.data})
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
-            this.setState({studygroups: response.data})
+            this.setState({
+                studygroups: response.data,
+                studygroups_users: response.included
+            })
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
 
         this.setState({loading: false});
@@ -77,7 +82,7 @@ class SearchContainer extends Component {
     badgeValue = props => this.state[props] ? this.state[props].length : 0
 
     render() {
-        const { loading, projects, projects_users } = this.state;
+        const { loading, projects, projects_users, studygroups, studygroups_users } = this.state;
         const { classes, theme } = this.props;
 
         return(
@@ -155,7 +160,7 @@ class SearchContainer extends Component {
                                     onChangeIndex={this.handleChangeIndex}
                                 >
                                     <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projects_users}/></TabContainer>
-                                    <TabContainer dir={theme.direction}>Gruppi di studio</TabContainer>
+                                    <TabContainer dir={theme.direction}><StudyGroupCardList study_groups={studygroups} users={studygroups_users}/></TabContainer>
                                     <TabContainer dir={theme.direction}>Libri</TabContainer>
                                     <TabContainer dir={theme.direction}>Utenti</TabContainer>
                                 </SwipeableViews>
