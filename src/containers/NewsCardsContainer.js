@@ -7,7 +7,8 @@ import {
     Typography,
     Button,
     Chip,
-    Divider
+    Divider,
+    Grid
 } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -53,10 +54,24 @@ class NewsCardsContainer extends Component {
 
         return (
             <div id="news-cards-container">
-                <Typography className={classes.header} component="h1" variant="display1" xs={12} md={6} xl={4}>
-                    News
-                    <Chip className={classes.chip} key={course.id} label={course.attributes.name}/>
-                </Typography>
+                <Grid container justify='space-between'>
+                    <Grid item >
+                        <Typography className={classes.header} component="h1" variant="display1" xs={12} md={6} xl={4}>
+                            News
+                        </Typography>
+                    </Grid>
+                    <Grid item className={classes.item} xs={12} sm={"auto"}>
+                        <Chip  classes={{
+                            root: classes.chipRoot,
+                            label: classes.chipLabel
+                        }} 
+                        key={course.id} 
+                        label={
+                            <Typography  variant='body1' noWrap>Ingegneria Elettronica e delle Telecomunicazioni</Typography>
+                        }
+                        />
+                    </Grid>
+                </Grid>
                 <Divider className={classes.hr} />
                 <NewsCardList news_list={news}/>
                 <Notifier />
@@ -74,9 +89,18 @@ const styles = theme => ({
     hr: {
         margin: '0 0 20px',
     },
-    chip: {
-        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+    item: {
+        padding: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px 0px`,
+        marginLeft: 'auto'
     },
+    chipRoot: {
+        maxWidth: '100%',
+    },
+    chipLabel:{
+        overflow: 'hidden',
+        paddingRight: 0,
+        marginRight: '12px',
+    }
 });
 
 export default withStyles(styles)(NewsCardsContainer);
