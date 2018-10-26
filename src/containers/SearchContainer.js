@@ -17,6 +17,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import ProjectCardList from '../components/ProjectCardList';
 import Notifier, {showNotifier} from '../components/Notifier';
+import StudyGroupCardList from '../components/StudyGroupCardList';
 
 function TabContainer({ children, dir }) {
   return (
@@ -34,8 +35,9 @@ class SearchContainer extends Component {
         projects: null,
         users: null,
         books: null,
-        studygroups: null,
-        projects_users: null
+        studyGroups: null,
+        projectsUsers: null,
+        studyGroupsUsers: null,
     }
     
     handleChangeTab = (event, value) => {
@@ -58,7 +60,7 @@ class SearchContainer extends Component {
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {
             this.setState({
                 projects: response.data,
-                projects_users: response.included
+                projectsUsers: response.included
             })
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
@@ -68,7 +70,10 @@ class SearchContainer extends Component {
             this.setState({books: response.data})
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
-            this.setState({studygroups: response.data})
+            this.setState({
+                studyGroups: response.data,
+                studyGroupsUsers: response.included
+            })
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
 
         this.setState({loading: false});
@@ -77,7 +82,7 @@ class SearchContainer extends Component {
     badgeValue = props => this.state[props] ? this.state[props].length : 0
 
     render() {
-        const { loading, projects, projects_users } = this.state;
+        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers } = this.state;
         const { classes, theme } = this.props;
 
         return(
@@ -121,7 +126,7 @@ class SearchContainer extends Component {
                                 />
                                 <Tab 
                                     label={
-                                        <Badge className={classes.badge} color="primary" badgeContent={this.badgeValue('studygroups')}>
+                                        <Badge className={classes.badge} color="primary" badgeContent={this.badgeValue('studyGroups')}>
                                             Studio
                                         </Badge>
                                     }
@@ -154,8 +159,8 @@ class SearchContainer extends Component {
                                     index={this.state.value}
                                     onChangeIndex={this.handleChangeIndex}
                                 >
-                                    <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projects_users}/></TabContainer>
-                                    <TabContainer dir={theme.direction}>Gruppi di studio</TabContainer>
+                                    <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers}/></TabContainer>
+                                    <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}>Libri</TabContainer>
                                     <TabContainer dir={theme.direction}>Utenti</TabContainer>
                                 </SwipeableViews>

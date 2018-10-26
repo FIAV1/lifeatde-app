@@ -90,7 +90,7 @@ class AppContainer extends Component {
                             </ListItemIcon>
                             <ListItemText primary="Progetti" />
                         </ListItem>
-                        <ListItem button onClick={this.handleClick}>
+                        <ListItem button onClick={() => history.push('/studygroups')}>
                             <ListItemIcon>
                                 <Icon color="action" className={classNames(classes.icon, 'fas fa-handshake')} />
                             </ListItemIcon>
@@ -102,7 +102,7 @@ class AppContainer extends Component {
                             </ListItemIcon>
                             <ListItemText primary="Libri" />
                         </ListItem>
-                        <ListItem button onClick={() => console.log('/news')}>
+                        <ListItem button onClick={() => history.push('/news')}>
                             <ListItemIcon>
                                 <Icon color="action" className={classNames(classes.icon, 'fas fa-newspaper')} />
                             </ListItemIcon>
