@@ -12,7 +12,7 @@ class StudyGroupCardList extends Component {
 
     render() {
 
-        const {studyGroups, users} = this.props;
+        const { studyGroups, users } = this.props;
         
         if((!studyGroups || studyGroups.length === 0) && (!users || users.length === 0)) {
             return(
@@ -31,6 +31,5 @@ class StudyGroupCardList extends Component {
         )
     }
 }
-
 
 export default (StudyGroupCardList);

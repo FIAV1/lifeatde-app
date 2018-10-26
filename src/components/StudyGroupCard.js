@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Moment from 'react-moment';
 import 'moment/locale/it';
@@ -100,9 +99,5 @@ const styles = theme => ({
         width: '100%'
     },
 });
-    
-StudyGroupCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(StudyGroupCard);

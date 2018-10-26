@@ -19,30 +19,33 @@ class NewsCardsContainer extends Component {
 
     state = {
         loading: true,
-        course: LocalStorage.get('user').included[3],
         news: null,
+        course: null,
     }
 
     componentDidMount() {
         document.title =  'LifeAtDe | News'
 
-        Api.get('/courses/'+ this.state.course.id + '/news').then(response =>{
+        let course = LocalStorage.get('user').included.find( item => item.type === 'course');
+
+        Api.get('/courses/'+ course.id + '/news').then(response =>{
             this.setState({
                 news: response.data,
-                loading: false
             })
         }).catch(({errors}) => {
             showNotifier({ messages: errors, variant: 'error' });
         });
+
+        this.setState({
+            course: course,
+            loading: false
+        })
     }
 
     render() {
 
-        const {loading, news, course} = this.state;
-        const {classes} = this.props;
-        console.log(course.attributes.name)
-        console.log(course.id)
-
+        const { loading, news, course } = this.state;
+        const { classes } = this.props;
 
         if(loading) {
             return <CircularProgress size={80} color='primary'/>
@@ -60,8 +63,7 @@ class NewsCardsContainer extends Component {
                         <Chip  classes={{
                             root: classes.chipRoot,
                             label: classes.chipLabel
-                        }} 
-                        key={course.id} 
+                        }}
                         label={
                             <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                         }
@@ -69,7 +71,7 @@ class NewsCardsContainer extends Component {
                     </Grid>
                 </Grid>
                 <Divider className={classes.hr} />
-                <NewsCardList news_list={news}/>
+                <NewsCardList newsList={news}/>
                 <Notifier />
             </div>
         );

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
 import Moment from 'react-moment';
 import 'moment/locale/it';
 
@@ -21,7 +19,7 @@ class NewsCard extends Component {
 
         return(
             <Grid item xs={12} md={6} xl={4}>
-                <Card className={classes.card}>
+                <Card >
                     <CardHeader subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{news.attributes.created_at}</Moment>}/>
                     <CardActionArea className={classes.cardContent}>
                         <CardContent>
@@ -37,16 +35,9 @@ class NewsCard extends Component {
 
 
 const styles = theme => ({
-    card: {
-        margin: '0 auto 20px'
-    },
     cardContent: {
         width: '100%'
     },
 });
-    
-NewsCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(NewsCard);

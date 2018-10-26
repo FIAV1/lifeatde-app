@@ -8,7 +8,7 @@ class NewsCardList extends Component {
 
     render() {
 
-        const {newsList} = this.props;
+        const { newsList } = this.props;
         
         if(!newsList || newsList.length === 0) {
             return(
@@ -27,6 +27,5 @@ class NewsCardList extends Component {
         )
     }
 }
-
 
 export default (NewsCardList);
