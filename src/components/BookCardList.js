@@ -18,7 +18,7 @@ class BookCardList extends Component {
 
         if (!books || books.length === 0) {
             return (
-                <Typography variant="subheading">
+                <Typography variant="subtitle1">
                     Non ci sono libri da visualizzare.
                 </Typography>
             )

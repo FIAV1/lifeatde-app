@@ -23,6 +23,7 @@ import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import history from '../lib/history'
 import green from '@material-ui/core/colors/green';
+import {getInitials} from "../lib/Utils";
 
 class BookCard extends Component {
     state = {
@@ -55,7 +56,12 @@ class BookCard extends Component {
                     <CardHeader
                         avatar={
                             <Link to={`/users/${user.id}`} className={classes.link}>
-                                <Avatar src={user.attributes.avatar.url} aria-label="user-avatar"/>
+                                <Avatar
+                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
+                                    src={user.attributes.avatar.id ? user.attributes.avatar.url : null}
+                                >
+                                    {user.attributes.avatar.id === null ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
+                                </Avatar>
                             </Link>
                         }
                         title={
@@ -81,8 +87,8 @@ class BookCard extends Component {
                     />
                     <CardActionArea className={classes.cardContent} onClick={() => history.push(`/books/${book.id}`)}>
                         <CardContent>
-                            <Typography noWrap gutterBottom variant="title" component="h1">{book.attributes.title}</Typography>
-                            <Typography noWrap component="p">{book.attributes.description}</Typography>
+                            <Typography noWrap gutterBottom variant="h6" component="h1">{book.attributes.title}</Typography>
+                            <Typography noWrap variant="body1" component="p">{book.attributes.description}</Typography>
                         </CardContent>
                     </CardActionArea>
                     <Divider/>
@@ -115,7 +121,7 @@ const styles = theme => ({
         color: theme.palette.text.primary,
         textDecoration: 'none',
         '&:hover': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
         }
     },
     priceChip: {

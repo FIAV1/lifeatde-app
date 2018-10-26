@@ -53,7 +53,7 @@ class BookCardsContainer extends Component {
 
         return(
             <div id="book-cards-container">
-                <Typography className={classes.header} component="h1" variant="display1">
+                <Typography className={classes.header} component="h1" variant="h4">
                     Libri
                     <div>
                         <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
