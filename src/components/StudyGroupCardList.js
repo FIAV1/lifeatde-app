@@ -6,15 +6,15 @@ import StudyGroupCard from '../components/StudyGroupCard';
 
 class StudyGroupCardList extends Component {
 
-    getAdmin = (study_groups, users) => {
-        return users.filter(user => study_groups.relationships.user.data.id === user.id)[0]
+    getAdmin = (studyGroups, users) => {
+        return users.filter(user => studyGroups.relationships.user.data.id === user.id)[0]
     }
 
     render() {
 
-        const {study_groups, users} = this.props;
+        const {studyGroups, users} = this.props;
         
-        if((!study_groups || study_groups.length === 0) && (!users || users.length === 0)) {
+        if((!studyGroups || studyGroups.length === 0) && (!users || users.length === 0)) {
             return(
                 <Typography variant="subheading">
                     Non ci sono gruppi di studio da visualizzare.
@@ -25,7 +25,7 @@ class StudyGroupCardList extends Component {
         return(
             <Grid container spacing={16}>
                 {
-                   study_groups.map((study_group) => <StudyGroupCard key={study_group.id} study_group={study_group} admin={this.getAdmin(study_group, users)} />)
+                   studyGroups.map((studyGroup) => <StudyGroupCard key={studyGroup.id} studyGroup={studyGroup} admin={this.getAdmin(studyGroup, users)} />)
                 }
             </Grid>
         )
