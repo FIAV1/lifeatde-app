@@ -12,12 +12,13 @@ import {
     LinearProgress,
     Paper
 } from '@material-ui/core';
-import SwipeableViews from 'react-swipeable-views';
 
+import Notifier, {showNotifier} from '../components/Notifier';
+import SwipeableViews from 'react-swipeable-views';
 import SearchIcon from '@material-ui/icons/Search';
 import ProjectCardList from '../components/ProjectCardList';
-import Notifier, {showNotifier} from '../components/Notifier';
 import StudyGroupCardList from '../components/StudyGroupCardList';
+import BookCardList from "../components/BookCardList";
 
 function TabContainer({ children, dir }) {
   return (
@@ -33,12 +34,13 @@ class SearchContainer extends Component {
         value: 0,
         loading: false,
         projects: null,
-        users: null,
-        books: null,
-        studyGroups: null,
         projectsUsers: null,
+        users: null,
+        studyGroups: null,
         studyGroupsUsers: null,
-    }
+        books: null,
+        booksUsers: null,
+    };
     
     handleChangeTab = (event, value) => {
         this.setState({ value });
@@ -67,7 +69,10 @@ class SearchContainer extends Component {
             this.setState({users: response.data})
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
         await Api.get(`/books?search=${this.state.searchString}`).then(response => {
-            this.setState({books: response.data})
+            this.setState({
+                books: response.data,
+                booksUsers: response.included,
+            })
         }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
@@ -82,7 +87,7 @@ class SearchContainer extends Component {
     badgeValue = props => this.state[props] ? this.state[props].length : 0
 
     render() {
-        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers } = this.state;
+        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers} = this.state;
         const { classes, theme } = this.props;
 
         return(
@@ -164,7 +169,7 @@ class SearchContainer extends Component {
                                 >
                                     <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
-                                    <TabContainer dir={theme.direction}>Libri</TabContainer>
+                                    <TabContainer dir={theme.direction}><BookCardList books={books} users={booksUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}>Utenti</TabContainer>
                                 </SwipeableViews>
                         }

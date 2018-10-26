@@ -121,6 +121,7 @@ const styles = theme => ({
     priceChip: {
         marginLeft: 'auto',
         backgroundColor: green[700],
+        color: 'white',
     }
 });
 
