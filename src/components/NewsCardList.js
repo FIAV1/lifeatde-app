@@ -8,9 +8,9 @@ class NewsCardList extends Component {
 
     render() {
 
-        const {news_list} = this.props;
+        const {newsList} = this.props;
         
-        if(!news_list || news_list.length === 0) {
+        if(!newsList || newsList.length === 0) {
             return(
                 <Typography variant="subheading">
                     Non ci sono news da visualizzare.
@@ -21,7 +21,7 @@ class NewsCardList extends Component {
         return(
             <Grid container spacing={16}>
                 {
-                   news_list.map((news) => <NewsCard key={news.id} news={news} />)
+                   newsList.map((news) => <NewsCard key={news.id} news={news} />)
                 }
             </Grid>
         )
