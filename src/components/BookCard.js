@@ -129,9 +129,6 @@ const styles = theme => ({
         backgroundColor: green[700],
         color: 'white',
     },
-    media: {
-        height: 140,
-    },
 });
 
 export default withStyles(styles)(BookCard);
