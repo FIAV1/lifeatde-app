@@ -23,16 +23,6 @@ class NewsCardList extends Component {
                 {
                    news_list.map((news) => <NewsCard key={news.id} news={news} />)
                 }
-                {
-                   news_list.map((news) => <NewsCard key={news.id} news={news} />)
-                }
-                {
-                   news_list.map((news) => <NewsCard key={news.id} news={news} />)
-                }
-                {
-                   news_list.map((news) => <NewsCard key={news.id} news={news} />)
-                }
-                
             </Grid>
         )
     }

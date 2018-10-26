@@ -4,25 +4,15 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import 'moment/locale/it';
 
-import LocalStorage from '../lib/LocalStorage';
-
 import {
     withStyles,
     Card,
     CardHeader,
     CardActionArea,
     CardContent,
-    CardActions,
-    Avatar,
     Typography,
     Grid,
-    IconButton,
-    Menu,
-    MenuItem,
-    Chip,
 } from '@material-ui/core';
-
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class NewsCard extends Component {
 

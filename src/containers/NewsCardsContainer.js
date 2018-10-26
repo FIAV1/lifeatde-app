@@ -5,14 +5,10 @@ import {
     withStyles,
     CircularProgress,
     Typography,
-    Button,
     Chip,
     Divider,
     Grid
 } from '@material-ui/core';
-
-import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
 
 import LocalStorage from '../lib/LocalStorage';
 import Notifier, { showNotifier } from '../components/Notifier';
@@ -67,7 +63,7 @@ class NewsCardsContainer extends Component {
                         }} 
                         key={course.id} 
                         label={
-                            <Typography  variant='body1' noWrap>Ingegneria Elettronica e delle Telecomunicazioni</Typography>
+                            <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                         }
                         />
                     </Grid>
