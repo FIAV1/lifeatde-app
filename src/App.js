@@ -3,10 +3,14 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import AppContainer from './containers/AppContainer';
 import Login from './containers/Login';
+
 import ProjectCardsContainer from './containers/ProjectCardsContainer';
 import ProjectContainer from './containers/ProjectContainer';
-import PrivateRoute from './components/PrivateRoute';
+import StudyGroupCardsContainer from './containers/StudyGroupCardsContainer';
+import NewsCardsContainer from './containers/NewsCardsContainer';
 import SearchContainer from './containers/SearchContainer';
+
+import PrivateRoute from './components/PrivateRoute';
 import NoMatch from './components/NoMatch';
 
 class App extends Component {
@@ -17,9 +21,10 @@ class App extends Component {
 					<Route exact path='/login' component={Login}/>
 					<Redirect exact from='/' to='/projects'/>
 					<PrivateRoute exact path='/projects' component={ProjectCardsContainer}/>
-					<PrivateRoute exact path='/studygroups' component={ProjectCardsContainer}/>
 					<PrivateRoute exact path='/search' component={SearchContainer}/>
 					<PrivateRoute exact path='/projects/:id' component={ProjectContainer}/>
+					<PrivateRoute exact path='/studygroups' component={StudyGroupCardsContainer}/>
+					<PrivateRoute exact path='/news' component={NewsCardsContainer}/>
 					<PrivateRoute component={NoMatch} />
 				</Switch>
 			</AppContainer>
