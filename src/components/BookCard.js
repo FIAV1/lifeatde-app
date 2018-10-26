@@ -46,7 +46,7 @@ class BookCard extends Component {
 
     render() {
         const { book, user, classes } = this.props;
-        const {menuAnchorEl} = this.state;
+        const { menuAnchorEl } = this.state;
         const open = Boolean(menuAnchorEl);
 
         return (
@@ -122,7 +122,10 @@ const styles = theme => ({
         marginLeft: 'auto',
         backgroundColor: green[700],
         color: 'white',
-    }
+    },
+    media: {
+        height: 140,
+    },
 });
 
 export default withStyles(styles)(BookCard);
