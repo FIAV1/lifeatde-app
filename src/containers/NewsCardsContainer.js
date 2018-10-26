@@ -55,7 +55,7 @@ class NewsCardsContainer extends Component {
             <div id="news-cards-container">
                 <Grid container justify='space-between'>
                     <Grid item >
-                        <Typography className={classes.header} component="h1" variant="display1" xs={12} md={6} xl={4}>
+                        <Typography className={classes.header} component="h1" variant="h4" xs={12} md={6} xl={4}>
                             News
                         </Typography>
                     </Grid>

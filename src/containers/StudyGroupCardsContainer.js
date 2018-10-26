@@ -21,7 +21,7 @@ class StudyGroupCardsContainer extends Component {
 
     state = {
         loading: true,
-        course: LocalStorage.get('user').included[3],
+        course: null,
         studyGroups: null,
         users: null
     }
@@ -29,15 +29,21 @@ class StudyGroupCardsContainer extends Component {
     componentDidMount() {
         document.title =  'LifeAtDe | Gruppi di Studio'
 
-        Api.get('/courses/'+ this.state.course.id + '/study_groups').then(response =>{
+        let course = LocalStorage.get('user').included.find(item => item.type === 'course');
+
+        Api.get('/courses/'+ course.id + '/study_groups').then(response =>{
             this.setState({
                 studyGroups: response.data,
                 users: response.included,
-                loading: false
             })
         }).catch(({errors}) => {
             showNotifier({ messages: errors, variant: 'error' });
         });
+
+        this.setState({
+            course,
+            loading: false,
+        })
     }
 
     render() {
@@ -51,7 +57,7 @@ class StudyGroupCardsContainer extends Component {
 
         return (
             <div id="studygroup-cards-container">
-                <Typography className={classes.header} component="h1" variant="display1">
+                <Typography className={classes.header} component="h1" variant="h4">
                     Gruppi di Studio
                     <div>
                         <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>

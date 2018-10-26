@@ -53,8 +53,11 @@ class CategoriesMenu extends Component {
 
 const styles = theme => ({
     div: {
-        width: '20px',
-        height: '20px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '22px',
+        height: '22px',
         borderRadius: '50%',
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,

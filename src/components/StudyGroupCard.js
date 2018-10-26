@@ -45,7 +45,7 @@ class StudyGroupCard extends Component {
 
         return(
             <Grid item xs={12} md={6} xl={4}>
-                <Card className={classes.card}>
+                <Card>
                     <CardHeader
                         avatar={
                             <Avatar alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`} src={admin.attributes.avatar.url} className={classes.avatar} />
@@ -68,8 +68,8 @@ class StudyGroupCard extends Component {
                     />
                     <CardActionArea className={classes.cardContent}>
                         <CardContent>
-                            <Typography noWrap gutterBottom variant="title" component="h1">{studyGroup.attributes.title}</Typography>
-                            <Typography noWrap component="p">{studyGroup.attributes.description}</Typography>
+                            <Typography noWrap gutterBottom variant="h6" component="h1">{studyGroup.attributes.title}</Typography>
+                            <Typography noWrap variant="body1" component="p">{studyGroup.attributes.description}</Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
@@ -92,9 +92,6 @@ class StudyGroupCard extends Component {
 
 
 const styles = theme => ({
-    card: {
-        margin: '0 auto 20px'
-    },
     cardContent: {
         width: '100%'
     },

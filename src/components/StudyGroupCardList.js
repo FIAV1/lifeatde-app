@@ -16,7 +16,7 @@ class StudyGroupCardList extends Component {
         
         if((!studyGroups || studyGroups.length === 0) && (!users || users.length === 0)) {
             return(
-                <Typography variant="subheading">
+                <Typography variant="subtitle1">
                     Non ci sono gruppi di studio da visualizzare.
                 </Typography>
             )

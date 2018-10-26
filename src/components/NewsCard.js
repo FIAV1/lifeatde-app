@@ -23,8 +23,8 @@ class NewsCard extends Component {
                     <CardHeader subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{news.attributes.created_at}</Moment>}/>
                     <CardActionArea className={classes.cardContent}>
                         <CardContent>
-                            <Typography gutterBottom variant="title" component="h1">{news.attributes.title}</Typography>
-                            <Typography component="p">{news.attributes.description}</Typography>
+                            <Typography gutterBottom variant="h6" component="h1">{news.attributes.title}</Typography>
+                            <Typography variant="body1" component="p">{news.attributes.description}</Typography>
                         </CardContent>
                     </CardActionArea>
                 </Card>

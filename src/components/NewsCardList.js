@@ -12,7 +12,7 @@ class NewsCardList extends Component {
         
         if(!newsList || newsList.length === 0) {
             return(
-                <Typography variant="subheading">
+                <Typography variant="subtitle1">
                     Non ci sono news da visualizzare.
                 </Typography>
             )
