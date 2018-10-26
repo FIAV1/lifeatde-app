@@ -22,7 +22,7 @@ class StudyGroupCardsContainer extends Component {
     state = {
         loading: true,
         course: LocalStorage.get('user').included[3],
-        study_groups: null,
+        studyGroups: null,
         users: null
     }
 
@@ -31,7 +31,7 @@ class StudyGroupCardsContainer extends Component {
 
         Api.get('/courses/'+ this.state.course.id + '/study_groups').then(response =>{
             this.setState({
-                study_groups: response.data,
+                studyGroups: response.data,
                 users: response.included,
                 loading: false
             })
@@ -42,7 +42,7 @@ class StudyGroupCardsContainer extends Component {
 
     render() {
 
-        const {loading, study_groups, users} = this.state;
+        const {loading, studyGroups, users} = this.state;
         const {classes} = this.props;
 
         if(loading) {
@@ -63,7 +63,7 @@ class StudyGroupCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <StudyGroupCardList study_groups={study_groups} users={users}/>
+                <StudyGroupCardList studyGroups={studyGroups} users={users}/>
                 <Notifier />
             </div>
         );

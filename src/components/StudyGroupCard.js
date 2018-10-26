@@ -40,7 +40,7 @@ class StudyGroupCard extends Component {
     };
 
     render() {
-        const { classes, study_group, admin } = this.props;
+        const { classes, studyGroup, admin } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
@@ -52,7 +52,7 @@ class StudyGroupCard extends Component {
                             <Avatar alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`} src={admin.attributes.avatar.url} className={classes.avatar} />
                         }
                         title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                        subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{study_group.attributes.created_at}</Moment>}
+                        subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{studyGroup.attributes.created_at}</Moment>}
                         action={
                             this.state.authUser.id === admin.id ?
                                 <IconButton
@@ -69,12 +69,12 @@ class StudyGroupCard extends Component {
                     />
                     <CardActionArea className={classes.cardContent}>
                         <CardContent>
-                            <Typography noWrap gutterBottom variant="title" component="h1">{study_group.attributes.title}</Typography>
-                            <Typography noWrap component="p">{study_group.attributes.description}</Typography>
+                            <Typography noWrap gutterBottom variant="title" component="h1">{studyGroup.attributes.title}</Typography>
+                            <Typography noWrap component="p">{studyGroup.attributes.description}</Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Chip className={classes.chip} key={study_group.attributes.course} label={study_group.attributes.course}/>)}
+                        <Chip className={classes.chip} key={studyGroup.attributes.course} label={studyGroup.attributes.course}/>)}
                     </CardActions>
                     <Menu
                         id="options-menu"
