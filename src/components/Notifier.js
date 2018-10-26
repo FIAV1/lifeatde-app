@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {
@@ -158,11 +157,6 @@ const styles = theme => ({
         margin: theme.spacing.unit*2,
     }
 });
-
-Notifier.propTypes = {
-    classes: PropTypes.object.isRequired,
-    message: PropTypes.node,
-};
         
 export function showNotifier({ messages, variant }){
     showNotifierFn({messages, variant});

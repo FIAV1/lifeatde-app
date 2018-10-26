@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import LocalStorage from '../lib/LocalStorage';
@@ -242,9 +241,5 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
     },
 });
-
-AppContainer.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(AppContainer);
