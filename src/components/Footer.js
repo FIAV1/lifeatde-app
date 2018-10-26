@@ -27,7 +27,7 @@ class Footer extends Component {
                 </Grid>
                 <Grid container direction="row" justify="space-around" className={classes.container}>
                     <Grid item className={classes.item} xs={7} sm={6}>
-                        <Typography className={classes.typography}>Crafted with</Typography>
+                        <Typography variant="body1" className={classes.typography}>Crafted with</Typography>
                         <RailsIcon color="action" className={classes.icon} />
                         <Icon color="action" className={classNames(classes.icon, 'fab fa-react')} />
                         <Icon color="action" className={classNames(classes.icon, 'fas fa-heart')} />

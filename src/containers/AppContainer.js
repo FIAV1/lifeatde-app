@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import LocalStorage from '../lib/LocalStorage';
 import Authentication from '../lib/Authentication';
+import { getInitials } from '../lib/Utils';
 
 import {
     withStyles,
@@ -65,7 +65,7 @@ class AppContainer extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="title">
+                        <Typography variant="h6" className={classes.title}>
                             LifeAtDe
                         </Typography>
                     </Toolbar>
@@ -113,7 +113,13 @@ class AppContainer extends Component {
                     <List>
                         <ListItem button onClick={() => history.push('/user/'+user.id)}>
                             <ListItemIcon>
-                            <Avatar alt={`${user.attributes.firstname} ${user.attributes.lastname}`} src={user.attributes.avatar.url} className={classes.avatar} />
+                                <Avatar
+                                    className={classes.avatar}
+                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
+                                    src={user.attributes.avatar.id ? user.attributes.avatar.url : null}
+                                >
+                                    {user.attributes.avatar.id === null ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
+                                </Avatar>
                             </ListItemIcon>
                             <ListItemText inset primary="Profilo" />
                         </ListItem>
@@ -219,10 +225,13 @@ const styles = theme => ({
         },
         overflowY: 'auto'
     },
+    title: {
+        color: theme.palette.common.white,
+    },
     avatar: {
-        backgroundColor: theme.palette.primary.main,
-        width: '24px',
-        height: '24px',
+        width: '28px',
+        height: '28px',
+        fontSize: '12px',
     },
     toolbar: {
         display: 'flex',
@@ -232,9 +241,5 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
     },
 });
-
-AppContainer.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(AppContainer);

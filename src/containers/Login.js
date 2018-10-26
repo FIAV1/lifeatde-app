@@ -68,7 +68,7 @@ class Login extends Component {
 							ref="form"
 							onSubmit={this.handleSubmit}
 						>
-							<Typography variant="display2" align="center">
+							<Typography variant="h3" align="center">
 								LifeAtDe
 							</Typography>
 							<TextValidator
