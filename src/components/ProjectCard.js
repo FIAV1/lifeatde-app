@@ -6,6 +6,10 @@ import 'moment/locale/it';
 
 import LocalStorage from '../lib/LocalStorage';
 
+import history from '../lib/history';
+
+import { getInitials } from '../lib/Utils';
+
 import {
     withStyles,
     Card,
@@ -22,7 +26,7 @@ import {
 } from '@material-ui/core';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ChipList from './ChipList';
+import CategoriesMenu from './CategoriesMenu';
 
 class ProjectCard extends Component {
     state = {
@@ -45,18 +49,23 @@ class ProjectCard extends Component {
 
         return(
             <Grid item xs={12} md={6} xl={4}>
-                <Card className={classes.card}>
+                <Card>
                     <CardHeader
                         avatar={
-                            <Avatar alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`} src={admin.attributes.avatar.url} className={classes.avatar} />
+                            <Avatar
+                                alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                            >
+                                {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                            </Avatar>
                         }
                         title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                        subheader={<Moment locale="it" fromNow>{project.attributes.created_at}</Moment>}
+                        subheader={<Moment parse="YYYY-MM-DD HH:mm" locale="it" fromNow>{project.attributes.created_at}</Moment>}
                         action={
                             this.state.authUser.id === admin.id ?
                                 <IconButton
                                     aria-label="Opzioni"
-                                    aria-owns={open ? 'options-menu' : null}
+                                    aria-owns={open ? `options-menu-${project.id}` : null}
                                     aria-haspopup="true"
                                     onClick={this.handleClick}
                                 >
@@ -66,17 +75,17 @@ class ProjectCard extends Component {
                                 null
                         }
                     />
-                    <CardActionArea className={classes.cardContent}>
+                    <CardActionArea className={classes.cardContent} onClick={() => history.push(`/projects/${project.id}`)}>
                         <CardContent>
-                            <Typography noWrap gutterBottom variant="title" component="h1">{project.attributes.title}</Typography>
-                            <Typography noWrap component="p">{project.attributes.description}</Typography>
+                            <Typography noWrap gutterBottom variant="h6">{project.attributes.title}</Typography>
+                            <Typography noWrap variant="body1">{project.attributes.description}</Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <ChipList elements={project.attributes.categories} />
+                        <CategoriesMenu id={project.id} elements={project.attributes.categories} />
                     </CardActions>
                     <Menu
-                        id="options-menu"
+                        id={`options-menu-${project.id}`}
                         anchorEl={anchorEl}
                         open={open}
                         onClose={this.handleClose}

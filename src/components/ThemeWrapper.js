@@ -13,6 +13,9 @@ import blue from '@material-ui/core/colors/blue';
 import amber from '@material-ui/core/colors/amber';
 
 const lightTheme = {
+    typography: {
+        useNextVariants: true,
+    },
     palette: {
         type: 'light',
         primary: {
@@ -28,6 +31,9 @@ const lightTheme = {
 };
 
 const darkTheme = {
+    typography: {
+        useNextVariants: true,
+    },
     palette: {
         type: 'dark',
         primary: {

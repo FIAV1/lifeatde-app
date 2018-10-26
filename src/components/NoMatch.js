@@ -14,8 +14,8 @@ class NoMatch extends Component {
             <Grid container className={classes.container}>
                 <Grid item xs={6} sm={4}>
                     <img src={notfound} className={classes.image} alt="loading..." />
-                    <Typography align="center" variant="headline" gutterBottom>404</Typography>
-                    <Typography align="center" variant="subheading">"Questa non è la pagina che stai cercando..."</Typography>
+                    <Typography align="center" variant="h5" gutterBottom>404</Typography>
+                    <Typography align="center" variant="subtitle1">"Questa non è la pagina che stai cercando..."</Typography>
                 </Grid>
             </Grid>
         )

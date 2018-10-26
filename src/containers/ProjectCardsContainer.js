@@ -46,7 +46,7 @@ class ProjectCardsContainer extends Component {
 
         return(
             <div id="project-cards-container">
-                <Typography className={classes.header} component="h1" variant="display1">
+                <Typography className={classes.header} variant="h4">
                     Progetti
                     <div>
                         <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>

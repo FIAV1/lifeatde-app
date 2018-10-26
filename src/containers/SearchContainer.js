@@ -10,9 +10,9 @@ import {
     Tab,
     Badge,
     LinearProgress,
+    Paper
 } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import SearchIcon from '@material-ui/icons/Search';
 import ProjectCardList from '../components/ProjectCardList';
@@ -84,21 +84,23 @@ class SearchContainer extends Component {
             <div id="global-search">
                 <Grid container spacing={16}>
                     <Grid item xs={12}>
-                        <form onSubmit={this.handleSubmit}>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon />
+                        <Paper>
+                            <form onSubmit={this.handleSubmit}>
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon />
+                                    </div>
+                                    <InputBase
+                                        placeholder="Cerca in LifeAtDe..."
+                                        onChange={this.handleChange}
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                    />
                                 </div>
-                                <InputBase
-                                    placeholder="Cerca in LifeAtDe..."
-                                    onChange={this.handleChange}
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                />
-                            </div>
-                        </form>
+                            </form>
+                        </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <AppBar position="static" color="default">
@@ -153,6 +155,7 @@ class SearchContainer extends Component {
                                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                                     index={this.state.value}
                                     onChangeIndex={this.handleChangeIndex}
+                                    animateHeight
                                 >
                                     <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projects_users}/></TabContainer>
                                     <TabContainer dir={theme.direction}>Gruppi di studio</TabContainer>
@@ -181,10 +184,7 @@ const styles = theme => ({
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
+        backgroundColor: theme.palette.background.paper,
         marginLeft: 0,
         width: '100%',
     },
@@ -206,14 +206,7 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit,
         paddingBottom: theme.spacing.unit,
         paddingLeft: theme.spacing.unit * 6,
-        transition: theme.transitions.create('width'),
         width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: 120,
-            '&:focus': {
-                width: 200,
-            },
-        },
     },
     tabRoot: {
         minWidth: 'fit-content',
