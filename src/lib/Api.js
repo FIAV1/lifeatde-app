@@ -20,7 +20,7 @@ class Api {
     }
 
     static download(route) {
-        return this.test(route, 'GET')
+        return this.getBlob(route, 'GET')
     }
 
     static get(route) {
@@ -81,7 +81,7 @@ class Api {
         });
     }
 
-    static test(route, verb) {
+    static getBlob(route, verb) {
         let options = Object.assign({method: verb}, null)
 
         options.headers = Api.headers();
