@@ -22,7 +22,7 @@ class CenteredCircularProgress extends Component {
 const styles = ({
     progressWrapper: {
         display: 'flex',
-        minHeight: '100%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center'
     }
