@@ -13,6 +13,8 @@ import {
     Divider,
     MenuItem,
     Grid,
+    GridList,
+    GridListTile,
     Typography,
     Menu,
 } from '@material-ui/core';
@@ -24,6 +26,7 @@ import { Link } from "react-router-dom";
 import history from '../lib/history'
 import green from '@material-ui/core/colors/green';
 import {getInitials} from "../lib/Utils";
+import imagePlaceholder from '../img/image-placeholder.jpg';
 
 class BookCard extends Component {
     state = {
@@ -49,6 +52,29 @@ class BookCard extends Component {
         const { book, user, classes } = this.props;
         const { menuAnchorEl } = this.state;
         const open = Boolean(menuAnchorEl);
+        let photoTiles = null;
+
+        if (book.attributes.photos) {
+            photoTiles = book.attributes.photos.slice(0, 3).map((photo, index, array) => {
+                let tile = {
+                    id: photo.id,
+                    src: photo.url,
+                    cols: 3,
+                };
+                switch (array.length) {
+                    case 2:
+                        index === 0 ? tile.cols = 2 : tile.cols = 1;
+                        break;
+                    case 3:
+                        tile.cols = 1;
+                        break;
+                    default:
+                        break;
+                }
+                return tile;
+            });
+
+        }
 
         return (
             <Grid item xs={12} md={6} xl={4}>
@@ -89,6 +115,21 @@ class BookCard extends Component {
                         <CardContent>
                             <Typography noWrap gutterBottom variant="h6" component="h1">{book.attributes.title}</Typography>
                             <Typography noWrap variant="body1" component="p">{book.attributes.description}</Typography>
+                            <div className={classes.listContainer}>
+                                <GridList className={classes.gridList} cellHeight={160} cols={3}>
+                                    { photoTiles ?
+                                        photoTiles.map((tile, index) => (
+                                            <GridListTile key={tile.id} cols={tile.cols}>
+                                                <img src={tile.src} alt={`book-pic-${index}`} />
+                                            </GridListTile>)
+                                        )
+                                        :
+                                        <GridListTile cols={3}>
+                                            <img src={imagePlaceholder} alt='book-placeholder-img' />
+                                        </GridListTile>
+                                    }
+                                </GridList>
+                            </div>
                         </CardContent>
                     </CardActionArea>
                     <Divider/>
@@ -128,6 +169,17 @@ const styles = theme => ({
         marginLeft: 'auto',
         backgroundColor: green[700],
         color: 'white',
+    },
+    listContainer: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+        marginTop: '16px',
+    },
+    gridList: {
+        width: '100%',
     },
 });
 
