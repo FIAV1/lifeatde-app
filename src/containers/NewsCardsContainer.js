@@ -15,6 +15,9 @@ import Notifier, { showNotifier } from '../components/Notifier';
 
 import NewsCardList from '../components/NewsCardList';
 
+
+import { getCourseColor } from '../lib/Utils';
+
 class NewsCardsContainer extends Component {
 
     state = {
@@ -67,6 +70,7 @@ class NewsCardsContainer extends Component {
                         label={
                             <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                         }
+                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
                         />
                     </Grid>
                 </Grid>
