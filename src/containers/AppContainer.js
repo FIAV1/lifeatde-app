@@ -96,7 +96,7 @@ class AppContainer extends Component {
                             </ListItemIcon>
                             <ListItemText primary="Studio" />
                         </ListItem>
-                        <ListItem button onClick={() => console.log('/books')}>
+                        <ListItem button onClick={() => history.push('/books')}>
                             <ListItemIcon>
                                 <Icon color="action" className={classNames(classes.icon, 'fas fa-book')} />
                             </ListItemIcon>

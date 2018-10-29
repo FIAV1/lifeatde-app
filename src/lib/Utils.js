@@ -14,13 +14,11 @@ const getStatusColor = status => {
     if(status === 'Terminato') {
         return red[700];
     }
-}
+};
 
 const getInitials = (firstName, lastName) => {
-    let fn = firstName.split(' ').map(name => name.charAt(0)).join('');
-    let ln = lastName.split(' ').map(name => name.charAt(0)).join('');
-    return fn+ln;
-}
+    return firstName.charAt(0)+lastName.charAt(0)
+};
 
 export {
     getStatusColor,
