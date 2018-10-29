@@ -19,6 +19,10 @@ class Api {
         return headers;
     }
 
+    static download(route) {
+        return this.test(route, 'GET')
+    }
+
     static get(route) {
         return this.xhr(route, null, 'GET')
     }
@@ -37,7 +41,14 @@ class Api {
 
     static xhr (route, params, verb) {
         const scope = '/api'
-        const url = `${scope}${route}`
+        let url;
+        
+        if(params === 'none'){
+            url = `${route}`;
+            params = null;
+        } else {
+            url = `${scope}${route}`
+        }
 
         let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null)
 
@@ -67,6 +78,20 @@ class Api {
             }
 
             return response.json().then(error => {throw error});
+        });
+    }
+
+    static test(route, verb) {
+        let options = Object.assign({method: verb}, null)
+
+        options.headers = Api.headers();
+
+        return fetch(route, options).then(response => {
+            if(response.ok) {
+                return response.blob();
+            }
+            
+            return response.blob().then(error => {throw error});
         });
     }
 }

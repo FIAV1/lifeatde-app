@@ -37,6 +37,7 @@ class Authentication {
             LocalStorage.delete('user');
             history.push('/login');
         } catch(error) {
+            LocalStorage.delete('user');
             history.push('/login');
         }
     }

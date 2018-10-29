@@ -3,7 +3,6 @@ import Api from '../lib/Api';
 
 import {
     withStyles,
-    CircularProgress,
     Typography,
     Button,
     Divider
@@ -16,6 +15,7 @@ import LocalStorage from '../lib/LocalStorage';
 import Notifier, { showNotifier } from '../components/Notifier';
 
 import StudyGroupCardList from '../components/StudyGroupCardList';
+import Loader from '../components/Loader';
 
 class StudyGroupCardsContainer extends Component {
 
@@ -52,7 +52,7 @@ class StudyGroupCardsContainer extends Component {
         const {classes} = this.props;
 
         if(loading) {
-            return <CircularProgress size={80} color='primary'/>
+            return <Loader notifier={<Notifier />} />
         }
 
         return (

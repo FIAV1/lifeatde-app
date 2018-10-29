@@ -3,7 +3,6 @@ import Api from '../lib/Api';
 
 import {
     withStyles,
-    CircularProgress,
     Typography,
     Button,
     Divider
@@ -14,6 +13,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 import Notifier, { showNotifier } from '../components/Notifier';
 import ProjectCardList from '../components/ProjectCardList';
+import Loader from '../components/Loader';
 
 class ProjectCardsContainer extends Component {
     state = {
@@ -41,7 +41,7 @@ class ProjectCardsContainer extends Component {
         const { classes } = this.props;
 
         if(loading) {
-            return <CircularProgress size={80} color="primary" />
+            return <Loader component={<Notifier />} />
         }
 
         return(
@@ -49,10 +49,10 @@ class ProjectCardsContainer extends Component {
                 <Typography className={classes.header} variant="h4">
                     Progetti
                     <div>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
+                        <Button variant="fab" mini color="primary" aria-label="Aggiungi" className={classes.button}>
                             <AddIcon />
                         </Button>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
+                        <Button variant="fab" mini color="primary" aria-label="Filtra" className={classes.button}>
                             <FilterListIcon />
                         </Button>
                     </div>
@@ -75,8 +75,6 @@ const styles = theme => ({
         margin: '0 0 20px',
     },
     button: {
-        width: '40px',
-        height: '40px',
         margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px ${theme.spacing.unit}px`,
     },
 });
