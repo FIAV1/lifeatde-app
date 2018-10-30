@@ -16,28 +16,16 @@ import PermMediaIcon from '@material-ui/icons/PermMedia';
 import Notifier, { showNotifier } from './Notifier';
 
 class DocumentList extends Component {
-    getFileName = url => {
-        let a = url.split('/');
-        return a[a.length-1];
-    }
-
-    downloadFile = url => () => {
-        let fileName = this.getFileName(url);
-
-        let errors = [{
-            detail: 'C\'è stato un problema durante il download, riprova più tardi',
-            status: 500
-        }];
-
+    downloadFile = (url, filename) => () => {
         Api.download(url)
             .then(file => {
                 const data = window.URL.createObjectURL(file);
                 let link = window.document.createElement('a');
                 link.href = data;
-                link.download = fileName;
+                link.download = filename;
                 link.click();
                 link.remove();
-            }).catch(() => {
+            }).catch(({errors}) => {
                 showNotifier({messages: errors, variant: 'error'});
             });
     }
@@ -53,7 +41,7 @@ class DocumentList extends Component {
                                 <ListItem
                                     button
                                     key={document.id}
-                                    onClick={this.downloadFile(document.url)}
+                                    onClick={this.downloadFile(document.url, document.filename)}
                                 >
                                     <ListItemAvatar>
                                     <Avatar>
@@ -61,7 +49,7 @@ class DocumentList extends Component {
                                     </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={this.getFileName(document.url)}
+                                        primary={document.filename}
                                     />
                                 </ListItem>
                             )

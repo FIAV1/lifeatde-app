@@ -84,15 +84,22 @@ class Api {
         }
 
         return fetch(route, options).then(response => {
+            let error = {
+                errors: [{
+                    detail: 'C\'è stato un problema durante il download, riprova più tardi',
+                    status: 500,
+                }]
+            }
+
             if(response.ok) {
                 try{
                     return response.blob();
-                } catch(error) {
+                } catch(e) {
                     throw error;
                 }
+            } else {
+                throw error;
             }
-            
-            throw response;
         });
     }
 }
