@@ -12,12 +12,13 @@ import {
     Paper
 } from '@material-ui/core';
 
-import Notifier, {showNotifier} from '../components/Notifier';
 import SwipeableViews from 'react-swipeable-views';
-import SearchIcon from '@material-ui/icons/Search';
-import ProjectCardList from '../components/ProjectCardList';
-import Notifier, {showNotifier} from '../components/Notifier';
 import Loader from '../components/Loader';
+import SearchIcon from '@material-ui/icons/Search';
+
+import Notifier, {showNotifier} from '../components/Notifier';
+
+import ProjectCardList from '../components/ProjectCardList';
 import StudyGroupCardList from '../components/StudyGroupCardList';
 import BookCardList from "../components/BookCardList";
 

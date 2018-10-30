@@ -19,10 +19,6 @@ class Api {
         return headers;
     }
 
-    static download(route) {
-        return this.getBlob(route, 'GET')
-    }
-
     static get(route) {
         return this.xhr(route, null, 'GET')
     }
@@ -81,17 +77,22 @@ class Api {
         });
     }
 
-    static getBlob(route, verb) {
-        let options = Object.assign({method: verb}, null)
-
-        options.headers = Api.headers();
+    static download(route) {
+        let options = {
+            method: 'GET',
+            headers: Api.headers()
+        }
 
         return fetch(route, options).then(response => {
             if(response.ok) {
-                return response.blob();
+                try{
+                    return response.blob();
+                } catch(error) {
+                    throw error;
+                }
             }
             
-            return response.blob().then(error => {throw error});
+            throw response;
         });
     }
 }
