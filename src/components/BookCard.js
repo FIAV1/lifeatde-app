@@ -120,7 +120,7 @@ class BookCard extends Component {
                                     { photoTiles ?
                                         photoTiles.map((tile, index) => (
                                             <GridListTile key={tile.id} cols={tile.cols}>
-                                                <img src={tile.src} alt={`book-pic-${index}`} />
+                                                <img src={tile.src} alt={`book-pic-${tile.id}`} />
                                             </GridListTile>)
                                         )
                                         :
