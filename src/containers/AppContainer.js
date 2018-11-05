@@ -90,7 +90,7 @@ class AppContainer extends Component {
                             </ListItemIcon>
                             <ListItemText primary="Progetti" />
                         </ListItem>
-                        <ListItem button onClick={() => history.push('/studygroups')}>
+                        <ListItem button onClick={() => history.push('/study_groups')}>
                             <ListItemIcon>
                                 <Icon color="action" className={classNames(classes.icon, 'fas fa-handshake')} />
                             </ListItemIcon>
