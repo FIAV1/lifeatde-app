@@ -24,7 +24,9 @@ class StudyGroupContainer extends Component {
                 admins: response.included,
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.studyGroup.attributes.title}`);
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            showNotifier({messages: errors, variant: 'error'})
+        });
     }
 
     render() {
