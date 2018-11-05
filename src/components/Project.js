@@ -185,7 +185,7 @@ class Project extends Component {
                                 aria-label="Team"
                                 className={classes.button}
                             >
-                                Membri
+                                Team
                                 <ExpandMoreIcon 
                                     className={classnames(classes.expand, {
                                         [classes.expandOpen]: expanded,
