@@ -118,7 +118,7 @@ class BookCard extends Component {
                             <div className={classes.listContainer}>
                                 <GridList className={classes.gridList} cellHeight={160} cols={3}>
                                     { photoTiles ?
-                                        photoTiles.map((tile, index) => (
+                                        photoTiles.map(tile => (
                                             <GridListTile key={tile.id} cols={tile.cols}>
                                                 <img src={tile.src} alt={`book-pic-${tile.id}`} />
                                             </GridListTile>)
