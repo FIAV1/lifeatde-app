@@ -11,46 +11,42 @@ import brown from '@material-ui/core/colors/brown';
 
 
 const getStatusColor = status => {
-    if(status === 'Aperto') {
-        return green[700];
-    }
+    switch (status) {
 
-    if(status === 'Chiuso') {
-        return blue[700];
-    }
+        case 'Aperto':
+            return green[700];
 
-    if(status === 'Terminato') {
-        return red[700];
+        case 'Chiuso':
+            return blue[700]; 
+            
+        case 'Terminato':
+            return red[700]; 
     }
 };
 
 const getCourseColor = course => {
-    if(course === 'Ingegneria Elettronica e Informatica') {
-        return yellow[700];
-    }
+    switch (course) {
 
-    if(course === 'Ingegneria Meccanica LT') {
-        return red[700];
-    }
+        case 'Ingegneria Elettronica e Informatica':
+            return yellow[700];
 
-    if(course === 'Ingegneria Civile e Ambientale') {
-        return green[700];
-    }
+        case 'Ingegneria Meccanica LT':
+            return red[700];
 
-    if(course === 'Ingegneria Elettronica e delle Telecomunicazioni') {
-        return purple[700];
-    }
+        case 'Ingegneria Civile e Ambientale':
+            return green[700];
 
-    if(course === 'Ingegneria Informatica e dell\' Automazione') {
-        return blue[700];
-    }
+        case 'Ingegneria Elettronica e delle Telecomunicazioni':
+            return purple[700];
 
-    if(course === 'Ingegneria Civile') {
-        return brown[700];
-    }
+        case 'Ingegneria Informatica e dell\' Automazione':
+            return blue[700];
 
-    if(course === 'Ingegneria Meccanica LM') {
-        return orange[700];
+        case 'Ingegneria Civile':
+            return brown[700];
+
+        case 'Ingegneria Meccanica LM':
+            return orange[700];
     }
 };
 

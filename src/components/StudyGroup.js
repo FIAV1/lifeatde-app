@@ -46,19 +46,17 @@ class StudyGroup extends Component {
                             <ReactMarkdown className={classes.markdown} source={studyGroup.attributes.description}/>
                         </CardContent>
                         <Divider />
-                        <CardContent>
-                            <CardHeader className={classes.admin}
-                                avatar={
-                                    <Avatar
-                                        alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                        src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
-                                    >
-                                        {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                                    </Avatar>                                }
-                                title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                subheader="Admin"
-                            />
-                        </CardContent>
+                        <CardHeader 
+                            avatar={
+                                <Avatar
+                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                    src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                                >
+                                    {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                </Avatar>                                }
+                            title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                            subheader="Admin"
+                        />
                     </Card>
                 </Grid>
             </Grid>
@@ -67,9 +65,6 @@ class StudyGroup extends Component {
 }
 
 const styles = theme => ({
-    admin: {
-        padding: 0,
-       },
     moment: {
         display: 'block',
         color: theme.palette.text.hint,
