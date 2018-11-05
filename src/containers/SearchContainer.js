@@ -9,13 +9,15 @@ import {
     Tabs,
     Tab,
     Badge,
-    LinearProgress,
     Paper
 } from '@material-ui/core';
 
-import Notifier, {showNotifier} from '../components/Notifier';
 import SwipeableViews from 'react-swipeable-views';
+import Loader from '../components/Loader';
 import SearchIcon from '@material-ui/icons/Search';
+
+import Notifier, {showNotifier} from '../components/Notifier';
+
 import ProjectCardList from '../components/ProjectCardList';
 import StudyGroupCardList from '../components/StudyGroupCardList';
 import BookCardList from "../components/BookCardList";
@@ -158,10 +160,9 @@ class SearchContainer extends Component {
                             </Tabs>
                         </AppBar>
                         {
-                            loading ?
-                                <LinearProgress variant="query" />
-                            :
-                                <SwipeableViews
+                            loading
+                            ? <Loader notifier={<Notifier />} />
+                            : <SwipeableViews
                                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                                     index={this.state.value}
                                     onChangeIndex={this.handleChangeIndex}

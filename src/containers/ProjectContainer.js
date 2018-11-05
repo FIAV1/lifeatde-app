@@ -4,11 +4,11 @@ import Api from '../lib/Api';
 
 import {
     Grid,
-    CircularProgress
 } from '@material-ui/core';
 
 import Project from '../components/Project';
-import { showNotifier } from '../components/Notifier';
+import Notifier, { showNotifier } from '../components/Notifier';
+import Loader from '../components/Loader';
 
 class ProjectContainer extends Component {
     state = {
@@ -24,14 +24,16 @@ class ProjectContainer extends Component {
                 team: response.included,
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.project.attributes.title}`);
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            showNotifier({messages: errors, variant: 'error'})
+        });
     }
 
     render() {
         const { loading, project, team} = this.state;
 
         if(loading) {
-            return <CircularProgress />
+            return <Loader notifier={<Notifier />} />
         }
 
         return(
@@ -39,6 +41,7 @@ class ProjectContainer extends Component {
                 <Grid item xs={12}>
                     <Project project={project} team={team} />
                 </Grid>
+                <Notifier />
             </Grid>
         );
     }

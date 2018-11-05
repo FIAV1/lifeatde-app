@@ -104,7 +104,7 @@ class AppContainer extends Component {
                         </ListItem>
                         <ListItem button onClick={() => history.push('/news')}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-newspaper')} />
+                                <Icon color="action" className={classNames(classes.icon, 'fas fa-bullhorn')} />
                             </ListItemIcon>
                             <ListItemText primary="News" />
                         </ListItem>

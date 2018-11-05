@@ -37,7 +37,14 @@ class Api {
 
     static xhr (route, params, verb) {
         const scope = '/api'
-        const url = `${scope}${route}`
+        let url;
+        
+        if(params === 'none'){
+            url = `${route}`;
+            params = null;
+        } else {
+            url = `${scope}${route}`
+        }
 
         let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null)
 
@@ -67,6 +74,32 @@ class Api {
             }
 
             return response.json().then(error => {throw error});
+        });
+    }
+
+    static download(route) {
+        let options = {
+            method: 'GET',
+            headers: Api.headers()
+        }
+
+        return fetch(route, options).then(response => {
+            let error = {
+                errors: [{
+                    detail: 'C\'è stato un problema durante il download, riprova più tardi',
+                    status: 500,
+                }]
+            }
+
+            if(response.ok) {
+                try{
+                    return response.blob();
+                } catch(e) {
+                    throw error;
+                }
+            } else {
+                throw error;
+            }
         });
     }
 }

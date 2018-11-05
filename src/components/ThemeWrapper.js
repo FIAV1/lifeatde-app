@@ -23,7 +23,11 @@ const lightTheme = {
             main: red[700],
             dark: red[900],
         },
-        secondary: blue,
+        secondary: {
+            light: blue[500],
+            main: blue[700],
+            dark: blue[900]
+        },
         error: amber,
         contrastThreshold: 3,
         tonalOffset: 0.2,
@@ -41,7 +45,11 @@ const darkTheme = {
             main: red[700],
             dark: red[900],
         },
-        secondary: blue,
+        secondary: {
+            light: blue[500],
+            main: blue[700],
+            dark: blue[900]
+        },
         error: amber,
         contrastThreshold: 3,
         tonalOffset: 0.2,

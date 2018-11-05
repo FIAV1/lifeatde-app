@@ -3,7 +3,6 @@ import Api from '../lib/Api';
 
 import {
     withStyles,
-    CircularProgress,
     Typography,
     Chip,
     Divider,
@@ -11,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import LocalStorage from '../lib/LocalStorage';
+import Loader from '../components/Loader';
 import Notifier, { showNotifier } from '../components/Notifier';
 
 import NewsCardList from '../components/NewsCardList';
@@ -48,7 +48,7 @@ class NewsCardsContainer extends Component {
         const { classes } = this.props;
 
         if(loading) {
-            return <CircularProgress size={80} color='primary'/>
+            return <Loader notifier={<Notifier />} />
         }
 
         return (

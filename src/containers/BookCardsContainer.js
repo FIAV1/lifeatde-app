@@ -9,11 +9,11 @@ import {
 
 import Api from '../lib/Api';
 import LocalStorage from "../lib/LocalStorage";
-import {showNotifier} from "../components/Notifier";
+import Notifier, {showNotifier} from "../components/Notifier";
 import BookCardList from '../components/BookCardList';
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import CenteredCircularProgress from "../components/CenteredCircularProgress";
+import Loader from "../components/Loader";
 
 class BookCardsContainer extends Component {
 
@@ -47,7 +47,7 @@ class BookCardsContainer extends Component {
 
         if (loading) {
             return (
-                <CenteredCircularProgress size={80}/>
+                <Loader notifier={<Notifier />} />
             )
         }
 
@@ -66,6 +66,7 @@ class BookCardsContainer extends Component {
                 </Typography>
                 <Divider className={classes.hr} />
                 <BookCardList books={books} users={users}/>
+                <Notifier />
             </div>
         )
     }
