@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Api from '../lib/Api';
+import Api from '../../lib/Api';
 
 import {
     Grid,
@@ -13,7 +13,7 @@ import {
 
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 
-import Notifier, { showNotifier } from './Notifier';
+import Notifier, { showNotifier } from '../common/Notifier';
 
 class DocumentList extends Component {
     downloadFile = (url, filename) => () => {

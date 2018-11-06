@@ -16,8 +16,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import Authentication from '../lib/Authentication';
-import Notifier, { showNotifier } from '../components/Notifier';
-import Footer from '../components/Footer';
+import Notifier, { showNotifier } from '../components/common/Notifier';
+import Footer from '../components/common/Footer';
 
 class Login extends Component {
 	state = {

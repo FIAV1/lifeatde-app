@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import 'moment/locale/it';
 
-import LocalStorage from '../lib/LocalStorage';
+import LocalStorage from '../../lib/LocalStorage';
 
-import history from '../lib/history';
+import history from '../../lib/history';
 
-import { getInitials } from '../lib/Utils';
+import { getInitials } from '../../lib/Utils';
 
 import {
     withStyles,

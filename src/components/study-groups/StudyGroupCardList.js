@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Grid, Typography } from '@material-ui/core';
 
-import StudyGroupCard from '../components/StudyGroupCard';
+import StudyGroupCard from './StudyGroupCard';
 
 class StudyGroupCardList extends Component {
 

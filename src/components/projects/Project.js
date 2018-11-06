@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import LocalStorage from '../lib/LocalStorage';
-import { getStatusColor } from '../lib/Utils';
+import LocalStorage from '../../lib/LocalStorage';
+import { getStatusColor } from '../../lib/Utils';
 
 import Moment from 'react-moment';
 import 'moment/locale/it';

@@ -9,11 +9,10 @@ class Api {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'dataType': 'application/json',
-            'X-Request-With': 'XMLHttpRequest',
         }
 
         if(user) {
-            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
+            headers['X-Authorization'] = `Bearer ${user.data.attributes.token}`;
         }
 
         return headers;
@@ -98,6 +97,7 @@ class Api {
                     throw error;
                 }
             } else {
+                
                 throw error;
             }
         });

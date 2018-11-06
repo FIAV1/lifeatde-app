@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import LocalStorage from '../lib/LocalStorage';
+import LocalStorage from '../../lib/LocalStorage';
 
 import {
     MuiThemeProvider,

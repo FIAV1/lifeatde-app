@@ -6,9 +6,9 @@ import {
     Grid,
 } from '@material-ui/core';
 
-import Project from '../components/Project';
-import Notifier, { showNotifier } from '../components/Notifier';
-import Loader from '../components/Loader';
+import Project from '../components/projects/Project';
+import Notifier, { showNotifier } from '../components/common/Notifier';
+import Loader from '../components/common/Loader';
 
 class ProjectContainer extends Component {
     state = {

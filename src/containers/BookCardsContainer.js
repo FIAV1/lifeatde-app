@@ -9,11 +9,11 @@ import {
 
 import Api from '../lib/Api';
 import LocalStorage from "../lib/LocalStorage";
-import Notifier, {showNotifier} from "../components/Notifier";
-import BookCardList from '../components/BookCardList';
+import Notifier, {showNotifier} from "../components/common/Notifier";
+import BookCardList from '../components/books/BookCardList';
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Loader from "../components/Loader";
+import Loader from "../components/common/Loader";
 
 class BookCardsContainer extends Component {
 
