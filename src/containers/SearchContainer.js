@@ -13,14 +13,14 @@ import {
 } from '@material-ui/core';
 
 import SwipeableViews from 'react-swipeable-views';
-import Loader from '../components/Loader';
+import Loader from '../components/common/Loader';
 import SearchIcon from '@material-ui/icons/Search';
 
-import Notifier, {showNotifier} from '../components/Notifier';
+import Notifier, {showNotifier} from '../components/common/Notifier';
 
-import ProjectCardList from '../components/ProjectCardList';
-import StudyGroupCardList from '../components/StudyGroupCardList';
-import BookCardList from "../components/BookCardList";
+import ProjectCardList from '../components/projects/ProjectCardList';
+import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
+import BookCardList from "../components/books/BookCardList";
 
 function TabContainer({ children, dir }) {
   return (

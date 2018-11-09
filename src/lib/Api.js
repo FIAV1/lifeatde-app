@@ -98,6 +98,7 @@ class Api {
                     throw error;
                 }
             } else {
+                
                 throw error;
             }
         });

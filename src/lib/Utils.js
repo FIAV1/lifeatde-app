@@ -4,7 +4,6 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 import purple from '@material-ui/core/colors/purple';
 import orange from '@material-ui/core/colors/orange';
-import indigo from '@material-ui/core/colors/indigo';
 import brown from '@material-ui/core/colors/brown';
 
 
@@ -20,7 +19,9 @@ const getStatusColor = status => {
             return blue[700]; 
             
         case 'Terminato':
-            return red[700]; 
+            return red[700];
+        default:
+            break;
     }
 };
 
@@ -47,6 +48,8 @@ const getCourseColor = course => {
 
         case 'Ingegneria Meccanica LM':
             return orange[700];
+        default:
+            break;
     }
 };
 

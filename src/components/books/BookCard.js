@@ -20,13 +20,13 @@ import {
 } from '@material-ui/core';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import LocalStorage from "../lib/LocalStorage";
+import LocalStorage from "../../lib/LocalStorage";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
-import history from '../lib/history'
+import history from '../../lib/history'
 import green from '@material-ui/core/colors/green';
-import {getInitials} from "../lib/Utils";
-import imagePlaceholder from '../img/image-placeholder.jpg';
+import {getInitials} from "../../lib/Utils";
+import imagePlaceholder from '../../img/image-placeholder.jpg';
 
 class BookCard extends Component {
     state = {

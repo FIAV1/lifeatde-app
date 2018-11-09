@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 
 import registerServiceWorker from './registerServiceWorker';
 import history from './lib/history'
-import ThemeWrapper from './components/ThemeWrapper';
+import ThemeWrapper from './components/common/ThemeWrapper';
 import App from './App';
 import './index.css';
 

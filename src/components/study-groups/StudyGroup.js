@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import 'moment/locale/it';
 
-import { getInitials, getCourseColor } from '../lib/Utils';
+import { getInitials, getCourseColor } from '../../lib/Utils';
 
 import {
     withStyles,

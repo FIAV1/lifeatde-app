@@ -5,7 +5,7 @@ import {
     Typography,
     Grid
 } from '@material-ui/core'
-import notfound from '../img/404.png'
+import notfound from '../../img/404.png'
 
 class NoMatch extends Component {
     render() {

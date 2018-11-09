@@ -10,10 +10,10 @@ import {
 } from '@material-ui/core';
 
 import LocalStorage from '../lib/LocalStorage';
-import Loader from '../components/Loader';
-import Notifier, { showNotifier } from '../components/Notifier';
+import Loader from '../components/common/Loader';
+import Notifier, { showNotifier } from '../components/common/Notifier';
 
-import NewsCardList from '../components/NewsCardList';
+import NewsCardList from '../components/news/NewsCardList';
 
 
 import { getCourseColor } from '../lib/Utils';

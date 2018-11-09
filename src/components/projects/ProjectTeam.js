@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getInitials } from '../lib/Utils';
+import { getInitials } from '../../lib/Utils';
 
 import {
     List,

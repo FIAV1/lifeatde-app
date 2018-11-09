@@ -12,10 +12,10 @@ import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import LocalStorage from '../lib/LocalStorage';
-import Notifier, { showNotifier } from '../components/Notifier';
+import Notifier, { showNotifier } from '../components/common/Notifier';
 
-import StudyGroupCardList from '../components/StudyGroupCardList';
-import Loader from '../components/Loader';
+import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
+import Loader from '../components/common/Loader';
 
 class StudyGroupCardsContainer extends Component {
 

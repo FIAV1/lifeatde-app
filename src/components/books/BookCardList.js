@@ -4,7 +4,7 @@ import {
     Grid,
     Typography,
 } from '@material-ui/core';
-import BookCard from '../components/BookCard';
+import BookCard from './BookCard';
 
 
 class BookCardList extends Component {

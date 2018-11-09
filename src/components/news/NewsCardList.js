@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Grid, Typography } from '@material-ui/core';
 
-import NewsCard from '../components/NewsCard';
+import NewsCard from './NewsCard';
 
 class NewsCardList extends Component {
 

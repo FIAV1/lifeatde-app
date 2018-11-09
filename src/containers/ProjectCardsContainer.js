@@ -11,9 +11,9 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-import Notifier, { showNotifier } from '../components/Notifier';
-import ProjectCardList from '../components/ProjectCardList';
-import Loader from '../components/Loader';
+import Notifier, { showNotifier } from '../components/common/Notifier';
+import ProjectCardList from '../components/projects/ProjectCardList';
+import Loader from '../components/common/Loader';
 
 class ProjectCardsContainer extends Component {
     state = {
