@@ -4,7 +4,7 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 import purple from '@material-ui/core/colors/purple';
 import orange from '@material-ui/core/colors/orange';
-import brown from '@material-ui/core/colors/brown';
+import blueGrey from '@material-ui/core/colors/blueGrey';
 
 const getStatusColor = status => {
     switch (status) {
@@ -41,7 +41,7 @@ const getCourseColor = course => {
             return blue[700];
 
         case 'Ingegneria Civile':
-            return brown[700];
+            return blueGrey[700];
 
         case 'Ingegneria Meccanica LM':
             return orange[700];

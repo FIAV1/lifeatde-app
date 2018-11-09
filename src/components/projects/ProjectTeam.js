@@ -11,6 +11,9 @@ import {
     Avatar,
 } from '@material-ui/core';
 
+
+import Anchor from "../common/Anchor";
+
 class ProjectTeam extends Component {
     render() {
         const { team } = this.props;
@@ -20,18 +23,22 @@ class ProjectTeam extends Component {
                 return (
                     <div key={member.id}>
                         <ListItem>
-                            <Avatar
-                                alt={`${member.attributes.firstname} ${member.attributes.lastname}`}
-                                src={member.attributes.avatar.id ? member.attributes.avatar.url : null}
-                            >
-                                {member.attributes.avatar.id === null ? getInitials(member.attributes.firstname, member.attributes.lastname) : null}
-                            </Avatar>
+                            <Anchor to={`/users/${member.id}`}>
+                                <Avatar
+                                    alt={`${member.attributes.firstname} ${member.attributes.lastname}`}
+                                    src={member.attributes.avatar.id ? member.attributes.avatar.url : null}
+                                >
+                                    {member.attributes.avatar.id === null ? getInitials(member.attributes.firstname, member.attributes.lastname) : null}
+                                </Avatar>
+                            </Anchor>
                             <ListItemText
                                 primary={
                                     <div>
-                                        <Typography variant="body1" noWrap>
-                                            {member.attributes.firstname} {member.attributes.lastname}
-                                        </Typography>
+                                        <Anchor to={`/users/${member.id}`}>
+                                            <Typography variant="body1" noWrap>
+                                                {member.attributes.firstname} {member.attributes.lastname}
+                                            </Typography>
+                                        </Anchor>
                                     </div>
                                 }
                                 secondary={member.attributes.admin ? 'Admin' : null}
