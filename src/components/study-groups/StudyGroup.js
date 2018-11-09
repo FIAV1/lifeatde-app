@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 
 import ReactMarkdown from 'react-markdown';
+import Anchor from "../common/Anchor";
 
 class StudyGroup extends Component {
 
@@ -48,13 +49,20 @@ class StudyGroup extends Component {
                         <Divider />
                         <CardHeader 
                             avatar={
-                                <Avatar
-                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                    src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
-                                >
-                                    {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                                </Avatar>                                }
-                            title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                <Anchor to={`/users/${admin.id}`}>
+                                    <Avatar
+                                        alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                        src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                                    >
+                                        {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                    </Avatar>
+                                </Anchor>
+                            }
+                            title={
+                                <Anchor to={`/users/${admin.id}`}>
+                                    {admin.attributes.firstname} {admin.attributes.lastname}
+                                </Anchor>
+                            }
                             subheader="Admin"
                         />
                     </Card>
