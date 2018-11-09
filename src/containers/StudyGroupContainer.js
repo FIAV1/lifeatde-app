@@ -9,6 +9,8 @@ import {
 
 import StudyGroup from '../components/study-groups/StudyGroup';
 import { showNotifier } from '../components/common/Notifier';
+import  Loader  from '../components/Loader';
+import Notifier  from '../components/Notifier';
 
 class StudyGroupContainer extends Component {
     state = {
@@ -33,7 +35,7 @@ class StudyGroupContainer extends Component {
         const { loading, studyGroup, admins} = this.state;
 
         if(loading) {
-            return <CircularProgress />
+            return <Loader notifier={<Notifier />} />
         }
 
         return(
