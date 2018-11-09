@@ -6,9 +6,6 @@ import purple from '@material-ui/core/colors/purple';
 import orange from '@material-ui/core/colors/orange';
 import brown from '@material-ui/core/colors/brown';
 
-
-
-
 const getStatusColor = status => {
     switch (status) {
 
