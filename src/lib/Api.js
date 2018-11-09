@@ -9,10 +9,11 @@ class Api {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'dataType': 'application/json',
+            'X-Request-With': 'XMLHttpRequest',
         }
 
         if(user) {
-            headers['X-Authorization'] = `Bearer ${user.data.attributes.token}`;
+            headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
         }
 
         return headers;
