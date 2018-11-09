@@ -28,7 +28,7 @@ class DocumentList extends Component {
             }).catch(({errors}) => {
                 showNotifier({messages: errors, variant: 'error'});
             });
-    }
+    };
 
     render() {
         const { documents } = this.props;

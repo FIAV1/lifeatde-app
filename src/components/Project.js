@@ -78,7 +78,7 @@ class Project extends Component {
 
     getAdmin = team => {
         return team.find(member => member.attributes.admin);
-    }
+    };
 
     render() {
         const { classes, project, team } = this.props;
