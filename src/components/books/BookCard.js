@@ -21,14 +21,14 @@ import {
 } from '@material-ui/core';
 
 import MoreVertIcon from '@material-ui/icons/MoreHoriz';
-import LocalStorage from "../lib/LocalStorage";
+import LocalStorage from "../../lib/LocalStorage";
 import Moment from "react-moment";
-import Anchor from "./Anchor";
-import history from '../lib/history'
+import Anchor from "../common/Anchor";
+import history from '../../lib/history'
 import green from '@material-ui/core/colors/green';
-import { getCourseColor, getInitials } from "../lib/Utils";
-import imagePlaceholder from '../img/image-placeholder.jpg';
-import Api from "../lib/Api";
+import { getCourseColor, getInitials } from "../../lib/Utils";
+import imagePlaceholder from '../../img/image-placeholder.jpg';
+import Api from "../../lib/Api";
 
 class BookCard extends Component {
 
