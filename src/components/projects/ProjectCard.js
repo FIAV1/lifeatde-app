@@ -26,12 +26,13 @@ import {
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CategoriesMenu from './CategoriesMenu';
+import Anchor from "../common/Anchor";
 
 class ProjectCard extends Component {
     state = {
         anchorEl: null,
         authUser: LocalStorage.get('user').data,
-    }
+    };
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -51,14 +52,20 @@ class ProjectCard extends Component {
                 <Card>
                     <CardHeader
                         avatar={
-                            <Avatar
-                                alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
-                            >
-                                {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                            </Avatar>
+                            <Anchor to={`/users/${admin.id}`}>
+                                <Avatar
+                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                    src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                                >
+                                    {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                </Avatar>
+                            </Anchor>
                         }
-                        title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                        title={
+                            <Anchor to={`/users/${admin.id}`}>
+                                {admin.attributes.firstname} {admin.attributes.lastname}
+                            </Anchor>
+                        }
                         subheader={<Moment parse="YYYY-MM-DD HH:mm" locale="it" fromNow>{project.attributes.created_at}</Moment>}
                         action={
                             this.state.authUser.id === admin.id ?

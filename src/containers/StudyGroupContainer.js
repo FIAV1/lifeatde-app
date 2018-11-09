@@ -4,20 +4,19 @@ import Api from '../lib/Api';
 
 import {
     Grid,
-    CircularProgress
 } from '@material-ui/core';
 
 import StudyGroup from '../components/study-groups/StudyGroup';
 import { showNotifier } from '../components/common/Notifier';
-import  Loader  from '../components/Loader';
-import Notifier  from '../components/Notifier';
+import Loader from '../components/common/Loader';
+import Notifier from '../components/common/Notifier';
 
 class StudyGroupContainer extends Component {
     state = {
         loading: true,
         studyGroup: null,
         admins: null
-    }
+    };
 
     componentDidMount() {
         Api.get('/study_groups/' + this.props.match.params.id).then(response => {

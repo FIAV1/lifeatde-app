@@ -5,6 +5,7 @@ import {
     Button,
     Menu,
     MenuItem,
+    Typography,
 } from '@material-ui/core';
 
 class CategoriesMenu extends Component {
@@ -33,7 +34,7 @@ class CategoriesMenu extends Component {
                     variant="outlined"
                     size="small"
                 >
-                    Categorie
+                    <Typography variant="overline" style={{lineHeight: 0}}>Categorie</Typography>
                     <div className={classes.div}>
                         {elements.length}
                     </div>

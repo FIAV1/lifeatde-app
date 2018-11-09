@@ -26,13 +26,14 @@ import {
 } from '@material-ui/core';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Anchor from "../common/Anchor";
 
 class StudyGroupCard extends Component {
 
     state = {
         anchorEl: null,
         authUser: LocalStorage.get('user').data,
-    }
+    };
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -52,14 +53,20 @@ class StudyGroupCard extends Component {
                 <Card>
                     <CardHeader
                         avatar={
-                            <Avatar
-                                alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
-                            >
-                                {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                            </Avatar>
+                            <Anchor to={`/users/${admin.id}`}>
+                                <Avatar
+                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                                    src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                                >
+                                    {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                </Avatar>
+                            </Anchor>
                         }
-                        title={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                        title={
+                            <Anchor to={`/users/${admin.id}`}>
+                                {admin.attributes.firstname} {admin.attributes.lastname}
+                            </Anchor>
+                        }
                         subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{studyGroup.attributes.created_at}</Moment>}
                         action={
                             this.state.authUser.id === admin.id ?

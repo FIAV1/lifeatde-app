@@ -3,14 +3,14 @@ import history from './history';
 
 class Api {
     static headers() {
-        let user = LocalStorage.get('user')
+        let user = LocalStorage.get('user');
 
         let headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'dataType': 'application/json',
             'X-Request-With': 'XMLHttpRequest',
-        }
+        };
 
         if(user) {
             headers['Authorization'] = `Bearer ${user.data.attributes.token}`;
@@ -36,7 +36,7 @@ class Api {
     }
 
     static xhr (route, params, verb) {
-        const scope = '/api'
+        const scope = '/api';
         let url;
         
         if(params === 'none'){
@@ -46,9 +46,9 @@ class Api {
             url = `${scope}${route}`
         }
 
-        let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null)
+        let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null);
 
-        options.headers = Api.headers()
+        options.headers = Api.headers();
 
         return fetch(url, options).then( response => {
 
@@ -69,7 +69,7 @@ class Api {
                         }]
                 };
                 LocalStorage.delete('user');
-                history.push('/login')
+                history.push('/login');
                 throw error;
             }
 
@@ -81,15 +81,14 @@ class Api {
         let options = {
             method: 'GET',
             headers: Api.headers()
-        }
-
+        };
         return fetch(route, options).then(response => {
             let error = {
                 errors: [{
                     detail: 'C\'è stato un problema durante il download, riprova più tardi',
-                    status: 500,
+                    status: response.status,
                 }]
-            }
+            };
 
             if(response.ok) {
                 try{
