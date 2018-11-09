@@ -24,7 +24,7 @@ class BookCardsContainer extends Component {
     };
 
     componentDidMount() {
-        document.title =  'LifeAtDe | Libri'
+        document.title =  'LifeAtDe | Libri';
 
         const courseId = LocalStorage.get('user').data.relationships.course.data.id;
 

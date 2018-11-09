@@ -26,7 +26,7 @@ import {
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CategoriesMenu from './CategoriesMenu';
-import Anchor from "./Anchor";
+import Anchor from "../common/Anchor";
 
 class ProjectCard extends Component {
     state = {
