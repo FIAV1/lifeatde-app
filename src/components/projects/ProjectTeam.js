@@ -34,11 +34,11 @@ class ProjectTeam extends Component {
                             <ListItemText
                                 primary={
                                     <div>
-                                        <Anchor to={`/users/${member.id}`}>
-                                            <Typography variant="body1" noWrap>
+                                        <Typography variant="body1" noWrap>
+                                            <Anchor to={`/users/${member.id}`}>
                                                 {member.attributes.firstname} {member.attributes.lastname}
-                                            </Typography>
-                                        </Anchor>
+                                            </Anchor>
+                                        </Typography>
                                     </div>
                                 }
                                 secondary={member.attributes.admin ? 'Admin' : null}
