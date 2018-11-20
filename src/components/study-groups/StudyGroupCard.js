@@ -56,9 +56,9 @@ class StudyGroupCard extends Component {
                             <Anchor to={`/users/${admin.id}`}>
                                 <Avatar
                                     alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                    src={admin.attributes.avatar.id ? admin.attributes.avatar.url : null}
+                                    src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
                                 >
-                                    {admin.attributes.avatar.id === null ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                    {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
                                 </Avatar>
                             </Anchor>
                         }

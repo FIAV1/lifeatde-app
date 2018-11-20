@@ -11,9 +11,10 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-import Notifier, { showNotifier } from '../components/common/Notifier';
 import ProjectCardList from '../components/projects/ProjectCardList';
 import Loader from '../components/common/Loader';
+
+import { withSnackbar } from 'notistack';
 
 class ProjectCardsContainer extends Component {
     state = {
@@ -32,16 +33,26 @@ class ProjectCardsContainer extends Component {
                 loading: false
             });
         }).catch(({errors}) => {
-            showNotifier({ messages: errors, variant: 'error' })
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
+        });
+    }
+
+    removeProject = (projectId, adminId) => {
+        let projects = this.state.projects.filter(project => project.id !== projectId);
+        let users = this.state.users.filter(user => user.id !== adminId);
+
+        this.setState({
+            projects,
+            users,
         });
     }
 
     render() {
         const { loading, projects, users } = this.state;
-        const { classes } = this.props;
+        const { classes, history } = this.props;
 
         if(loading) {
-            return <Loader component={<Notifier />} />
+            return <Loader />
         }
 
         return(
@@ -49,7 +60,7 @@ class ProjectCardsContainer extends Component {
                 <Typography className={classes.header} variant="h4">
                     Progetti
                     <div>
-                        <Button variant="fab" mini color="primary" aria-label="Aggiungi" className={classes.button}>
+                        <Button onClick={() => history.push('/projects/new')} variant="fab" mini color="primary" aria-label="Aggiungi" className={classes.button}>
                             <AddIcon />
                         </Button>
                         <Button variant="fab" mini color="primary" aria-label="Filtra" className={classes.button}>
@@ -58,8 +69,7 @@ class ProjectCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <ProjectCardList projects={projects} users={users} />
-                <Notifier />
+                <ProjectCardList projects={projects} users={users} removeProject={this.removeProject} />
             </div>
         );
     }
@@ -79,4 +89,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(ProjectCardsContainer);
+export default withSnackbar(withStyles(styles)(ProjectCardsContainer));

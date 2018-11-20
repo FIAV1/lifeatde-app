@@ -23,7 +23,7 @@ class ProjectCardList extends Component {
         return(
             <Grid container spacing={16}>
                 {
-                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} />)
+                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} removeProject={this.props.removeProject} />)
                 }
             </Grid>
 

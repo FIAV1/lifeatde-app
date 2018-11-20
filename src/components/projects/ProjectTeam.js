@@ -16,36 +16,63 @@ import Anchor from "../common/Anchor";
 
 class ProjectTeam extends Component {
     render() {
-        const { team } = this.props;
+        const { admin, collaborators } = this.props;
         return(
             <List>
-            {team.map( (member, index) => {
+                <ListItem>
+                    <Anchor to={`/users/${admin.id}`}>
+                        <Avatar
+                            alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
+                            src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
+                        >
+                            {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                        </Avatar>
+                    </Anchor>
+                    <ListItemText
+                        primary={
+                            <div>
+                                <Anchor to={`/users/${admin.id}`}>
+                                    <Typography variant="body1" noWrap>
+                                        {admin.attributes.firstname} {admin.attributes.lastname}
+                                    </Typography>
+                                </Anchor>
+                            </div>
+                        }
+                        secondary={'Admin'}
+                    />
+                </ListItem>
+                { 
+                    collaborators.length > 0 ?
+                        <Divider inset component="li" />
+                    :
+                        null
+                }
+            {collaborators.map( (collaborator, index) => {
                 return (
-                    <div key={member.id}>
+                    <div key={collaborator.id}>
                         <ListItem>
-                            <Anchor to={`/users/${member.id}`}>
+                            <Anchor to={`/users/${collaborator.id}`}>
                                 <Avatar
-                                    alt={`${member.attributes.firstname} ${member.attributes.lastname}`}
-                                    src={member.attributes.avatar.id ? member.attributes.avatar.url : null}
+                                    alt={`${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`}
+                                    src={collaborator.attributes.avatar ? collaborator.attributes.avatar.url : null}
                                 >
-                                    {member.attributes.avatar.id === null ? getInitials(member.attributes.firstname, member.attributes.lastname) : null}
+                                    {!collaborator.attributes.avatar ? getInitials(collaborator.attributes.firstname, collaborator.attributes.lastname) : null}
                                 </Avatar>
                             </Anchor>
                             <ListItemText
                                 primary={
                                     <div>
-                                        <Anchor to={`/users/${member.id}`}>
+                                        <Anchor to={`/users/${collaborator.id}`}>
                                             <Typography variant="body1" noWrap>
-                                                {member.attributes.firstname} {member.attributes.lastname}
+                                                {collaborator.attributes.firstname} {collaborator.attributes.lastname}
                                             </Typography>
                                         </Anchor>
                                     </div>
                                 }
-                                secondary={member.attributes.admin ? 'Admin' : null}
                             />
                         </ListItem>
                         { 
-                            index !== team.length - 1 ?
+                            index !== collaborators.length - 1 ?
                                 <Divider inset component="li" />
                             :
                                 null

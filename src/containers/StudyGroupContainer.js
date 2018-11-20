@@ -7,9 +7,9 @@ import {
 } from '@material-ui/core';
 
 import StudyGroup from '../components/study-groups/StudyGroup';
-import { showNotifier } from '../components/common/Notifier';
 import Loader from '../components/common/Loader';
-import Notifier from '../components/common/Notifier';
+
+import { withSnackbar } from 'notistack';
 
 class StudyGroupContainer extends Component {
     state = {
@@ -26,7 +26,7 @@ class StudyGroupContainer extends Component {
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.studyGroup.attributes.title}`);
         }).catch(({errors}) => {
-            showNotifier({messages: errors, variant: 'error'})
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
     }
 
@@ -34,7 +34,7 @@ class StudyGroupContainer extends Component {
         const { loading, studyGroup, admins} = this.state;
 
         if(loading) {
-            return <Loader notifier={<Notifier />} />
+            return <Loader />
         }
 
         return(
@@ -47,4 +47,4 @@ class StudyGroupContainer extends Component {
     }
 }
 
-export default StudyGroupContainer;
+export default withSnackbar(StudyGroupContainer);
