@@ -6,31 +6,31 @@ import {
     Grid,
 } from '@material-ui/core';
 
-import Project from '../components/projects/Project';
+import Book from '../components/books/Book';
 import Notifier, { showNotifier } from '../components/common/Notifier';
 import Loader from '../components/common/Loader';
 
-class ProjectContainer extends Component {
+class BookContainer extends Component {
     state = {
         loading: true,
-        project: null,
-        team: null
+        book: null,
+        user: null,
     };
 
     componentDidMount() {
-        Api.get('/projects/' + this.props.match.params.id).then(response => {
+        Api.get('/books/' + this.props.match.params.id).then(response => {
             this.setState({
-                project: response.data,
-                team: response.included,
+                book: response.data,
+                user: response.included.shift(),
                 loading: false
-            }, () => document.title = `LifeAtDe | ${this.state.project.attributes.title}`);
+            }, () => document.title = `LifeAtDe | ${this.state.book.attributes.title}`);
         }).catch(({errors}) => {
             showNotifier({messages: errors, variant: 'error'})
         });
     }
 
     render() {
-        const { loading, project, team} = this.state;
+        const { loading, book, user} = this.state;
 
         if(loading) {
             return <Loader notifier={<Notifier />} />
@@ -39,7 +39,7 @@ class ProjectContainer extends Component {
         return(
             <Grid container>
                 <Grid item xs={12}>
-                    <Project project={project} team={team} />
+                    <Book book={book} user={user} />
                 </Grid>
                 <Notifier />
             </Grid>
@@ -47,4 +47,4 @@ class ProjectContainer extends Component {
     }
 }
 
-export default ProjectContainer;
+export default BookContainer;

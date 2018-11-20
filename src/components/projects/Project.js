@@ -161,17 +161,21 @@ class Project extends Component {
                                 <Grid item xs={12}>
                                     <Typography variant="overline">Contatta l'amministratore</Typography>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    {
-                                        this.getAdmin(team).attributes.phone
-                                        ? <IconButton href={`tel:${this.getAdmin(team).attributes.phone}`} aria-label="telefono">
+                                {
+                                    this.getAdmin(team).attributes.phone
+                                    ? <Grid item xs={12}>
+                                        <IconButton href={`tel:${this.getAdmin(team).attributes.phone}`} aria-label="telefono">
                                             <PhoneIcon />
                                         </IconButton>
-                                        : null
-                                    }
+                                            <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${this.getAdmin(team).attributes.phone}`}</Typography>
+                                    </Grid>
+                                    : null
+                                }
+                                <Grid item xs={12}>
                                     <IconButton href={`mailto:${this.getAdmin(team).attributes.email}`} aria-label="email">
                                         <EmailIcon />
                                     </IconButton>
+                                    <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${this.getAdmin(team).attributes.email}`}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -256,6 +260,13 @@ const styles = theme => ({
     delete: {
         marginLeft: theme.spacing.unit,
     },
-})
+    contactInfo: {
+        display: 'inline-flex',
+        [theme.breakpoints.down('xs')]: {
+            display: 'block',
+            paddingLeft: '12px',
+        }
+    }
+});
 
 export default withStyles(styles)(Project);
