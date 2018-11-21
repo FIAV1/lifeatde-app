@@ -95,14 +95,13 @@ class Api {
                 }]
             };
 
-            if(response.ok) {
+            if(response.redirected) {
                 try{
-                    return response.blob();
+                    return response.url;
                 } catch(e) {
                     throw error;
                 }
             } else {
-                
                 throw error;
             }
         });

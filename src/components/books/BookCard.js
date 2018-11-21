@@ -17,94 +17,83 @@ import {
     GridList,
     GridListTile,
     Typography,
-    Menu,
+    Menu, ListItemIcon, ListItemText,
 } from '@material-ui/core';
 
-import MoreVertIcon from '@material-ui/icons/MoreHoriz';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import LocalStorage from "../../lib/LocalStorage";
 import Moment from "react-moment";
 import Anchor from "../common/Anchor";
+import PriceChip from "./PriceChip";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import history from '../../lib/history'
-import green from '@material-ui/core/colors/green';
-import { getCourseColor, getInitials } from "../../lib/Utils";
+import { getCourseColor, getInitials, createPhotoTiles } from "../../lib/Utils";
 import imagePlaceholder from '../../img/image-placeholder.jpg';
 import Api from "../../lib/Api";
 
 class BookCard extends Component {
 
-    getPhotoTiles = () => {
-        if (this.props.book.attributes.photos) {
-            return this.props.book.attributes.photos
-                .slice(0, 3)
-                .map((photo, index, array) => {
-                    let cols = 3;
-                    switch (array.length) {
-                        case 2:
-                            index === 0 ? cols = 2 : cols = 1;
-                            break;
-                        case 3:
-                            cols = 1;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return {
-                        url: photo.url,
-                        id: photo.id,
-                        cols: cols,
-                        loading: true,
-                        file: null
-                    }
-                });
-        } else {
-            return null;
-        }
-    };
-
     state = {
-        authUser: LocalStorage.get('user'),
-        menuAnchorEl: null,
-        photoTiles: this.getPhotoTiles()
+        anchorEl: null,
+        photoTiles: null
     };
 
     handleClick = event => {
-        this.setState({ menuAnchorEl: event.currentTarget });
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleClose = () => {
-        this.setState({ menuAnchorEl: null });
+        this.setState({ anchorEl: null });
     };
 
-    handleDelete = () => {
-        /**
-         * @TODO Create a Dialog component for confirmation and display that dialog
-         */
+    handleSelected = value => () => {
+        this.setState({ anchorEl: null });
+
+        switch(value) {
+            case 'modifica':
+                console.log('modifica');
+                /**
+                 * @TODO Handle edit
+                 */
+                break;
+            case 'elimina':
+                console.log('elimina');
+                /**
+                 * @TODO Handle delete
+                 */
+                break;
+            default:
+                console.log('ciao');
+                break;
+        }
     };
 
     componentDidMount() {
-        let { photoTiles } = this.state;
+        let photoTiles = createPhotoTiles(this.props.book.attributes.photos, 3);
 
-        if (photoTiles) {
-            photoTiles.forEach((tile, index) => {
-                Api.download(tile.url)
-                    .then(file => {
-                        photoTiles[index].file = file;
-                        photoTiles[index].loading = false;
-                        this.setState({photoTiles});
-                    })
-                    .catch(() => {
-                        photoTiles[index].loading = false;
-                        this.setState({photoTiles});
-                    });
-            });
-        }
+        photoTiles.forEach((tile, index) => {
+            Api.download(tile.activeStorageUrl)
+                .then(fileUrl => {
+                    photoTiles[index].fileUrl = fileUrl;
+                    photoTiles[index].loading = false;
+                    this.setState({photoTiles});
+                })
+                .catch(() => {
+                    photoTiles[index].loading = false;
+                    this.setState({photoTiles});
+                });
+        });
     }
+
+    isAuthUserAdmin = () => {
+        return LocalStorage.get('user').data.id === this.props.user.id;
+    };
 
     render() {
         const { book, user, classes } = this.props;
-        const { menuAnchorEl, photoTiles } = this.state;
-        const open = Boolean(menuAnchorEl);
+        const { anchorEl, photoTiles } = this.state;
+        const open = Boolean(anchorEl);
 
         return (
             <Grid item xs={12} md={6} xl={4}>
@@ -127,65 +116,76 @@ class BookCard extends Component {
                         }
                         subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{book.attributes.created_at}</Moment>}
                         action={
-                            this.state.authUser.id === user.id ?
-                                <IconButton
-                                    aria-label="Opzioni"
-                                    aria-owns={open ? 'options-menu' : null}
-                                    aria-haspopup="true"
-                                    onClick={this.handleClick}
-                                >
-                                    <MoreVertIcon/>
-                                </IconButton>
-                                :
-                                null
+                            this.isAuthUserAdmin()
+                                ? <div>
+                                    <IconButton
+                                        onClick={this.handleClick}
+                                        aria-owns={anchorEl ? 'options-menu' : null}
+                                        aria-haspopup="true"
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <Menu
+                                        id="options-menu"
+                                        anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={this.handleClose}
+                                    >
+                                        <MenuItem onClick={this.handleSelected('modifica')} value="modifica">
+                                            <ListItemIcon>
+                                                <EditIcon />
+                                            </ListItemIcon>
+                                            <ListItemText inset primary="Modifica" />
+                                        </MenuItem>
+                                        <MenuItem onClick={this.handleSelected('elimina')} value="elimina">
+                                            <ListItemIcon >
+                                                <DeleteIcon />
+                                            </ListItemIcon>
+                                            <ListItemText inset primary="Elimina" />
+                                        </MenuItem>
+                                    </Menu>
+                                </div>
+                                : null
                         }
                     />
                     <CardActionArea className={classes.cardContent} onClick={() => history.push(`/books/${book.id}`)}>
                         <CardContent>
                             <Typography noWrap gutterBottom variant="h6">{book.attributes.title}</Typography>
                             <Typography noWrap variant="body1">{book.attributes.description}</Typography>
-                            <div className={classes.listContainer}>
-                                <GridList className={classes.gridList} cellHeight={160} cols={3}>
+                                <div className={classes.gridListContainer}>
                                     { photoTiles ?
-                                        photoTiles.map(tile => {
-                                            if (tile.loading) {
-                                                return <div key={tile.id} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                                    <CircularProgress size={50}/>
-                                                </div>
-                                            }
-                                            if (tile.file) {
+                                        <GridList className={classes.gridList} cellHeight={160} cols={3}>
+                                            { photoTiles.map(tile => {
+                                                if (tile.loading) {
+                                                    return <div key={tile.id} style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <CircularProgress size={50}/>
+                                                    </div>
+                                                }
+                                                if (tile.fileUrl) {
+                                                    return <GridListTile key={tile.id} cols={tile.cols}>
+                                                        <img src={tile.fileUrl} alt={`book-pic-${tile.id}`}/>
+                                                    </GridListTile>
+                                                }
                                                 return <GridListTile key={tile.id} cols={tile.cols}>
-                                                    <img src={URL.createObjectURL(tile.file)} alt={`book-pic-${tile.id}`} />
+                                                    <img src={imagePlaceholder} alt='book-placeholder-img'/>
                                                 </GridListTile>
+                                            })
                                             }
-                                            return <GridListTile key={tile.id} cols={tile.cols}>
-                                                <img src={imagePlaceholder} alt='book-placeholder-img' />
-                                            </GridListTile>
-                                        })
-                                        :
-                                        <GridListTile cols={3}>
-                                            <img src={imagePlaceholder} alt='book-placeholder-img' />
-                                        </GridListTile>
+                                        </GridList>
+                                        : null
                                     }
-                                </GridList>
-                            </div>
+                                </div>
                         </CardContent>
                     </CardActionArea>
                     <Divider/>
                     <CardActions>
-                        <Chip key={book.attributes.course} style={{backgroundColor: getCourseColor(book.attributes.course)}} label={book.attributes.course}/>
-                        <Chip className={classes.priceChip} label={`${book.attributes.price} €`}/>
+                        <Chip className={classes.courseChip} style={{backgroundColor: getCourseColor(book.attributes.course)}} label={book.attributes.course}/>
+                        <PriceChip price={book.attributes.price} style={{marginLeft: 'auto'}}/>
                     </CardActions>
-
-                    <Menu
-                        id="options-menu"
-                        anchorEl={menuAnchorEl}
-                        open={open}
-                        onClose={this.handleClose}
-                    >
-                        <MenuItem onClick={() => history.push(`/books/${book.id}/edit`)}>Modifica</MenuItem>
-                        <MenuItem onClick={this.handleDelete}>Elimina</MenuItem>
-                    </Menu>
                 </Card>
             </Grid>
         );
@@ -197,18 +197,19 @@ const styles = theme => ({
     cardContent: {
         width: '100%'
     },
-    priceChip: {
-        marginLeft: 'auto',
-        backgroundColor: green[700],
-        color: 'white',
+    courseChip: {
+        color: theme.palette.common.white,
     },
-    listContainer: {
+    gridListContainer: {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
         marginTop: '16px',
+        [theme.breakpoints.up('md')]: {
+            height: '160px',
+        },
     },
     gridList: {
         width: '100%',

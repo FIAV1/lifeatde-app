@@ -50,6 +50,41 @@ const getCourseColor = course => {
     }
 };
 
+const createPhotoTiles = (photos, limit = null) => {
+    if (photos && limit) {
+        photos = photos.slice(0, limit)
+    }
+
+    if (photos) {
+        return photos.map((photo, index, array) => {
+            let cols = 1;
+            switch (array.length % 3) {
+                case 0:
+                    cols = 1;
+                    break;
+                case 1:
+                    index === array.length - 1 ? cols = 3 : cols = 1;
+                    break;
+                case 2:
+                    index === array.length - 2 ? cols = 2 : cols = 1;
+                    break;
+                default:
+                    break;
+            }
+
+            return {
+                id: photo.id,
+                activeStorageUrl: photo.url,
+                fileUrl: null,
+                cols: cols,
+                loading: true
+            }
+        });
+    } else {
+        return [];
+    }
+};
+
 const getInitials = (firstName, lastName) => {
     return firstName.charAt(0)+lastName.charAt(0)
 };
@@ -112,4 +147,5 @@ export {
     bytesToSize,
     formDataSerializer,
     getError,
+    createPhotoTiles
 }

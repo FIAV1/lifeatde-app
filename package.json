@@ -13,6 +13,7 @@
     "notistack": "^0.3.7",
     "react": "^16.6.1",
     "react-dom": "^16.4.2",
+    "react-images": "^0.5.19",
     "react-markdown": "^4.0.3",
     "react-material-ui-form-validator": "^2.0.2",
     "react-moment": "^0.8.2",

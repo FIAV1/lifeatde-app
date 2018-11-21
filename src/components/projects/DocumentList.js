@@ -17,10 +17,9 @@ import { withSnackbar } from 'notistack';
 class DocumentList extends Component {
     downloadFile = (url, filename) => () => {
         Api.download(url)
-            .then(file => {
-                const data = window.URL.createObjectURL(file);
+            .then(fileUrl => {
                 let link = window.document.createElement('a');
-                link.href = data;
+                link.href = fileUrl;
                 link.download = filename;
                 link.click();
                 link.remove();

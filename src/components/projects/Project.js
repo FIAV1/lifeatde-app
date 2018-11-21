@@ -218,6 +218,7 @@ class Project extends Component {
                                     <IconButton href={`mailto:${admin.attributes.email}`} aria-label="email">
                                         <EmailIcon />
                                     </IconButton>
+                                    <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${this.getAdmin(team).attributes.email}`}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -326,6 +327,13 @@ const styles = theme => ({
     chip: {
         margin: theme.spacing.unit,
     }
-})
+    contactInfo: {
+        display: 'inline-flex',
+        [theme.breakpoints.down('xs')]: {
+            display: 'block',
+            paddingLeft: '12px',
+        }
+    }
+});
 
 export default withSnackbar(withStyles(styles)(Project));

@@ -10,7 +10,8 @@ import StudyGroupCardsContainer from './containers/StudyGroupCardsContainer';
 import StudyGroupContainer from './containers/StudyGroupContainer';
 import NewsCardsContainer from './containers/NewsCardsContainer';
 import SearchContainer from './containers/SearchContainer';
-import BookCardsContainer from "./containers/BookCardsContainer";
+import BookCardsContainer from './containers/BookCardsContainer';
+import BookContainer from './containers/BookContainer';
 import PrivateRoute from './components/common/PrivateRoute';
 import NoMatch from './components/common/NoMatch';
 import ProjectNewContainer from './containers/ProjectNewContainer';
@@ -32,6 +33,7 @@ class App extends Component {
 					<PrivateRoute exact path='/news' component={NewsCardsContainer}/>
 					<PrivateRoute exact path='/search' component={SearchContainer}/>
 					<PrivateRoute exact path='/books' component={BookCardsContainer}/>
+                    <PrivateRoute exact path='/books/:id' component={BookContainer}/>
 					<PrivateRoute component={NoMatch} />
 				</Switch>
 			</AppContainer>
