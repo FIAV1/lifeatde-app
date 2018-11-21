@@ -103,9 +103,9 @@ class BookCard extends Component {
                             <Anchor to={`/users/${user.id}`}>
                                 <Avatar
                                     alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
-                                    src={user.attributes.avatar.id ? user.attributes.avatar.url : null}
+                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
                                 >
-                                    {user.attributes.avatar.id === null ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
+                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
                                 </Avatar>
                             </Anchor>
                         }

@@ -12,10 +12,11 @@ import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import LocalStorage from '../lib/LocalStorage';
-import Notifier, { showNotifier } from '../components/common/Notifier';
 
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import Loader from '../components/common/Loader';
+
+import { withSnackbar } from 'notistack';
 
 class StudyGroupCardsContainer extends Component {
 
@@ -37,7 +38,7 @@ class StudyGroupCardsContainer extends Component {
                 users: response.included,
             })
         }).catch(({errors}) => {
-            showNotifier({ messages: errors, variant: 'error' });
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
         });
 
         this.setState({
@@ -52,7 +53,7 @@ class StudyGroupCardsContainer extends Component {
         const {classes} = this.props;
 
         if(loading) {
-            return <Loader notifier={<Notifier />} />
+            return <Loader />
         }
 
         return (
@@ -70,7 +71,6 @@ class StudyGroupCardsContainer extends Component {
                 </Typography>
                 <Divider className={classes.hr} />
                 <StudyGroupCardList studyGroups={studyGroups} users={users}/>
-                <Notifier />
             </div>
         );
     }
@@ -92,4 +92,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(StudyGroupCardsContainer);
+export default withSnackbar(withStyles(styles)(StudyGroupCardsContainer));

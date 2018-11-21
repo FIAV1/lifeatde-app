@@ -7,44 +7,58 @@ import {
 } from '@material-ui/core';
 
 import Project from '../components/projects/Project';
-import Notifier, { showNotifier } from '../components/common/Notifier';
 import Loader from '../components/common/Loader';
+
+import { withSnackbar } from 'notistack';
 
 class ProjectContainer extends Component {
     state = {
         loading: true,
         project: null,
-        team: null
-    };
+        admin: null,
+        collaborators: null,
+    }
+    
+    getCollaborators = (collaborators, team) => {
+        let collaboratorsKey = collaborators.data.map(collaborator => collaborator.id);
+
+        return team.filter(member => collaboratorsKey.indexOf(member.id) > -1);
+    }
+
+    getAdmin = (admins, team) => {
+        let adminsKey = admins.data.map(admin => admin.id);
+
+        return team.filter(member => adminsKey.indexOf(member.id) > -1)[0];
+    }
 
     componentDidMount() {
         Api.get('/projects/' + this.props.match.params.id).then(response => {
             this.setState({
                 project: response.data,
-                team: response.included,
+                collaborators: this.getCollaborators(response.data.relationships.collaborators, response.included),
+                admin: this.getAdmin(response.data.relationships.admins, response.included),
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.project.attributes.title}`);
         }).catch(({errors}) => {
-            showNotifier({messages: errors, variant: 'error'})
+            errors.map(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
     }
 
     render() {
-        const { loading, project, team} = this.state;
+        const { loading, project, admin, collaborators} = this.state;
 
         if(loading) {
-            return <Loader notifier={<Notifier />} />
+            return <Loader />
         }
 
         return(
             <Grid container>
                 <Grid item xs={12}>
-                    <Project project={project} team={team} />
+                    <Project project={project} admin={admin} collaborators={collaborators} />
                 </Grid>
-                <Notifier />
             </Grid>
         );
     }
 }
 
-export default ProjectContainer;
+export default withSnackbar(ProjectContainer);

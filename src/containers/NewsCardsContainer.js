@@ -11,12 +11,12 @@ import {
 
 import LocalStorage from '../lib/LocalStorage';
 import Loader from '../components/common/Loader';
-import Notifier, { showNotifier } from '../components/common/Notifier';
 
 import NewsCardList from '../components/news/NewsCardList';
 
-
 import { getCourseColor } from '../lib/Utils';
+
+import { withSnackbar } from 'notistack';
 
 class NewsCardsContainer extends Component {
 
@@ -36,7 +36,7 @@ class NewsCardsContainer extends Component {
                 news: response.data,
             })
         }).catch(({errors}) => {
-            showNotifier({ messages: errors, variant: 'error' });
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
         });
 
         this.setState({
@@ -51,7 +51,7 @@ class NewsCardsContainer extends Component {
         const { classes } = this.props;
 
         if(loading) {
-            return <Loader notifier={<Notifier />} />
+            return <Loader />
         }
 
         return (
@@ -76,7 +76,6 @@ class NewsCardsContainer extends Component {
                 </Grid>
                 <Divider className={classes.hr} />
                 <NewsCardList newsList={news}/>
-                <Notifier />
             </div>
         );
     }
@@ -105,4 +104,4 @@ const styles = theme => ({
     }
 });
 
-export default withStyles(styles)(NewsCardsContainer);
+export default withSnackbar(withStyles(styles)(NewsCardsContainer));

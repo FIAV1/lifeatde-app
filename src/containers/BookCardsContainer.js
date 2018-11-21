@@ -9,11 +9,11 @@ import {
 
 import Api from '../lib/Api';
 import LocalStorage from "../lib/LocalStorage";
-import Notifier, {showNotifier} from "../components/common/Notifier";
 import BookCardList from '../components/books/BookCardList';
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Loader from "../components/common/Loader";
+import { withSnackbar } from 'notistack';
 
 class BookCardsContainer extends Component {
 
@@ -28,17 +28,15 @@ class BookCardsContainer extends Component {
 
         const courseId = LocalStorage.get('user').data.relationships.course.data.id;
 
-        Api.get(`/courses/${courseId}/books`)
-            .then(
-                response => {
-                    this.setState({
-                        books: response.data,
-                        users: response.included,
-                        loading: false
-                    });
-                }
-            )
-            .catch(({errors}) => showNotifier({messages: errors, variant: 'error'}))
+        Api.get(`/courses/${courseId}/books`).then(response => {
+            this.setState({
+                books: response.data,
+                users: response.included,
+                loading: false
+            });
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
     }
 
     render() {
@@ -47,7 +45,7 @@ class BookCardsContainer extends Component {
 
         if (loading) {
             return (
-                <Loader notifier={<Notifier />} />
+                <Loader />
             )
         }
 
@@ -66,7 +64,6 @@ class BookCardsContainer extends Component {
                 </Typography>
                 <Divider className={classes.hr} />
                 <BookCardList books={books} users={users}/>
-                <Notifier />
             </div>
         )
     }
@@ -89,4 +86,4 @@ const styles = theme => ({
 });
 
 
-export default withStyles(styles)(BookCardsContainer);
+export default withSnackbar(withStyles(styles)(BookCardsContainer));

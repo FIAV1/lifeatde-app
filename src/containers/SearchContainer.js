@@ -16,11 +16,11 @@ import SwipeableViews from 'react-swipeable-views';
 import Loader from '../components/common/Loader';
 import SearchIcon from '@material-ui/icons/Search';
 
-import Notifier, {showNotifier} from '../components/common/Notifier';
-
 import ProjectCardList from '../components/projects/ProjectCardList';
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import BookCardList from "../components/books/BookCardList";
+
+import { withSnackbar } from 'notistack';
 
 function TabContainer({ children, dir }) {
   return (
@@ -66,22 +66,30 @@ class SearchContainer extends Component {
                 projects: response.data,
                 projectsUsers: response.included
             })
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
             this.setState({users: response.data})
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
         await Api.get(`/books?search=${this.state.searchString}`).then(response => {
             this.setState({
                 books: response.data,
                 booksUsers: response.included,
             })
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
                 studyGroups: response.data,
                 studyGroupsUsers: response.included
             })
-        }).catch(({errors}) => showNotifier({messages: errors, variant: 'error'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
 
         this.setState({loading: false});
     }
@@ -161,7 +169,7 @@ class SearchContainer extends Component {
                         </AppBar>
                         {
                             loading
-                            ? <Loader notifier={<Notifier />} />
+                            ? <Loader />
                             : <SwipeableViews
                                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                                     index={this.state.value}
@@ -176,7 +184,6 @@ class SearchContainer extends Component {
                         }
                     </Grid>
                 </Grid>
-                <Notifier />
             </div>
         );
     }
@@ -227,4 +234,4 @@ const styles = theme => ({
     },
 })
 
-export default withStyles(styles, {withTheme: true})(SearchContainer);
+export default withSnackbar(withStyles(styles, {withTheme: true})(SearchContainer));

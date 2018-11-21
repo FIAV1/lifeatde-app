@@ -16,8 +16,9 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import Authentication from '../lib/Authentication';
-import Notifier, { showNotifier } from '../components/common/Notifier';
 import Footer from '../components/common/Footer';
+
+import { withSnackbar } from 'notistack';
 
 class Login extends Component {
 	state = {
@@ -46,7 +47,7 @@ class Login extends Component {
 		Authentication.login(credentials).then(() =>
 			this.setState({ redirectToPreviousRoute: true })
 		).catch(({errors}) => {
-			showNotifier({ messages: errors, variant: 'error' });
+			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
 		});
 	};
 
@@ -119,7 +120,6 @@ class Login extends Component {
 							</Button>
 						</ValidatorForm>
 					</Grid>
-					<Notifier />
 				</Grid>
 				<Footer />
 			</div>
@@ -156,4 +156,4 @@ const styles = theme => ({
 	}
 });
 
-export default withStyles(styles)(Login);
+export default withSnackbar(withStyles(styles)(Login));

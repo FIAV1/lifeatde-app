@@ -12,8 +12,7 @@ import {
 } from '@material-ui/core';
 
 import PermMediaIcon from '@material-ui/icons/PermMedia';
-
-import Notifier, { showNotifier } from '../common/Notifier';
+import { withSnackbar } from 'notistack';
 
 class DocumentList extends Component {
     downloadFile = (url, filename) => () => {
@@ -25,7 +24,7 @@ class DocumentList extends Component {
                 link.click();
                 link.remove();
             }).catch(({errors}) => {
-                showNotifier({messages: errors, variant: 'error'});
+                errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
             });
     };
 
@@ -40,25 +39,24 @@ class DocumentList extends Component {
                                 <ListItem
                                     button
                                     key={document.id}
-                                    onClick={this.downloadFile(document.url, document.filename)}
+                                    onClick={this.downloadFile(document.url, document.name)}
                                 >
                                     <ListItemAvatar>
-                                    <Avatar>
-                                        <PermMediaIcon />
-                                    </Avatar>
+                                        <Avatar>
+                                            <PermMediaIcon />
+                                        </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={document.filename}
+                                        primary={document.name}
                                     />
                                 </ListItem>
                             )
                         }
                     </List>
-                    <Notifier />
                 </Grid>
             </Grid>
         );
     }
 }
 
-export default DocumentList;
+export default withSnackbar(DocumentList);

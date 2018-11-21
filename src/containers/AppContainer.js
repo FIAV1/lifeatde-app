@@ -116,9 +116,9 @@ class AppContainer extends Component {
                                 <Avatar
                                     className={classes.avatar}
                                     alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
-                                    src={user.attributes.avatar.id ? user.attributes.avatar.url : null}
+                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
                                 >
-                                    {user.attributes.avatar.id === null ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
+                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
                                 </Avatar>
                             </ListItemIcon>
                             <ListItemText inset primary="Profilo" />
@@ -212,6 +212,7 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
+        zIndex: theme.zIndex.drawer + 2,
         backgroundColor: theme.palette.background.default,
         marginTop: '64px',
         padding: theme.spacing.unit*2,

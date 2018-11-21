@@ -7,9 +7,6 @@ class Api {
 
         let headers = {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'dataType': 'application/json',
-            'X-Request-With': 'XMLHttpRequest',
         };
 
         if(user) {
@@ -46,9 +43,17 @@ class Api {
             url = `${scope}${route}`
         }
 
-        let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null);
+        let options = {
+            method: verb,
+            headers: Api.headers(),
+        };
 
-        options.headers = Api.headers();
+        if (params && params instanceof FormData) {
+            options.body = params;
+        } else if (params) {
+            options.body = JSON.stringify(params);
+            options.headers['Content-Type'] = 'application/json';
+        }
 
         return fetch(url, options).then( response => {
 
