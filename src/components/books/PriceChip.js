@@ -16,7 +16,7 @@ class PriceChip extends Component {
         return(
             <Chip
                 className={classes.priceChip}
-                label={price && parseInt(price) !== 0 ? `${price} €` : 'Gratis'}
+                label={price && parseInt(price, 10) !== 0 ? `${price} €` : 'Gratis'}
                 style={style}
             />
         );

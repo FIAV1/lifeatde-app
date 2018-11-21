@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 
 import Book from '../components/books/Book';
-import Notifier, { showNotifier } from '../components/common/Notifier';
+import { withSnackbar } from 'notistack';
 import Loader from '../components/common/Loader';
 
 class BookContainer extends Component {
@@ -25,7 +25,7 @@ class BookContainer extends Component {
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.book.attributes.title}`);
         }).catch(({errors}) => {
-            showNotifier({messages: errors, variant: 'error'})
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
     }
 
@@ -33,7 +33,7 @@ class BookContainer extends Component {
         const { loading, book, user} = this.state;
 
         if(loading) {
-            return <Loader notifier={<Notifier />} />
+            return <Loader />
         }
 
         return(
@@ -41,10 +41,9 @@ class BookContainer extends Component {
                 <Grid item xs={12}>
                     <Book book={book} user={user} />
                 </Grid>
-                <Notifier />
             </Grid>
         );
     }
 }
 
-export default BookContainer;
+export default withSnackbar(BookContainer);

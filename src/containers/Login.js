@@ -47,7 +47,13 @@ class Login extends Component {
 		Authentication.login(credentials).then(() =>
 			this.setState({ redirectToPreviousRoute: true })
 		).catch(({errors}) => {
-			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
+			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {
+				variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'center',
+                },
+			}));
 		});
 	};
 

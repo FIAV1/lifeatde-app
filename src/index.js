@@ -12,7 +12,7 @@ import './index.css';
 
 ReactDOM.render((
         <Router history={history}>
-            <SnackbarProvider maxSnack={10}>
+            <SnackbarProvider maxSnack={5}>
                 <ThemeWrapper>
                     <App history={history}/>
                 </ThemeWrapper>

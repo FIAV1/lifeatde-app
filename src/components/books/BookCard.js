@@ -128,7 +128,7 @@ class BookCard extends Component {
                                     <Menu
                                         id="options-menu"
                                         anchorEl={anchorEl}
-                                        open={Boolean(anchorEl)}
+                                        open={open}
                                         onClose={this.handleClose}
                                     >
                                         <MenuItem onClick={this.handleSelected('modifica')} value="modifica">
