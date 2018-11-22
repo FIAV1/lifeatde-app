@@ -24,7 +24,7 @@ class ProjectCardsContainer extends Component {
     };
 
     componentDidMount() {
-        document.title =  'LifeAtDe | Progetti'
+        document.title =  'LifeAtDe | Progetti';
 
         Api.get('/projects').then((response) => {
             this.setState({
@@ -45,7 +45,7 @@ class ProjectCardsContainer extends Component {
             projects,
             users,
         });
-    }
+    };
 
     render() {
         const { loading, projects, users } = this.state;

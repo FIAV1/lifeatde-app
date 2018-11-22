@@ -24,10 +24,10 @@ class NewsCardsContainer extends Component {
         loading: true,
         news: null,
         course: null,
-    }
+    };
 
     componentDidMount() {
-        document.title =  'LifeAtDe | News'
+        document.title =  'LifeAtDe | News';
 
         let course = LocalStorage.get('user').included.find( item => item.type === 'course');
 

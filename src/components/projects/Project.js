@@ -21,24 +21,12 @@ import {
     Collapse,
     Typography,
     IconButton,
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
 } from '@material-ui/core';
 
 import ReactMarkdown from 'react-markdown';
 import ProjectTeam from './ProjectTeam';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import DocumentList from './DocumentList';
@@ -47,53 +35,38 @@ import Api from '../../lib/Api';
 import history from '../../lib/history';
 
 import { withSnackbar } from 'notistack';
+import EditDeleteActions from "../common/EditDeleteActions";
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
 
 class Project extends Component {
     state = {
-        expanded: false,
-        anchorEl: null,
-        dialogOpen: false,
+        teamExpanded: false,
+        confirmationDialogIsOpen: false,
+        projectId: null
     };
 
     handleExpandClick = () => {
-        this.setState(state => ({ expanded: !state.expanded }));
+        this.setState(state => ({ teamExpanded: !state.teamExpanded }));
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+    handleClickEdit = () => {
+        history.push(`/projects/${this.props.project.id}/edit`);
     };
-    
-    handleClose = value => () => {
-        switch (value) {
-            case 'dialog':
-                this.setState({
-                    dialogOpen: true,
-                });
-                break;
-            case 'edit':
-                history.push(`/projects/${this.props.project.id}/edit`);
-                break;
-            case 'delete':
-                Api.delete(`/projects/${this.props.project.id}`).then(response => {
-                    response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
-                    history.push('/projects');
-                }).catch(({errors}) => {
-                    errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-                });
-                break;
-            case 'cancel':
-                this.setState({
-                    dialogOpen: false,
-                });
-                break;
-            case 'close':
-                this.setState({
-                    anchorEl: null,
-                });
-                break;
-            default:
-                break;
-        }
+
+    openConfirmationDialog = projectId => {
+        this.setState({
+            confirmationDialogIsOpen: true,
+            projectId: projectId,
+        });
+    };
+
+    deleteProject = () => {
+        Api.delete(`/projects/${this.props.project.id}`).then(response => {
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+            history.push('/projects');
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
     };
 
     isAdmin = admin => {
@@ -102,7 +75,7 @@ class Project extends Component {
 
     render() {
         const { classes, project, admin, collaborators } = this.props;
-        const { expanded, anchorEl, dialogOpen } = this.state;
+        const { teamExpanded } = this.state;
 
         if (!project || !admin) {
             return null;
@@ -127,53 +100,17 @@ class Project extends Component {
                             action={
                                 this.isAdmin(admin)
                                 ? <div>
-                                        <IconButton
-                                            onClick={this.handleClick}
-                                            aria-owns={anchorEl ? 'options-menu' : null}
-                                            aria-haspopup="true"
-                                        >
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                        <Menu
-                                            id="options-menu"
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClose={this.handleClose('close')}
-                                        >
-                                            <MenuItem onClick={this.handleClose('edit')}>
-                                                <ListItemIcon>
-                                                    <EditIcon />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Modifica" />
-                                            </MenuItem>
-                                            <MenuItem onClick={this.handleClose('dialog')}>
-                                                <ListItemIcon >
-                                                    <DeleteIcon />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Elimina" />
-                                            </MenuItem>
-                                        </Menu>
-                                        <Dialog
-                                            open={dialogOpen}
-                                            onClose={this.handleClose('cancel')}
-                                            aria-labelledby={`project-dialog-title-${project.id}`}
-                                            aria-describedby={`project-dialog-description-${project.id}`}
-                                        >
-                                            <DialogTitle id={`project-dialog-title-${project.id}`}>{"Vuoi eliminare il progetto?"}</DialogTitle>
-                                            <DialogContent>
-                                                <DialogContentText id={`project-dialog-description-${project.id}`}>
-                                                    Questa operazione è irrevesribile, una volta cancellato il progetto non sarai più in grado di ripristinarlo.
-                                                </DialogContentText>
-                                            </DialogContent>
-                                            <DialogActions>
-                                                <Button onClick={this.handleClose('delete')} color="primary">
-                                                    Elimina progetto
-                                                </Button>
-                                                <Button onClick={this.handleClose('cancel')} color="primary" autoFocus>
-                                                    Annulla
-                                                </Button>
-                                            </DialogActions>
-                                        </Dialog>
+                                    <EditDeleteActions
+                                        onClickEdit={this.handleClickEdit}
+                                        onClickDelete={this.openConfirmationDialog}
+                                    />
+                                    <DeleteConfirmationDialog
+                                        open={this.state.confirmationDialogIsOpen}
+                                        title={"Vuoi eliminare il progetto?"}
+                                        body={"Questa operazione è irrevesribile, una volta cancellato il progetto non sarai più in grado di ripristinarlo."}
+                                        onClickDelete={this.deleteProject}
+                                        onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                    />
                                     </div>
                                 : null
                             }
@@ -239,19 +176,19 @@ class Project extends Component {
                                 variant="text"
                                 size="small"
                                 onClick={this.handleExpandClick}
-                                aria-expanded={expanded}
+                                aria-expanded={teamExpanded}
                                 aria-label="Team"
                                 className={classes.button}
                             >
                                 Team
                                 <ExpandMoreIcon 
                                     className={classnames(classes.expand, {
-                                        [classes.expandOpen]: expanded,
+                                        [classes.expandOpen]: teamExpanded,
                                     })}
                                 />
                             </Button>
                         </CardActions>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <Collapse in={teamExpanded} timeout="auto" unmountOnExit>
                             <CardContent>
                                 <ProjectTeam admin={admin} collaborators={collaborators} />
                             </CardContent>
@@ -271,7 +208,7 @@ const ChipList = ({categories, classes}) => {
             className={classes.chip}
         />
     );
-}
+};
 
 const styles = theme => ({
     title: {

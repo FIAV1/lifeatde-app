@@ -39,6 +39,16 @@ class BookCardsContainer extends Component {
         });
     }
 
+    removeBook = (bookId, userId) => {
+        let books = this.state.books.filter(book => book.id !== bookId);
+        let users = this.state.users.filter(user => user.id !== userId);
+
+        this.setState({
+            books,
+            users
+        });
+    };
+
     render() {
         const { classes } = this.props;
         const { books, users, loading } = this.state;
@@ -63,7 +73,7 @@ class BookCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <BookCardList books={books} users={users}/>
+                <BookCardList books={books} users={users} onBookDelete={this.removeBook}/>
             </div>
         )
     }

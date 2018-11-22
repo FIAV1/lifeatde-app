@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-    Slide,
     Typography,
-    Button,
     IconButton,
 	List,
 	ListItem,
@@ -11,11 +9,6 @@ import {
 	Avatar,
 	ListItemText,
 	ListItemSecondaryAction,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
 } from '@material-ui/core';
 
 import { intToBytes, bytesToSize } from '../../lib/Utils';
@@ -24,51 +17,36 @@ import PermMediaIcon from '@material-ui/icons/PermMedia';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Api from '../../lib/Api';
 import { withSnackbar } from 'notistack';
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
 
 class FileList extends Component {
     state = {
-        open: false,
+        confirmationDialogIsOpen: false,
         fileId: null,
     };
-    
-    handleClickOpen = (fileId, index) => () => {
+
+    openConfirmationDialog = fileId => () => {
         this.setState({
-            open: true,
+            confirmationDialogIsOpen: true,
             fileId: fileId,
         });
     };
-    
-    handleClose = value => () => {
-        const { fileId } = this.state;
 
+    deleteFile = fileId => {
         let files = {
             documents: [fileId]
-        }
+        };
 
-        switch (value) {
-            case 'delete':
-                Api.delete(`/projects/${this.props.projectId}/documents`, files).then(response => {
-                    this.props.removeFile(fileId, null);
-                    response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
-                }).catch(({errors}) => {
-                    errors.forEach(error => this.props.enqueueSnackbar(error, {variant: 'error'}));
-                });
-                this.setState({
-                    open: false,
-                    fileId: null,
-                });
-                break;
-            default:
-                this.setState({
-                    open: false,
-                    fileId: null,
-                });
-                break;
-        }
+        Api.delete(`/projects/${this.props.projectId}/documents`, files).then(response => {
+            this.props.removeFile(fileId, null);
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
+        this.setState({
+            confirmationDialogIsOpen: false,
+            fileId: null,
+        });
     };
 
     render() {
@@ -92,7 +70,7 @@ class FileList extends Component {
                                     secondary={<Typography variant="body1" noWrap>{file.size ? intToBytes(file.size) : bytesToSize(file.byte_size)}</Typography>}
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton onClick={old ? this.handleClickOpen(file.id, index) : () => this.props.removeFile(null, index)} aria-label="Elimina">
+                                    <IconButton onClick={old ? this.openConfirmationDialog(file.id) : () => this.props.removeFile(null, index)} aria-label="Elimina">
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -100,28 +78,15 @@ class FileList extends Component {
                         </List>
                     )
                 }
-                <Dialog
-                    TransitionComponent={Transition}
-                    open={this.state.open}
-                    onClose={this.handleClose('dialog')}
-                    aria-labelledby={`alert-dialog-title`}
-                    aria-describedby={`alert-dialog-description`}
-                >
-                    <DialogTitle id={`alert-dialog-title`}>{"Eliminare il file?"}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id={`alert-dialog-description`}>
-                            Questa operazione è irreversibile, una volta eliminato il file non sarà più possibile recuperarlo.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose('delete')} color="primary">
-                            Elimina
-                        </Button>
-                        <Button onClick={this.handleClose('cancel')} color="secondary" autoFocus>
-                            Annulla
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <DeleteConfirmationDialog
+                    open={this.state.confirmationDialogIsOpen}
+                    title={"Eliminare il file?"}
+                    body={"Questa operazione è irreversibile, una volta eliminato il file non sarà più possibile recuperarlo."}
+                    target={this.state.fileId}
+                    onClickDelete={this.deleteFile}
+                    onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                />
+
             </div>
         )
     }

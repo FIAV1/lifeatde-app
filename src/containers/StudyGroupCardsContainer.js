@@ -25,27 +25,33 @@ class StudyGroupCardsContainer extends Component {
         course: null,
         studyGroups: null,
         users: null
-    }
+    };
 
     componentDidMount() {
-        document.title =  'LifeAtDe | Gruppi di Studio'
+        document.title =  'LifeAtDe | Gruppi di Studio';
 
-        let course = LocalStorage.get('user').included.find(item => item.type === 'course');
+        const courseId = LocalStorage.get('user').data.relationships.course.data.id;
 
-        Api.get('/courses/'+ course.id + '/study_groups').then(response =>{
+        Api.get(`/courses/${courseId}/study_groups`).then(response => {
             this.setState({
                 studyGroups: response.data,
                 users: response.included,
+                loading: false,
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error' }));
         });
+    }
+
+    removeStudyGroup = (studyGroupId, userId) => {
+        let books = this.state.studyGroups.filter(studyGroup => studyGroup.id !== studyGroupId);
+        let users = this.state.users.filter(user => user.id !== userId);
 
         this.setState({
-            course,
-            loading: false,
-        })
-    }
+            books,
+            users
+        });
+    };
 
     render() {
 
@@ -70,7 +76,7 @@ class StudyGroupCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <StudyGroupCardList studyGroups={studyGroups} users={users}/>
+                <StudyGroupCardList studyGroups={studyGroups} users={users} onStudyGroupDelete={this.removeStudyGroup}/>
             </div>
         );
     }

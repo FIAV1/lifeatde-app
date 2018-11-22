@@ -8,7 +8,7 @@ class StudyGroupCardList extends Component {
 
     getAdmin = (studyGroups, users) => {
         return users.filter(user => studyGroups.relationships.user.data.id === user.id)[0]
-    }
+    };
 
     render() {
 
@@ -25,7 +25,13 @@ class StudyGroupCardList extends Component {
         return(
             <Grid container spacing={16}>
                 {
-                   studyGroups.map((studyGroup) => <StudyGroupCard key={studyGroup.id} studyGroup={studyGroup} admin={this.getAdmin(studyGroup, users)} />)
+                   studyGroups.map((studyGroup) =>
+                       <StudyGroupCard
+                           key={studyGroup.id}
+                           studyGroup={studyGroup}
+                           user={this.getAdmin(studyGroup, users)}
+                           removeStudyGroup={this.props.onStudyGroupDelete}
+                       />)
                 }
             </Grid>
         )

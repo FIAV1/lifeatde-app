@@ -14,10 +14,6 @@ import {
     CardContent,
     Typography,
     IconButton,
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
     GridList,
     CircularProgress,
     GridListTile, Chip,
@@ -25,9 +21,6 @@ import {
 
 import ReactMarkdown from 'react-markdown';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import Api from "../../lib/Api";
@@ -35,43 +28,39 @@ import imagePlaceholder from "../../img/image-placeholder.jpg";
 import Lightbox from 'react-images';
 import PriceChip from "./PriceChip";
 import {createPhotoTiles, getCourseColor} from "../../lib/Utils";
+import EditDeleteActions from "../common/EditDeleteActions";
+import history from "../../lib/history";
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import { withSnackbar } from 'notistack';
 
 class Book extends Component {
+
     state = {
-        anchorEl: null,
         photoTiles: null,
         lightboxIsOpen: false,
-        currentImage: 0
+        currentImage: 0,
+        confirmationDialogIsOpen: false,
+        bookId: null
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+    handleClickEdit = () => {
+        history.push(`/books/${this.props.book.id}/edit`);
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
+    openConfirmationDialog = bookId => {
+        this.setState({
+            confirmationDialogIsOpen: true,
+            bookId: bookId,
+        });
     };
 
-    handleSelected = value => () => {
-        this.setState({ anchorEl: null });
-
-        switch(value) {
-            case 'modifica':
-                console.log('modifica');
-                /**
-                 * @TODO Handle edit
-                 */
-                break;
-            case 'elimina':
-                console.log('elimina');
-                /**
-                 * @TODO Handle delete
-                 */
-                break;
-            default:
-                console.log('ciao');
-                break;
-        }
+    deleteBook = () => {
+        Api.delete(`/books/${this.props.book.id}`, null).then(response => {
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+            history.push('/books');
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
     };
 
     isAuthUserAdmin = () => {
@@ -109,7 +98,7 @@ class Book extends Component {
 
     render() {
         const { classes, book, user } = this.props;
-        const { anchorEl, photoTiles } = this.state;
+        const { photoTiles } = this.state;
         let lightboxImageSet = null;
 
         if (photoTiles) {
@@ -130,7 +119,14 @@ class Book extends Component {
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{book.attributes.created_at}</Moment>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap'}}>
-                                        <Chip className={classes.courseChip} style={{backgroundColor: getCourseColor(book.attributes.course)}} label={book.attributes.course} />
+                                        <Chip
+                                            classes={{
+                                                root: classes.courseChipRoot,
+                                                label: classes.courseChipLabel
+                                            }}
+                                            style={{backgroundColor: getCourseColor(book.attributes.course)}}
+                                            label={<Typography noWrap variant={'body'}>{book.attributes.course}</Typography>}
+                                        />
                                         <PriceChip price={book.attributes.price}/>
                                     </div>
                                 </div>
@@ -138,32 +134,17 @@ class Book extends Component {
                             action={
                                 this.isAuthUserAdmin()
                                     ? <div>
-                                        <IconButton
-                                            onClick={this.handleClick}
-                                            aria-owns={anchorEl ? 'options-menu' : null}
-                                            aria-haspopup="true"
-                                        >
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                        <Menu
-                                            id="options-menu"
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClose={this.handleClose}
-                                        >
-                                            <MenuItem onClick={this.handleSelected('modifica')} value="modifica">
-                                                <ListItemIcon>
-                                                    <EditIcon />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Modifica" />
-                                            </MenuItem>
-                                            <MenuItem onClick={this.handleSelected('elimina')} value="elimina">
-                                                <ListItemIcon >
-                                                    <DeleteIcon />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Elimina" />
-                                            </MenuItem>
-                                        </Menu>
+                                        <EditDeleteActions
+                                            onClickEdit={this.handleClickEdit}
+                                            onClickDelete={this.openConfirmationDialog}
+                                        />
+                                        <DeleteConfirmationDialog
+                                            open={this.state.confirmationDialogIsOpen}
+                                            title={"Vuoi togliere il materiale dalla vendita?"}
+                                            body={"Questa operazione è irreversibile, una volta eliminato l'annuncio non sarà più possibile recuperarlo."}
+                                            onClickDelete={this.deleteBook}
+                                            onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                        />
                                     </div>
                                     : null
                             }
@@ -276,9 +257,15 @@ const styles = theme => ({
         color: theme.palette.text.hint,
         margin: theme.spacing.unit,
     },
-    courseChip: {
-        margin: `${theme.spacing.unit}px 0px`,
+    courseChipRoot: {
+        maxWidth: '100%',
         color: theme.palette.common.white,
+        margin: `${theme.spacing.unit}px 0px`,
+    },
+    courseChipLabel:{
+        overflow: 'hidden',
+        paddingRight: 0,
+        marginRight: '12px',
     },
     markdown: {
         color: theme.palette.text.primary,
@@ -298,4 +285,4 @@ const styles = theme => ({
     }
 });
 
-export default withStyles(styles)(Book);
+export default withSnackbar(withStyles(styles)(Book));

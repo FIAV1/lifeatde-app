@@ -15,14 +15,14 @@ class StudyGroupContainer extends Component {
     state = {
         loading: true,
         studyGroup: null,
-        admins: null
+        user: null
     };
 
     componentDidMount() {
         Api.get('/study_groups/' + this.props.match.params.id).then(response => {
             this.setState({
                 studyGroup: response.data,
-                admins: response.included,
+                user: response.included.shift(),
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.studyGroup.attributes.title}`);
         }).catch(({errors}) => {
@@ -31,7 +31,7 @@ class StudyGroupContainer extends Component {
     }
 
     render() {
-        const { loading, studyGroup, admins} = this.state;
+        const { loading, studyGroup, user} = this.state;
 
         if(loading) {
             return <Loader />
@@ -40,7 +40,7 @@ class StudyGroupContainer extends Component {
         return(
             <Grid container>
                 <Grid item xs={12}>
-                    <StudyGroup studyGroup={studyGroup} admins={admins} />
+                    <StudyGroup studyGroup={studyGroup} user={user} />
                 </Grid>
             </Grid>
         );

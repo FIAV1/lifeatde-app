@@ -19,65 +19,88 @@ import {
     Avatar,
     Typography,
     Grid,
-    IconButton,
-    Menu,
-    MenuItem,
     Chip,
 } from '@material-ui/core';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Anchor from "../common/Anchor";
+import EditDeleteActions from "../common/EditDeleteActions";
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import Api from "../../lib/Api";
+import {withSnackbar} from "notistack";
 
 class StudyGroupCard extends Component {
 
     state = {
-        anchorEl: null,
-        authUser: LocalStorage.get('user').data,
+        confirmationDialogIsOpen: false,
+        studyGroupId: null
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+    handleClickEdit = () => {
+        history.push(`/study_groups/${this.props.studyGroup.id}/edit`);
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
+    openConfirmationDialog = studyGroupId => {
+        this.setState({
+            confirmationDialogIsOpen: true,
+            studyGroupId: studyGroupId,
+        });
+    };
+
+    deleteStudyGroup = () => {
+        Api.delete(`/study_groups/${this.props.studyGroup.id}`).then(response => {
+            this.props.removeStudyGroup(this.props.studyGroup.id, this.props.user.id);
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
+    };
+
+    isAuthUserAdmin = () => {
+        return LocalStorage.get('user').data.id === this.props.user.id;
     };
 
     render() {
-        const { classes, studyGroup, admin } = this.props;
-        const { anchorEl } = this.state;
-        const open = Boolean(anchorEl);
+        const { classes, studyGroup, user } = this.props;
+
+        if(!user || !studyGroup) {
+            return null;
+        }
 
         return(
             <Grid item xs={12} md={6} xl={4}>
                 <Card>
                     <CardHeader
                         avatar={
-                            <Anchor to={`/users/${admin.id}`}>
+                            <Anchor to={`/users/${user.id}`}>
                                 <Avatar
-                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                    src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
+                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
+                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
                                 >
-                                    {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
                                 </Avatar>
                             </Anchor>
                         }
                         title={
-                            <Anchor to={`/users/${admin.id}`}>
-                                {admin.attributes.firstname} {admin.attributes.lastname}
+                            <Anchor to={`/users/${user.id}`}>
+                                {user.attributes.firstname} {user.attributes.lastname}
                             </Anchor>
                         }
                         subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{studyGroup.attributes.created_at}</Moment>}
                         action={
-                            this.state.authUser.id === admin.id ?
-                                <IconButton
-                                    aria-label="Opzioni"
-                                    aria-owns={open ? 'options-menu' : null}
-                                    aria-haspopup="true"
-                                    onClick={this.handleClick}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
+                            this.isAuthUserAdmin() ?
+                                <div>
+                                    <EditDeleteActions
+                                        onClickEdit={this.handleClickEdit}
+                                        onClickDelete={this.openConfirmationDialog}
+                                    />
+                                    <DeleteConfirmationDialog
+                                        open={this.state.confirmationDialogIsOpen}
+                                        title={"Vuoi eliminare il gruppo di studio?"}
+                                        body={"Questa operazione è irreversibile, una volta eliminato il gruppo di studio non sarà più possibile recuperarlo."}
+                                        onClickDelete={this.deleteStudyGroup}
+                                        onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                    />
+                                </div>
                             :
                                 null
                         }
@@ -91,15 +114,6 @@ class StudyGroupCard extends Component {
                     <CardActions>
                         <Chip className={classes.chip} key={studyGroup.attributes.course} style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course}/>)}
                     </CardActions>
-                    <Menu
-                        id="options-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={this.handleClose}
-                    >
-                        <MenuItem onClick={this.handleClose}>Modifica</MenuItem>
-                        <MenuItem onClick={this.handleClose}>Elimina</MenuItem>
-                    </Menu>
                 </Card>
             </Grid>
         );
@@ -113,4 +127,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(StudyGroupCard);
+export default withSnackbar(withStyles(styles)(StudyGroupCard));
