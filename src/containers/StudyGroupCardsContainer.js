@@ -16,6 +16,9 @@ import LocalStorage from '../lib/LocalStorage';
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import Loader from '../components/common/Loader';
 
+
+import history from '../lib/history';
+
 import { withSnackbar } from 'notistack';
 
 class StudyGroupCardsContainer extends Component {
@@ -61,7 +64,7 @@ class StudyGroupCardsContainer extends Component {
                 <Typography className={classes.header} component="h1" variant="h4">
                     Gruppi di Studio
                     <div>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
+                        <Button  onClick={() => history.push('/study_groups/new')} variant="fab" color="primary" aria-label="Add" className={classes.button}>
                             <AddIcon />
                         </Button>
                         <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>

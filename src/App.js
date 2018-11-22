@@ -16,6 +16,8 @@ import PrivateRoute from './components/common/PrivateRoute';
 import NoMatch from './components/common/NoMatch';
 import ProjectNewContainer from './containers/ProjectNewContainer';
 import ProjectEditContainer from './containers/ProjectEditContainer';
+import StudyGroupNewContainer from './containers/StudyGroupNewContainer';
+import StudyGroupEditContainer from './containers/StudyGroupEditContainer';
 
 class App extends Component {
 	render() {
@@ -29,7 +31,9 @@ class App extends Component {
 					<PrivateRoute exact path='/projects/:id' component={ProjectContainer}/>
 					<PrivateRoute exact path='/projects/:id/edit' component={ProjectEditContainer}/>
 					<PrivateRoute exact path='/study_groups' component={StudyGroupCardsContainer}/>
+					<PrivateRoute exact path='/study_groups/new' component={StudyGroupNewContainer}/>
 					<PrivateRoute exact path='/study_groups/:id' component={StudyGroupContainer}/>
+					<PrivateRoute exact path='/study_groups/:id/edit' component={StudyGroupEditContainer}/>
 					<PrivateRoute exact path='/news' component={NewsCardsContainer}/>
 					<PrivateRoute exact path='/search' component={SearchContainer}/>
 					<PrivateRoute exact path='/books' component={BookCardsContainer}/>
