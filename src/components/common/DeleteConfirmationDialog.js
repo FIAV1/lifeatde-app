@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import 'moment/locale/it';
+
 import {
     DialogTitle,
     DialogContent,
@@ -26,30 +26,28 @@ class DeleteConfirmationDialog extends Component {
         } = this.props;
 
         return(
-            <div>
-                <Dialog
-                    TransitionComponent={Transition}
-                    open={open}
-                    onClose={onClose}
-                    aria-labelledby={`alert-dialog-title`}
-                    aria-describedby={`alert-dialog-description`}
-                >
-                    <DialogTitle id={`alert-dialog-title`}>{title}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id={`alert-dialog-description`}>
-                            {body}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={onClickDelete} color="primary">
-                            Elimina
-                        </Button>
-                        <Button onClick={onClose} color="secondary" autoFocus>
-                            Annulla
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
+            <Dialog
+                TransitionComponent={Transition}
+                open={open}
+                onClose={onClose}
+                aria-labelledby={`alert-dialog-title`}
+                aria-describedby={`alert-dialog-description`}
+            >
+                <DialogTitle id={`alert-dialog-title`}>{title}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id={`alert-dialog-description`}>
+                        {body}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClickDelete} color="primary">
+                        Elimina
+                    </Button>
+                    <Button onClick={onClose} color="secondary" autoFocus>
+                        Annulla
+                    </Button>
+                </DialogActions>
+            </Dialog>
         );
     }
 }
