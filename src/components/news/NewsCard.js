@@ -21,12 +21,10 @@ class NewsCard extends Component {
             <Grid item xs={12} md={6} xl={4}>
                 <Card >
                     <CardHeader subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{news.attributes.created_at}</Moment>}/>
-                    <CardActionArea className={classes.cardContent}>
-                        <CardContent>
-                            <Typography gutterBottom variant="h6" component="h1">{news.attributes.title}</Typography>
-                            <Typography variant="body1" component="p">{news.attributes.description}</Typography>
-                        </CardContent>
-                    </CardActionArea>
+                    <CardContent className={classes.cardContent}>
+                        <Typography gutterBottom variant="h6" component="h1">{news.attributes.title}</Typography>
+                        <Typography variant="body1" component="p">{news.attributes.description}</Typography>
+                    </CardContent>
                 </Card>
             </Grid>
         );

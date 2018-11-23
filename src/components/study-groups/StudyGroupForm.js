@@ -52,7 +52,7 @@ class StudyGroupForm extends Component {
         }
         
         if (this.props.edit) {
-            Api.put(`/courses/${course_id}/study_groups/${id}`, params).then(response => {
+            Api.put(`/study_groups/${id}`, params).then(response => {
                 response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
                 history.push(`/study_groups/${response.data.id}`)
             }).catch(({errors}) => {
@@ -78,7 +78,7 @@ class StudyGroupForm extends Component {
                 <Grid container justify='space-between'>
                     <Grid item >
                         <Typography className={classes.header} component="h1" variant="h4" xs={12} md={6} xl={4}>
-                            Crea il tuo gruppo di studio
+                        {edit ? 'Modifica il gruppo di studio' : 'Crea un gruppo di studio'}
                         </Typography>
                     </Grid>
                     <Grid item className={classes.item} xs={12} sm={"auto"}>
@@ -100,7 +100,7 @@ class StudyGroupForm extends Component {
                     onSubmit={this.handleSubmit}
                 >
                     <TextValidator
-                        className={classes.mB}
+                        margin="normal"
                         label="Titolo"
                         onChange={this.handleChange('title')}
                         name="title"
@@ -109,7 +109,6 @@ class StudyGroupForm extends Component {
                         errorMessages={['Dai un titolo al tuo gruppo di studio']}
                     />
                     <TextValidator
-                        className={classes.mB}
                         label="Descrizione"
                         onChange={this.handleChange('description')}
                         name="description"
@@ -117,6 +116,9 @@ class StudyGroupForm extends Component {
                         validators={['required']}
                         errorMessages={['Fai una descrizione del tuo gruppo di studio']}
                         multiline
+                        rowMax="100"
+                        variant="outlined"
+                        margin="normal"
                     />
                 <Button
                         type="submit"
@@ -126,7 +128,7 @@ class StudyGroupForm extends Component {
                         fullWidth
                         className={classes.button}
                     >
-                        {edit ? 'Salva modifiche' : 'Crea progetto'}
+                        {edit ? 'Salva modifiche' : 'Crea gruppo di studio'}
                     </Button>
                 </ValidatorForm>
             </div>
@@ -160,12 +162,6 @@ const styles = theme => ({
 		display: 'flex',
 		flexWrap: 'wrap',
 		flexDirection: 'column',
-	},
-	mB: {
-		marginBottom: theme.spacing.unit * 2,
-	},
-	mT: {
-		marginTop: theme.spacing.unit * 2,
 	},
 	button: {
 		marginTop: theme.spacing.unit * 2,
