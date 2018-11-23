@@ -56,6 +56,7 @@ class Api {
         }
 
         const response = await fetch(url, options);
+
         if (response.ok) {
             return response.json();
         }
@@ -76,8 +77,8 @@ class Api {
             history.push('/login');
             throw error;
         }
-        const error_1 = await response.json();
-        throw error_1;
+        const error = await response.json();
+        throw error;
     }
 
     static async download(route) {

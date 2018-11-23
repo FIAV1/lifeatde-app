@@ -17,13 +17,12 @@ import {
     CardHeader,
     CardContent,
     CardActions,
+    CardActionArea,
     Avatar,
     Typography,
     Grid,
-    Button,
 } from '@material-ui/core';
 
-import WorkIcon from '@material-ui/icons/Work';
 import CategoriesMenu from './CategoriesMenu';
 import Anchor from "../common/Anchor";
 
