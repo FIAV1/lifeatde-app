@@ -6,7 +6,6 @@ import {
     withStyles,
     Card,
     CardHeader,
-    CardActionArea,
     CardContent,
     Typography,
     Grid,

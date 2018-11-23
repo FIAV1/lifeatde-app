@@ -167,9 +167,18 @@ const styles = theme => ({
     markdown: {
         color: theme.palette.text.primary,
     },
-    contactInfo:{
-        padding: '16px 24px 16px 24px' 
-    },
+    contactInfo: {
+        display: 'inline-flex',
+        [theme.breakpoints.down('xs')]: {
+            display: 'block',
+            paddingLeft: '12px',
+        },
+        [theme.breakpoints.up('sm')]: {
+            display: 'block',
+            paddingLeft: '24px',
+        }
+    }
+
 })
 
 export default withSnackbar(withStyles(styles)(StudyGroup));
