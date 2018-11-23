@@ -59,6 +59,8 @@ class SearchContainer extends Component {
     handleSubmit = async event => {
         event.preventDefault();
 
+        if (this.state.searchString.length === 0 || !this.state.searchString.trim()) return;
+
         this.setState({loading: true});
 
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {

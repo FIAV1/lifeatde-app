@@ -16,6 +16,7 @@ import PrivateRoute from './components/common/PrivateRoute';
 import NoMatch from './components/common/NoMatch';
 import ProjectNewContainer from './containers/ProjectNewContainer';
 import ProjectEditContainer from './containers/ProjectEditContainer';
+import UserProfile from './containers/UserProfile';
 
 class App extends Component {
 	render() {
@@ -34,6 +35,8 @@ class App extends Component {
 					<PrivateRoute exact path='/search' component={SearchContainer}/>
 					<PrivateRoute exact path='/books' component={BookCardsContainer}/>
                     <PrivateRoute exact path='/books/:id' component={BookContainer}/>
+					<PrivateRoute exact path='/users/:id' component={UserProfile} />
+					<PrivateRoute exact path='/profile/:id' component={UserProfile} />
 					<PrivateRoute component={NoMatch} />
 				</Switch>
 			</AppContainer>

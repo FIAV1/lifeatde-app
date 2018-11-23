@@ -189,13 +189,6 @@ class ProjectForm extends Component {
 					onFocus={this.removeErrors('description')}
 				/>
 				<Typography variant="caption" color="error">{getError('description', errors)}</Typography>
-				<input
-					className={classes.input}
-					id="upload-file-button"
-					multiple
-					type="file"
-					onChange={this.handleChange('files')}
-				/>
 				{status === 3 && <div>
 					<Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
 					<Editor
@@ -241,6 +234,13 @@ class ProjectForm extends Component {
 						<CloudUploadIcon className={classes.rightIcon} />
 					</Button>
 				</label>
+				<input
+					className={classes.input}
+					id="upload-file-button"
+					multiple
+					type="file"
+					onChange={this.handleChange('files')}
+				/>
 				<FileList removeFile={this.removeFile} projectId={id} files={files} />
 				<FileList removeFile={this.removeFile} projectId={id} files={oldFiles} old />
 				<Button

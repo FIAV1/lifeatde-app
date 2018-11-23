@@ -41,6 +41,14 @@ const styles = theme => ({
             0.08,
         ),
     },
+    chipRoot: {
+        maxWidth: '100%',
+    },
+    chipLabel:{
+        overflow: 'hidden',
+        paddingRight: 0,
+        marginRight: '12px',
+    },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     },
@@ -54,7 +62,7 @@ const styles = theme => ({
     },
     paper: {
         position: 'absolute',
-        zIndex: 1,
+        zIndex: 2,
         marginTop: theme.spacing.unit,
         left: 0,
         right: 0,
@@ -144,10 +152,14 @@ function MultiValue(props) {
     return (
         <Chip
             tabIndex={-1}
-            label={props.children}
+            label={<Typography variant="body1" noWrap>{props.children}</Typography>}
             className={classNames(props.selectProps.classes.chip, {
                 [props.selectProps.classes.chipFocused]: props.isFocused,
             })}
+            classes={{
+                root: props.selectProps.classes.chipRoot,
+                label: props.selectProps.classes.chipLabel,
+            }}
             onDelete={props.removeProps.onClick}
             deleteIcon={<CancelIcon {...props.removeProps} />}
         />

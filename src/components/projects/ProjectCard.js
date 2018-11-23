@@ -104,20 +104,13 @@ class ProjectCard extends Component {
                                 null
                         }
                     />
-                    <CardContent>
-                        <Typography noWrap gutterBottom variant="h5">{project.attributes.title}</Typography>
-                    </CardContent>
+                    <CardActionArea className={classes.cardActionArea} onClick={() => history.push(`/projects/${project.id}`)}>
+                        <CardContent>
+                            <Typography noWrap gutterBottom variant="h5">{project.attributes.title}</Typography>
+                        </CardContent>
+                    </CardActionArea>
                     <CardActions>
                         <CategoriesMenu id={project.id} elements={project.attributes.categories} />
-                        <Button
-                            className={classes.button}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => history.push(`/projects/${project.id}`)}
-                        >
-                            <WorkIcon className={classes.icon} />
-                            vai al progetto
-                        </Button>
                     </CardActions>
                 </Card>
             </Grid>
@@ -126,6 +119,9 @@ class ProjectCard extends Component {
 }
 
 const styles = theme => ({
+    cardActionArea: {
+        width: '100%'
+    },
     button:{
         marginLeft: 'auto',
     },

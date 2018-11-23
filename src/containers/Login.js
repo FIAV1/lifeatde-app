@@ -44,16 +44,17 @@ class Login extends Component {
 			password: this.state.password
 		};
 
-		Authentication.login(credentials).then(() =>
-			this.setState({ redirectToPreviousRoute: true })
-		).catch(({errors}) => {
+		Authentication.login(credentials).then(response => {
+			let event = new CustomEvent('login', { detail: response });
+			this.setState({ redirectToPreviousRoute: true }, () => window.document.dispatchEvent(event));
+		}).catch(({errors}) => {
 			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {
 				variant: 'error',
                 anchorOrigin: {
                     vertical: 'top',
                     horizontal: 'center',
                 },
-			}));
+			}))
 		});
 	};
 

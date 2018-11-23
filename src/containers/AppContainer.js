@@ -3,7 +3,6 @@ import classNames from 'classnames';
 
 import LocalStorage from '../lib/LocalStorage';
 import Authentication from '../lib/Authentication';
-import { getInitials } from '../lib/Utils';
 
 import {
     withStyles,
@@ -17,7 +16,6 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Avatar,
     Typography
 } from '@material-ui/core';
 
@@ -26,9 +24,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SearchIcon from '@material-ui/icons/Search';
+import AsyncAvatar from '../components/common/AsyncAvatar';
+import Loader from '../components/common/Loader'
 
 class AppContainer extends Component {
     state = {
+        loading: true,
         user: null,
         open: false,
     };
@@ -40,16 +41,33 @@ class AppContainer extends Component {
     handleDrawerClose = () => {
         this.setState({ open: false });
     };
+
+    componentDidMount() {
+        window.document.addEventListener('updateProfile', event => {
+            LocalStorage.set('user', event.detail);
+            this.setState({user: event.detail.data});
+        }, false);
+
+        window.document.addEventListener('login', event => {
+            this.setState({loading: false, user: event.detail.data});
+        }, false);
+
+        if(Authentication.isAuthenticated()) {
+            let user = LocalStorage.get('user').data;
+            this.setState({loading: false, user });
+        }
+    }
     
     render() {
         const { classes, theme, history } = this.props;
+        const { loading, user } = this.state;
 
         if(!Authentication.isAuthenticated()) {
             return this.props.children;
         }
 
-        const user = LocalStorage.get('user').data;
-        
+        if (loading) return <Loader />
+
         return (
             <div className={classes.root}>
                 <AppBar
@@ -111,15 +129,12 @@ class AppContainer extends Component {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button onClick={() => history.push('/user/'+user.id)}>
+                        <ListItem button onClick={() => history.push('/profile/'+user.id)}>
                             <ListItemIcon>
-                                <Avatar
-                                    className={classes.avatar}
-                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
-                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
-                                >
-                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
-                                </Avatar>
+                                <AsyncAvatar
+                                    avatarClass={classes.avatar}
+                                    user={user}
+                                />
                             </ListItemIcon>
                             <ListItemText inset primary="Profilo" />
                         </ListItem>
