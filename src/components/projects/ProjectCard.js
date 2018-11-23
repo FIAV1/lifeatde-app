@@ -7,8 +7,6 @@ import LocalStorage from '../../lib/LocalStorage';
 
 import history from '../../lib/history';
 
-import { getInitials } from '../../lib/Utils';
-
 import Api from '../../lib/Api';
 
 import {
@@ -18,7 +16,6 @@ import {
     CardContent,
     CardActions,
     CardActionArea,
-    Avatar,
     Typography,
     Grid,
 } from '@material-ui/core';
@@ -29,6 +26,7 @@ import Anchor from "../common/Anchor";
 import { withSnackbar } from 'notistack';
 import EditDeleteActions from "../common/EditDeleteActions";
 import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import AsyncAvatar from '../common/AsyncAvatar';
 
 class ProjectCard extends Component {
     state = {
@@ -70,12 +68,7 @@ class ProjectCard extends Component {
                     <CardHeader
                         avatar={
                             <Anchor to={`/users/${admin.id}`}>
-                                <Avatar
-                                    alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                    src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
-                                >
-                                    {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                                </Avatar>
+                                <AsyncAvatar user={admin} />
                             </Anchor>
                         }
                         title={

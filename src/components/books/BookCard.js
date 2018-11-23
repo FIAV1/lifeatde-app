@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import {
     withStyles,
-    Avatar,
     Card,
     CardHeader,
     CardContent,
@@ -22,11 +21,12 @@ import Moment from "react-moment";
 import Anchor from "../common/Anchor";
 import PriceChip from "./PriceChip";
 import history from '../../lib/history'
-import { getCourseColor, getInitials, createPhotoTiles } from "../../lib/Utils";
+import { getCourseColor, createPhotoTiles } from "../../lib/Utils";
 import imagePlaceholder from '../../img/image-placeholder.jpg';
 import Api from "../../lib/Api";
 import EditDeleteActions from "../common/EditDeleteActions";
 import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import AsyncAvatar from '../common/AsyncAvatar';
 import { withSnackbar } from 'notistack';
 
 class BookCard extends Component {
@@ -92,12 +92,7 @@ class BookCard extends Component {
                     <CardHeader
                         avatar={
                             <Anchor to={`/users/${user.id}`}>
-                                <Avatar
-                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
-                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
-                                >
-                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
-                                </Avatar>
+                                <AsyncAvatar user={user} />
                             </Anchor>
                         }
                         title={
