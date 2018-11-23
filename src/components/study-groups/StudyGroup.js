@@ -122,23 +122,30 @@ class StudyGroup extends Component {
                             }
                         />
                         <Divider/>
-                       <Grid container className={classes.contactInfo}>
-                            <Grid item xs={12}>
-                                <Typography variant="overline">Contatta l'amministratore</Typography>
-                            </Grid>
-                            <Grid item xs={12}>
+                        <CardContent>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <Typography variant="overline">Contatta l'utente</Typography>
+                                </Grid>
                                 {
                                     user.attributes.phone
-                                    ? <IconButton href={`tel:${user.attributes.phone}`} aria-label="telefono">
-                                        <PhoneIcon />
-                                    </IconButton>
-                                    : null
+                                        ?
+                                        <Grid item xs={12}>
+                                            <IconButton href={`tel:${user.attributes.phone}`} aria-label="telefono">
+                                                <PhoneIcon />
+                                            </IconButton>
+                                            <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.phone}`}</Typography>
+                                        </Grid>
+                                        : null
                                 }
-                                <IconButton href={`mailto:${user.attributes.email}`} aria-label="email">
-                                    <EmailIcon />
-                                </IconButton>
+                                <Grid item xs={12}>
+                                    <IconButton href={`mailto:${user.attributes.email}`} aria-label="email">
+                                        <EmailIcon />
+                                    </IconButton>
+                                    <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.email}`}</Typography>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </CardContent>
                     </Card>
                 </Grid>
             </Grid>
@@ -172,10 +179,6 @@ const styles = theme => ({
         [theme.breakpoints.down('xs')]: {
             display: 'block',
             paddingLeft: '12px',
-        },
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-            paddingLeft: '24px',
         }
     }
 
