@@ -38,9 +38,19 @@ class StudyGroupCard extends Component {
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
-
-    handleClose = () => {
-        this.setState({ anchorEl: null });
+    handleClose = value => () => {
+        switch (value) {
+            case 'edit':
+                history.push(`/study_groups/${this.props.studyGroup.id}/edit`);
+                break;
+            case 'close':
+                this.setState({
+                    anchorEl: null,
+                });
+                break;
+            default:
+                break;
+        }
     };
 
     render() {
@@ -95,10 +105,10 @@ class StudyGroupCard extends Component {
                         id="options-menu"
                         anchorEl={anchorEl}
                         open={open}
-                        onClose={this.handleClose}
+                        onClose={this.handleClose('close')}
                     >
-                        <MenuItem onClick={this.handleClose}>Modifica</MenuItem>
-                        <MenuItem onClick={this.handleClose}>Elimina</MenuItem>
+                        <MenuItem onClick={this.handleClose('edit')}>Modifica</MenuItem>
+                        <MenuItem onClick={this.handleClose('close')}>Elimina</MenuItem>
                     </Menu>
                 </Card>
             </Grid>

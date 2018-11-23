@@ -52,7 +52,7 @@ class StudyGroupForm extends Component {
         }
         
         if (this.props.edit) {
-            Api.put(`/courses/${course_id}/study_groups/${id}`, params).then(response => {
+            Api.put(`/study_groups/${id}`, params).then(response => {
                 response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
                 history.push(`/study_groups/${response.data.id}`)
             }).catch(({errors}) => {
@@ -78,7 +78,7 @@ class StudyGroupForm extends Component {
                 <Grid container justify='space-between'>
                     <Grid item >
                         <Typography className={classes.header} component="h1" variant="h4" xs={12} md={6} xl={4}>
-                            Crea il tuo gruppo di studio
+                        {edit ? 'Modifica il gruppo di studio' : 'Crea un gruppo di studio'}
                         </Typography>
                     </Grid>
                     <Grid item className={classes.item} xs={12} sm={"auto"}>
