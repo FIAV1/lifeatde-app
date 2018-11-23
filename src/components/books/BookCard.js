@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {
     withStyles,
     Avatar,
-    IconButton,
     Card,
     CardHeader,
     CardContent,
@@ -12,61 +11,54 @@ import {
     Chip,
     CircularProgress,
     Divider,
-    MenuItem,
     Grid,
     GridList,
     GridListTile,
     Typography,
-    Menu, ListItemIcon, ListItemText,
 } from '@material-ui/core';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import LocalStorage from "../../lib/LocalStorage";
 import Moment from "react-moment";
 import Anchor from "../common/Anchor";
 import PriceChip from "./PriceChip";
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import history from '../../lib/history'
 import { getCourseColor, getInitials, createPhotoTiles } from "../../lib/Utils";
 import imagePlaceholder from '../../img/image-placeholder.jpg';
 import Api from "../../lib/Api";
+import EditDeleteActions from "../common/EditDeleteActions";
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import { withSnackbar } from 'notistack';
 
 class BookCard extends Component {
 
     state = {
-        anchorEl: null,
-        photoTiles: null
+        photoTiles: null,
+        confirmationDialogIsOpen: false,
+        bookId: null
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+    handleClickEdit = () => {
+        history.push(`/books/${this.props.book.id}/edit`);
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
+    openConfirmationDialog = bookId => {
+        this.setState({
+            confirmationDialogIsOpen: true,
+            bookId: bookId,
+        });
     };
 
-    handleSelected = value => () => {
-        this.setState({ anchorEl: null });
+    deleteBook = () => {
+        Api.delete(`/books/${this.props.book.id}`, null).then(response => {
+            this.props.removeBook(this.props.book.id, this.props.user.id);
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
+    };
 
-        switch(value) {
-            case 'modifica':
-                console.log('modifica');
-                /**
-                 * @TODO Handle edit
-                 */
-                break;
-            case 'elimina':
-                console.log('elimina');
-                /**
-                 * @TODO Handle delete
-                 */
-                break;
-            default:
-                console.log('ciao');
-                break;
-        }
+    isAuthUserAdmin = () => {
+        return LocalStorage.get('user').data.id === this.props.user.id;
     };
 
     componentDidMount() {
@@ -86,14 +78,13 @@ class BookCard extends Component {
         });
     }
 
-    isAuthUserAdmin = () => {
-        return LocalStorage.get('user').data.id === this.props.user.id;
-    };
-
     render() {
         const { book, user, classes } = this.props;
-        const { anchorEl, photoTiles } = this.state;
-        const open = Boolean(anchorEl);
+        const { photoTiles } = this.state;
+
+        if(!user || !book) {
+            return null;
+        }
 
         return (
             <Grid item xs={12} md={6} xl={4}>
@@ -118,32 +109,17 @@ class BookCard extends Component {
                         action={
                             this.isAuthUserAdmin()
                                 ? <div>
-                                    <IconButton
-                                        onClick={this.handleClick}
-                                        aria-owns={anchorEl ? 'options-menu' : null}
-                                        aria-haspopup="true"
-                                    >
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                    <Menu
-                                        id="options-menu"
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={this.handleClose}
-                                    >
-                                        <MenuItem onClick={this.handleSelected('modifica')} value="modifica">
-                                            <ListItemIcon>
-                                                <EditIcon />
-                                            </ListItemIcon>
-                                            <ListItemText inset primary="Modifica" />
-                                        </MenuItem>
-                                        <MenuItem onClick={this.handleSelected('elimina')} value="elimina">
-                                            <ListItemIcon >
-                                                <DeleteIcon />
-                                            </ListItemIcon>
-                                            <ListItemText inset primary="Elimina" />
-                                        </MenuItem>
-                                    </Menu>
+                                    <EditDeleteActions
+                                        onClickEdit={this.handleClickEdit}
+                                        onClickDelete={this.openConfirmationDialog}
+                                    />
+                                    <DeleteConfirmationDialog
+                                        open={this.state.confirmationDialogIsOpen}
+                                        title={"Vuoi togliere il materiale dalla vendita?"}
+                                        body={"Questa operazione è irreversibile, una volta eliminato l'annuncio non sarà più possibile recuperarlo."}
+                                        onClickDelete={this.deleteBook}
+                                        onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                    />
                                 </div>
                                 : null
                         }
@@ -216,4 +192,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(BookCard);
+export default withSnackbar(withStyles(styles)(BookCard));

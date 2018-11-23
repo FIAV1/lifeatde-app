@@ -26,7 +26,15 @@ class BookCardList extends Component {
 
         return (
             <Grid container spacing={16}>
-                {books.map(book => <BookCard key={book.id} book={book} user={this.getBookOwner(book, users)}/>)}
+                {
+                    books.map(book =>
+                        <BookCard
+                            key={book.id}
+                            book={book}
+                            user={this.getBookOwner(book, users)}
+                            removeBook={this.props.onBookDelete}
+                        />)
+                }
             </Grid>
         );
     }

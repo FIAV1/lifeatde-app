@@ -19,16 +19,47 @@ import {
 
 import ReactMarkdown from 'react-markdown';
 import Anchor from "../common/Anchor";
+import EditDeleteActions from "../common/EditDeleteActions";
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import LocalStorage from "../../lib/LocalStorage";
+import history from "../../lib/history";
+import Api from "../../lib/Api";
+import { withSnackbar } from 'notistack';
 
 class StudyGroup extends Component {
 
-    getAdmin = (studyGroups, users) => {
-        return users.filter(user => studyGroups.relationships.user.data.id === user.id)[0]
-    }
-    
+    state = {
+        confirmationDialogIsOpen: false,
+        studyGroupId: null,
+    };
+
+    isAuthUserAdmin = () => {
+        return LocalStorage.get('user').data.id === this.props.user.id;
+    };
+
+    handleClickEdit = () => {
+        history.push(`/study_groups/${this.props.studyGroup.id}/edit`);
+    };
+
+    openConfirmationDialog = studyGroupId => {
+        this.setState({
+            confirmationDialogIsOpen: true,
+            studyGroupId: studyGroupId,
+        });
+    };
+
+    deleteStudyGroup = () => {
+        Api.delete(`/study_groups/${this.props.studyGroup.id}`, null).then(response => {
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+            history.push('/study_groups');
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
+    };
+
     render() {
-        const { classes, studyGroup, admins } = this.props;
-        const admin  = this.getAdmin(studyGroup, admins);
+        const { classes, studyGroup, user } = this.props;
+
         return(
             <Grid container justify="center">
                 <Grid item xs={12} md={10} lg={8}>
@@ -41,6 +72,23 @@ class StudyGroup extends Component {
                                     <Chip className={classes.couse} style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course} />
                                 </div>
                             }
+                            action={
+                                this.isAuthUserAdmin()
+                                    ? <div>
+                                        <EditDeleteActions
+                                            onClickEdit={this.handleClickEdit}
+                                            onClickDelete={this.openConfirmationDialog}
+                                        />
+                                        <DeleteConfirmationDialog
+                                            open={this.state.confirmationDialogIsOpen}
+                                            title={"Vuoi eliminare il gruppo di studio?"}
+                                            body={"Questa operazione è irreversibile, una volta eliminato il gruppo di studio non sarà più possibile recuperarlo."}
+                                            onClickDelete={this.deleteStudyGroup}
+                                            onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                        />
+                                    </div>
+                                    : null
+                            }
                         />
                         <Divider />
                         <CardContent>
@@ -49,21 +97,20 @@ class StudyGroup extends Component {
                         <Divider />
                         <CardHeader 
                             avatar={
-                                <Anchor to={`/users/${admin.id}`}>
+                                <Anchor to={`/users/${user.id}`}>
                                     <Avatar
-                                        alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                                        src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
+                                        alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
+                                        src={user.attributes.avatar ? user.attributes.avatar.url : null}
                                     >
-                                        {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
+                                        {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
                                     </Avatar>
                                 </Anchor>
                             }
                             title={
-                                <Anchor to={`/users/${admin.id}`}>
-                                    {admin.attributes.firstname} {admin.attributes.lastname}
+                                <Anchor to={`/users/${user.id}`}>
+                                    {user.attributes.firstname} {user.attributes.lastname}
                                 </Anchor>
                             }
-                            subheader="Admin"
                         />
                     </Card>
                 </Grid>
@@ -85,6 +132,6 @@ const styles = theme => ({
     markdown: {
         color: theme.palette.text.primary,
     },
-})
+});
 
-export default withStyles(styles)(StudyGroup);
+export default withSnackbar(withStyles(styles)(StudyGroup));
