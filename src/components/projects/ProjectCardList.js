@@ -12,7 +12,7 @@ class ProjectCardList extends Component {
 
     render() {
         const { projects, users } = this.props;
-        if((!projects || projects.length === 0) && (!users || users.length === 0)) {
+        if((!projects || projects.length === 0) || (!users || users.length === 0)) {
             return(
                 <Typography variant="subtitle1">
                     Non ci sono progetti da visualizzare.

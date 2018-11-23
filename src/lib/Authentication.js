@@ -7,10 +7,9 @@ import history from './history';
 class Authentication {
     static isAuthenticated() {
         try {
-            let user = LocalStorage.get('user')
+            let token = LocalStorage.get('token')
 
-            if(user) {
-                let token = user.data.attributes.token;
+            if(token) {
                 let decoded = jwt_decode(token);
 
                 if(decoded.exp>(Date.now()/1000)){
@@ -24,9 +23,11 @@ class Authentication {
         }
     }
 
-    static login(credentials) {
+    static async login(credentials) {
         return Api.post('/login', credentials).then(response => {
             LocalStorage.set('user', response);
+            LocalStorage.set('token', response.data.attributes.token);
+            return response;
         }).catch(e => {
             throw e
         });
@@ -34,9 +35,11 @@ class Authentication {
 
     static logout() {
         try {
+            LocalStorage.delete('token');
             LocalStorage.delete('user');
             history.push('/login');
         } catch(error) {
+            LocalStorage.delete('token');
             LocalStorage.delete('user');
             history.push('/login');
         }

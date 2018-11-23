@@ -110,10 +110,9 @@ const formDataSerializer = (prefix, object, formData) => {
     
     if (object) {
         Object.keys(object).forEach(key => {
-            if (typeof object[key] === 'object' && !Array.isArray(object[key])) {
+            if (typeof object[key] === 'object' && !Array.isArray(object[key]) && !object[key] instanceof File) {
                 result += formDataSerializer(`${prefix}[${key}]`, object[key]);
-            }
-            else {
+            } else {
                 if (Array.isArray(object[key])) {
                     if (object[key].length > 0) {
                         result += `${prefix}[${key}][]`;
