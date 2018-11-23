@@ -15,7 +15,11 @@ import {
     CardContent,
     Typography,
     Avatar,
+    IconButton
 } from '@material-ui/core';
+
+import PhoneIcon from '@material-ui/icons/Phone';
+import EmailIcon from '@material-ui/icons/Email';
 
 import ReactMarkdown from 'react-markdown';
 import Anchor from "../common/Anchor";
@@ -63,13 +67,17 @@ class StudyGroup extends Component {
         return(
             <Grid container justify="center">
                 <Grid item xs={12} md={10} lg={8}>
-                    <Card className={classes.paper}>
+                    <Card>
                         <CardHeader
-                            title={<Typography variant="h3">{studyGroup.attributes.title}</Typography>}
+                            classes={{
+                                content: classes.headerContent,
+                                action: classes.headerAction,
+                            }}
+                            title={<Typography className={classes.title} variant="h3" noWrap>{studyGroup.attributes.title}</Typography>}
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{studyGroup.attributes.created_at}</Moment>
-                                    <Chip className={classes.couse} style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course} />
+                                    <Chip style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course} />
                                 </div>
                             }
                             action={
@@ -92,9 +100,10 @@ class StudyGroup extends Component {
                         />
                         <Divider />
                         <CardContent>
+                            <Typography variant="overline">Descrizione</Typography>
                             <ReactMarkdown className={classes.markdown} source={studyGroup.attributes.description}/>
                         </CardContent>
-                        <Divider />
+                        <Divider/>
                         <CardHeader 
                             avatar={
                                 <Anchor to={`/users/${user.id}`}>
@@ -112,6 +121,24 @@ class StudyGroup extends Component {
                                 </Anchor>
                             }
                         />
+                        <Divider/>
+                       <Grid container className={classes.contactInfo}>
+                            <Grid item xs={12}>
+                                <Typography variant="overline">Contatta l'amministratore</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {
+                                    user.attributes.phone
+                                    ? <IconButton href={`tel:${user.attributes.phone}`} aria-label="telefono">
+                                        <PhoneIcon />
+                                    </IconButton>
+                                    : null
+                                }
+                                <IconButton href={`mailto:${user.attributes.email}`} aria-label="email">
+                                    <EmailIcon />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Card>
                 </Grid>
             </Grid>
@@ -120,18 +147,29 @@ class StudyGroup extends Component {
 }
 
 const styles = theme => ({
+    title: {
+        fontSize: '2rem',
+        [theme.breakpoints.up('md')]: {
+            fontSize: '3rem'
+        }
+    },
+    headerContent: {
+        width: `calc(100% - ${theme.spacing.unit*2}px - 72px)`,
+    },
+    headerAction: {
+        width: 'auto',
+    },
     moment: {
         display: 'block',
         color: theme.palette.text.hint,
         margin: theme.spacing.unit,
     },
-    status: {
-        margin: theme.spacing.unit,
-        color: theme.palette.common.white,
-    },
     markdown: {
         color: theme.palette.text.primary,
     },
-});
+    contactInfo:{
+        padding: '16px 24px 16px 24px' 
+    },
+})
 
 export default withSnackbar(withStyles(styles)(StudyGroup));

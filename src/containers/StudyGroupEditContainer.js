@@ -13,7 +13,6 @@ class StudyGroupEditContainer extends Component {
 	state = {
 		title: '',
         description: '',
-		course: '',
 		loading: true,
 	}
 
@@ -24,7 +23,6 @@ class StudyGroupEditContainer extends Component {
 				id: study_groups.id,
 				title: study_groups.attributes.title,
 				description: study_groups.attributes.description,
-				course: study_groups.attributes.course.id,
 				study_groups: response.data,
 				loading: false,
 			});
@@ -33,7 +31,7 @@ class StudyGroupEditContainer extends Component {
 		});
 	}
 	render() {
-		const { id, title, description, course, loading } = this.state;
+		const { id, title, description, loading } = this.state;
 
 		if (loading) return <Loader />;
 
@@ -44,7 +42,6 @@ class StudyGroupEditContainer extends Component {
 						id={id}
 						title={title}
 						description={description}
-						course={course}
 						edit={true}
 					/>
                 </Grid>
