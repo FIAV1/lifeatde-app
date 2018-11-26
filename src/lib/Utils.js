@@ -161,12 +161,6 @@ const encodeSearchString = (prefix, object) => {
     return params.join('&');
 }
 
-const getError = (value, errors) => {
-    let temp = errors.find(error => error[value]);
-
-    return temp ? temp[value] : null;
-}
-
 export {
     getStatusColor,
     getCourseColor,
@@ -175,6 +169,5 @@ export {
     bytesToSize,
     formDataSerializer,
     encodeSearchString,
-    getError,
     createPhotoTiles
 }
