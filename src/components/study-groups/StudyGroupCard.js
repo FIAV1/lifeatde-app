@@ -7,7 +7,7 @@ import history from '../../lib/history';
 
 import LocalStorage from '../../lib/LocalStorage';
 
-import { getInitials, getCourseColor } from '../../lib/Utils';
+import { getCourseColor } from '../../lib/Utils';
 
 import {
     withStyles,
@@ -16,7 +16,6 @@ import {
     CardActionArea,
     CardContent,
     CardActions,
-    Avatar,
     Typography,
     Grid,
     Chip,
@@ -25,6 +24,8 @@ import {
 import Anchor from "../common/Anchor";
 import EditDeleteActions from "../common/EditDeleteActions";
 import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import AsyncAvatar from '../common/AsyncAvatar';
+
 import Api from "../../lib/Api";
 import {withSnackbar} from "notistack";
 
@@ -72,12 +73,7 @@ class StudyGroupCard extends Component {
                     <CardHeader
                         avatar={
                             <Anchor to={`/users/${user.id}`}>
-                                <Avatar
-                                    alt={`${user.attributes.firstname} ${user.attributes.lastname}`}
-                                    src={user.attributes.avatar ? user.attributes.avatar.url : null}
-                                >
-                                    {!user.attributes.avatar ? getInitials(user.attributes.firstname, user.attributes.lastname) : null}
-                                </Avatar>
+                                 <AsyncAvatar user={user} />
                             </Anchor>
                         }
                         title={

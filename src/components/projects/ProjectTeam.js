@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 
-import { getInitials } from '../../lib/Utils';
-
 import {
     List,
     ListItem,
     ListItemText,
     Divider,
     Typography,
-    Avatar,
 } from '@material-ui/core';
 
 
 import Anchor from "../common/Anchor";
+import AsyncAvatar from '../common/AsyncAvatar';
 
 class ProjectTeam extends Component {
     render() {
@@ -21,12 +19,7 @@ class ProjectTeam extends Component {
             <List>
                 <ListItem>
                     <Anchor to={`/users/${admin.id}`}>
-                        <Avatar
-                            alt={`${admin.attributes.firstname} ${admin.attributes.lastname}`}
-                            src={admin.attributes.avatar ? admin.attributes.avatar.url : null}
-                        >
-                            {!admin.attributes.avatar ? getInitials(admin.attributes.firstname, admin.attributes.lastname) : null}
-                        </Avatar>
+                        <AsyncAvatar user={admin} />
                     </Anchor>
                     <ListItemText
                         primary={
@@ -52,12 +45,7 @@ class ProjectTeam extends Component {
                     <div key={collaborator.id}>
                         <ListItem>
                             <Anchor to={`/users/${collaborator.id}`}>
-                                <Avatar
-                                    alt={`${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`}
-                                    src={collaborator.attributes.avatar ? collaborator.attributes.avatar.url : null}
-                                >
-                                    {!collaborator.attributes.avatar ? getInitials(collaborator.attributes.firstname, collaborator.attributes.lastname) : null}
-                                </Avatar>
+                            <AsyncAvatar user={collaborator} />
                             </Anchor>
                             <ListItemText
                                 primary={

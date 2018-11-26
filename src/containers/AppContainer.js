@@ -129,7 +129,7 @@ class AppContainer extends Component {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button onClick={() => history.push('/profile/'+user.id)}>
+                        <ListItem button onClick={() => history.push('/users/'+user.id)}>
                             <ListItemIcon>
                                 <AsyncAvatar
                                     avatarClass={classes.avatar}
