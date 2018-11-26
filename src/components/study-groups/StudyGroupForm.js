@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import {
-	withStyles,
+    withStyles,
+    TextField,
     Button,
     Grid,
     Typography,
@@ -9,57 +12,52 @@ import {
     Divider,
 } from '@material-ui/core';
 
-import {
-	ValidatorForm,
-	TextValidator,
-} from 'react-material-ui-form-validator';
-
-
 import Api from '../../lib/Api';
 import history from '../../lib/history';
 import LocalStorage from '../../lib/LocalStorage';
 import { getCourseColor } from '../../lib/Utils';
 import { withSnackbar } from 'notistack';
 
+const validationSchema = Yup.object().shape({
+    title: Yup.string()
+        .max(50, 'Sono consentiti al massimo 50 caratteri per il titolo')
+        .required('Devi inserire un titolo'),
+    description: Yup.string()
+        .required('Devi inserire una descrizione per il gruppo di studio'),
+});
+
 class StudyGroupForm extends Component {
-	state = {
-		id: null || this.props.id,
+    state = {
+        course: LocalStorage.get('user').included.find( item => item.type === 'course'),
+    }
+
+    FORM_VALUES = {
+        id: this.props.id || null,
 		title: this.props.title || '',
         description: this.props.description || '',
-        course: LocalStorage.get('user').included.find( item => item.type === 'course')
     }
 
-    handleChange = value => event => {
-        this.setState({[value]: event.target.value});
-    }
+    handleSubmit = (values, actions) => {
+        actions.setSubmitting(false);
 
-    handleEditor = value => content => {
-		this.setState({[value]: content});
-    }
-    
-    handleSubmit = event => {
-		event.preventDefault();
-
-		const { id, title, description, course } = this.state;
-
-        let course_id = course.id
+        const courseId = this.state.course.id;
 
         let params = {
             study_group:{
-                title,
-                description,
+                title: values.title,
+                description: values.description,
             }
         }
         
         if (this.props.edit) {
-            Api.put(`/study_groups/${id}`, params).then(response => {
+            Api.put(`/study_groups/${values.id}`, params).then(response => {
                 response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
                 history.push(`/study_groups/${response.data.id}`)
             }).catch(({errors}) => {
                 errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
             })
         } else {
-            Api.post(`/courses/${course_id}/study_groups/`, params).then(response => {
+            Api.post(`/courses/${courseId}/study_groups/`, params).then(response => {
                 response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
                 history.push(`/study_groups/${response.data.id}`)
             }).catch(({errors}) => {
@@ -71,7 +69,7 @@ class StudyGroupForm extends Component {
 
     render() {
 		const { classes, edit } = this.props;
-		const { title, description, course } = this.state;
+		const { course } = this.state;
 
         return (
             <div id="news-cards-container">
@@ -94,43 +92,58 @@ class StudyGroupForm extends Component {
                     </Grid>
                 </Grid>
                 <Divider className={classes.hr} />
-                <ValidatorForm
-                    ref={ref => this.form = ref}
-                    className={classes.container}
+                <Formik
+                    initialValues={this.FORM_VALUES}
                     onSubmit={this.handleSubmit}
-                >
-                    <TextValidator
-                        margin="normal"
-                        label="Titolo"
-                        onChange={this.handleChange('title')}
-                        name="title"
-                        value={title}
-                        validators={['required']}
-                        errorMessages={['Dai un titolo al tuo gruppo di studio']}
-                    />
-                    <TextValidator
-                        label="Descrizione"
-                        onChange={this.handleChange('description')}
-                        name="description"
-                        value={description}
-                        validators={['required']}
-                        errorMessages={['Fai una descrizione del tuo gruppo di studio']}
-                        multiline
-                        rowMax="100"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                <Button
-                        type="submit"
-                        onClick={this.handleValidation}
-                        variant="contained"
-                        color="secondary"
-                        fullWidth
-                        className={classes.button}
-                    >
-                        {edit ? 'Salva modifiche' : 'Crea gruppo di studio'}
-                    </Button>
-                </ValidatorForm>
+                    validationSchema={validationSchema}
+                    validateOnBlur
+                    render={props =>
+                        <form onSubmit={props.handleSubmit}>
+                            <TextField
+                                id="title"
+                                label="Titolo"
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                value={props.values.title}
+                                helperText={props.touched.title ? props.errors.title : null}
+                                error={props.errors.title && props.touched.title}
+                                className={classes.formField}
+                            />
+                            <TextField
+                                id="description"
+                                label="Descrizione"
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                value={props.values.description}
+                                helperText={props.touched.description ? props.errors.description : null}
+                                error={props.errors.description && props.touched.description}
+                                className={classes.formField}
+                                multiline
+                                rowMax="100"
+                                variant="outlined"
+                            />
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                className={classes.button}
+                            >
+                                {edit ? 'Salva modifiche' : 'Crea gruppo di studio'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                className={classes.button}
+                                onClick={() => history.goBack()}
+                            >
+                                Annulla
+                            </Button>
+                        </form>
+                    }
+                />
             </div>
         )
     }

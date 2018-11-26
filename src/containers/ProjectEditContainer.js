@@ -14,7 +14,7 @@ class ProjectEditContainer extends Component {
 		title: '',
 		description: '',
 		status: '',
-		files: [],
+		documents: [],
 		categories: [],
 		admin: '',
 		collaborators: [],
@@ -42,10 +42,10 @@ class ProjectEditContainer extends Component {
 				title: project.attributes.title,
 				description: project.attributes.description,
 				status: project.attributes.status.id,
-				files: project.attributes.documents,
-				categories: project.attributes.categories.map(category => ({value: parseInt(category.id, 10), label: category.name})),
+				documents: project.attributes.documents,
+				categories: project.attributes.categories.map(category => ({value: category.id, label: category.name})),
 				project: response.data,
-                collaborators: this.getCollaborators(response.data.relationships.collaborators, response.included).map(collaborator => ({value: parseInt(collaborator.id, 10), label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})),
+                collaborators: this.getCollaborators(response.data.relationships.collaborators, response.included).map(collaborator => ({value: collaborator.id, label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})),
                 admin: this.getAdmin(response.data.relationships.admins, response.included),
 				results: project.attributes.results,
 				loading: false,
@@ -55,7 +55,7 @@ class ProjectEditContainer extends Component {
 		});
 	}
 	render() {
-		const { id, title, description, status, files, categories, admin, collaborators, results, loading } = this.state;
+		const { id, title, description, status, documents, categories, admin, collaborators, results, loading } = this.state;
 
 		if (loading) return <Loader />;
 
@@ -67,12 +67,12 @@ class ProjectEditContainer extends Component {
 						title={title}
 						description={description}
 						status={status}
-						files={files}
+						documents={documents}
 						categories={categories}
 						collaborators={collaborators}
 						admin={admin}
 						results={results}
-						edit={true}
+						edit
 					/>
                 </Grid>
             </Grid>

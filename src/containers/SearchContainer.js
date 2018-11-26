@@ -96,7 +96,17 @@ class SearchContainer extends Component {
         this.setState({loading: false});
     }
     
-    badgeValue = props => this.state[props] ? this.state[props].length : 0
+    badgeValue = props => this.state[props] ? this.state[props].length : 0;
+
+    removeProject = (projectId, adminId) => {
+        let projects = this.state.projects.filter(project => project.id !== projectId);
+        let users = this.state.users.filter(user => user.id !== adminId);
+
+        this.setState({
+            projects,
+            users,
+        });
+    };
 
     render() {
         const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers} = this.state;
@@ -178,7 +188,7 @@ class SearchContainer extends Component {
                                     onChangeIndex={this.handleChangeIndex}
                                     animateHeight
                                 >
-                                    <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers}/></TabContainer>
+                                    <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers} removeProject={this.removeProject}/></TabContainer>
                                     <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}><BookCardList books={books} users={booksUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}>Utenti</TabContainer>

@@ -18,11 +18,14 @@ class DocumentList extends Component {
     downloadFile = (url, filename) => () => {
         Api.download(url)
             .then(fileUrl => {
-                let link = window.document.createElement('a');
-                link.href = fileUrl;
-                link.download = filename;
-                link.click();
-                link.remove();
+                fetch(fileUrl).then(res => res.blob()).then(blob => {
+                    let objectURL = URL.createObjectURL(blob);
+                    let link = window.document.createElement('a');
+                    link.href = objectURL;
+                    link.download = filename;
+                    link.click();
+                    link.remove();
+                });
             }).catch(({errors}) => {
                 errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
             });

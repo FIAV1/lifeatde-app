@@ -4,15 +4,12 @@ import Api from '../lib/Api';
 import {
     withStyles,
     Typography,
-    Button,
     Divider
 } from '@material-ui/core';
 
-import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
 import ProjectCardList from '../components/projects/ProjectCardList';
 import Loader from '../components/common/Loader';
+import ProjectFilters from '../components/filters/ProjectFilters';
 
 import { withSnackbar } from 'notistack';
 
@@ -47,9 +44,13 @@ class ProjectCardsContainer extends Component {
         });
     };
 
+    handleFilter = property => filteredItems => {
+        this.setState({[property]: filteredItems});
+    }
+
     render() {
         const { loading, projects, users } = this.state;
-        const { classes, history } = this.props;
+        const { classes } = this.props;
 
         if(loading) {
             return <Loader />
@@ -57,17 +58,13 @@ class ProjectCardsContainer extends Component {
 
         return(
             <div id="project-cards-container">
-                <Typography className={classes.header} variant="h4">
+                <Typography className={classes.header} variant="h4" gutterBottom>
                     Progetti
-                    <div>
-                        <Button onClick={() => history.push('/projects/new')} variant="fab" mini color="primary" aria-label="Aggiungi" className={classes.button}>
-                            <AddIcon />
-                        </Button>
-                        <Button variant="fab" mini color="primary" aria-label="Filtra" className={classes.button}>
-                            <FilterListIcon />
-                        </Button>
-                    </div>
                 </Typography>
+                <ProjectFilters
+                    filters={['categories']}
+                    onFilter={this.handleFilter('projects')}
+                />
                 <Divider className={classes.hr} />
                 <ProjectCardList projects={projects} users={users} removeProject={this.removeProject} />
             </div>

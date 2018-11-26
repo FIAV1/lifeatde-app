@@ -11,9 +11,7 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import Api from '../../lib/Api';
 import { withSnackbar } from 'notistack';
-import LocalStorage from '../../lib/LocalStorage';
 
 const styles = theme => ({
     root: {
@@ -173,7 +171,7 @@ const components = {
     ValueContainer,
 };
 
-class Autocomplete extends React.Component {
+class AsyncAutocomplete extends React.Component {
     state = {
 		inputValue: '',
 	};
@@ -184,25 +182,19 @@ class Autocomplete extends React.Component {
 		return inputValue;
 	};
 
-	loadOptions = (inputValue) => {
-		return Api.get(this.props.endpoint+inputValue).then(response => {
-			return response.data.filter(element => element.id !== LocalStorage.get('user').data.id).map(element => ({
-                value: parseInt(element.id, 10),
-                label: element.attributes.firstname + ' ' + element.attributes.lastname,
-            }));
-		}).catch(({errors}) => {
-            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-        });
-	}
-
     render() {
         const { 
             classes,
             theme,
+            loadOptions,
+            value,
+            isMulti,
             label,
-            values,
-            name,
-            handleAutocomplete,
+            placeholder,
+            onChange,
+            onBlur,
+            helperText,
+            error,
         } = this.props;
 
         const selectStyles = {
@@ -215,8 +207,6 @@ class Autocomplete extends React.Component {
             }),
         };
 
-        if (!values) return null;
-
         return (
             <div className={classes.root}>
                 <NoSsr>
@@ -224,22 +214,25 @@ class Autocomplete extends React.Component {
 						classes={classes}
 						styles={selectStyles}
 						textFieldProps={{
-							label: label,
+							label,
 							InputLabelProps: {
 								shrink: true,
-							},
+                            },
+                            error,
+                            helperText,
 						}}
-						cacheOptions
-						loadOptions={this.loadOptions}
+                        value={value}
+                        cacheOptions
+						loadOptions={loadOptions}
 						defaultOptions={[]}
-						onInputChange={this.handleInputChange}
-						onChange={handleAutocomplete(name)}
-						components={components}
-                        value={values}
-                        placeholder={'Seleziona i membri...'}
-                        noOptionsMessage={() => "Nessun risultato."}
-                        loadingMessage={() => "Caricamento..."}
-                        isMulti
+                        components={components}
+                        placeholder={placeholder}
+                        noOptionsMessage={() => 'Nessun risultato.'}
+                        loadingMessage={() => 'Caricamento...'}
+                        isMulti={isMulti}
+                        onInputChange={this.handleInputChange}
+                        onChange={onChange}
+                        onBlur={onBlur}
 					/>
                 </NoSsr>
             </div>
@@ -247,9 +240,21 @@ class Autocomplete extends React.Component {
     }
 }
 
-Autocomplete.propTypes = {
+AsyncAutocomplete.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
 };
 
-export default withSnackbar(withStyles(styles, { withTheme: true })(Autocomplete));
+AsyncAutocomplete.defaultProps = {
+    error: false,
+    errorText: '',
+    value: null,
+    options: [],
+    placeholder: 'Select...',
+    noOptionsMessage: 'No options',
+    isMulti: false,
+    onChange: () => null,
+    onBlur: () => null,
+}
+
+export default withSnackbar(withStyles(styles, { withTheme: true })(AsyncAutocomplete));

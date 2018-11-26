@@ -132,10 +132,33 @@ const formDataSerializer = (prefix, object, formData) => {
     return formData;
 };
 
-const getError = (value, errors) => {
-    let temp = errors.find(error => error[value]);
+const encodeSearchString = (prefix, object) => {
+    let params = [];
 
-    return temp ? temp[value] : null;
+    if (object) {
+        Object.keys(object).forEach(key => {
+            if (typeof object[key] === 'object' && !Array.isArray(object[key])) {
+                encodeSearchString(`${prefix}[${key}]`, object[key]);
+            } else {
+                if (Array.isArray(object[key])) {
+                    if (object[key].length > 0) {
+                        let result = '';
+                        object[key].forEach((el, index) => {
+                            if (index > 0) {
+                                result += '&';
+                            }
+                            result += `${prefix}[${key}][]=${el}`;
+                        });
+                        params.push(result);
+                    }
+                } else {
+                    params.push(`${prefix}[${key}]=${object[key]}`);
+                }
+            }
+        });
+    }
+
+    return params.join('&');
 }
 
 export {
@@ -145,6 +168,6 @@ export {
     intToBytes,
     bytesToSize,
     formDataSerializer,
-    getError,
+    encodeSearchString,
     createPhotoTiles
 }

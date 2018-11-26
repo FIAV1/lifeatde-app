@@ -11,9 +11,6 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import Api from '../../lib/Api';
-import { withSnackbar } from 'notistack';
-import { getError } from '../../lib/Utils';
 
 const styles = theme => ({
     root: {
@@ -41,14 +38,6 @@ const styles = theme => ({
             0.08,
         ),
     },
-    chipRoot: {
-        maxWidth: '100%',
-    },
-    chipLabel:{
-        overflow: 'hidden',
-        paddingRight: 0,
-        marginRight: '12px',
-    },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     },
@@ -62,7 +51,7 @@ const styles = theme => ({
     },
     paper: {
         position: 'absolute',
-        zIndex: 2,
+        zIndex: 1,
         marginTop: theme.spacing.unit,
         left: 0,
         right: 0,
@@ -152,14 +141,10 @@ function MultiValue(props) {
     return (
         <Chip
             tabIndex={-1}
-            label={<Typography variant="body1" noWrap>{props.children}</Typography>}
+            label={props.children}
             className={classNames(props.selectProps.classes.chip, {
                 [props.selectProps.classes.chipFocused]: props.isFocused,
             })}
-            classes={{
-                root: props.selectProps.classes.chipRoot,
-                label: props.selectProps.classes.chipLabel,
-            }}
             onDelete={props.removeProps.onClick}
             deleteIcon={<CancelIcon {...props.removeProps} />}
         />
@@ -186,39 +171,20 @@ const components = {
 };
 
 class Autocomplete extends React.Component {
-    state = {
-        suggestions: [],
-        loading: true,
-    }
-
-    componentDidMount() {
-        const { endpoint } = this.props;
-        
-        Api.get(endpoint).then(response => {
-            let suggestions = response.data.map(element => ({
-                value: parseInt(element.id, 10),
-                label: element.attributes.name,
-            }));
-            this.setState({suggestions: suggestions, loading: false});
-        }).catch(({errors}) => {
-            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-        })
-    }
-
-    isOptionSelected = (el, elements) => elements.filter(element => element.value === el.value).length < 0;
-
     render() {
         const { 
             classes,
             theme,
+            options,
+            value,
+            isMulti,
             label,
-            values,
-            name,
-            errors,
-            handleAutocomplete,
-            onFocus,
+            placeholder,
+            onChange,
+            onBlur,
+            helperText,
+            error,
         } = this.props;
-        const { suggestions, loading } = this.state;
 
         const selectStyles = {
             input: base => ({
@@ -230,8 +196,6 @@ class Autocomplete extends React.Component {
             }),
         };
 
-        if (loading) return null;
-
         return (
             <div className={classes.root}>
                 <NoSsr>
@@ -239,21 +203,21 @@ class Autocomplete extends React.Component {
                         classes={classes}
                         styles={selectStyles}
                         textFieldProps={{
-                            label: label,
+                            label,
                             InputLabelProps: {
                                 shrink: true,
                             },
-                            error: getError(name, errors) ? true : false,
-                            helperText: errors.length > 0 ? getError(name, errors) : null,
+                            error,
+                            helperText,
                         }}
-                        value={values}
-                        options={suggestions}
+                        value={value}
+                        options={options}
                         components={components}
-                        onChange={handleAutocomplete(name)}
-                        placeholder={'Seleziona le categorie...'}
-                        onFocus={onFocus}
-                        noOptionsMessage={() => "Nessun risultato."}
-                        isMulti
+                        placeholder={placeholder}
+                        noOptionsMessage={() => 'Nessun risultato.'}
+                        isMulti={isMulti}
+                        onChange={onChange}
+                        onBlur={onBlur}
                     />
                 </NoSsr>
             </div>
@@ -266,4 +230,16 @@ Autocomplete.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withSnackbar(withStyles(styles, { withTheme: true })(Autocomplete));
+Autocomplete.defaultProps = {
+    error: false,
+    errorText: '',
+    value: null,
+    options: [],
+    placeholder: 'Select...',
+    noOptionsMessage: 'No options',
+    isMulti: false,
+    onChange: () => null,
+    onBlur: () => null,
+}
+
+export default withStyles(styles, { withTheme: true })(Autocomplete);
