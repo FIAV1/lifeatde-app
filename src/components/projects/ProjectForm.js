@@ -1,297 +1,328 @@
 import React, { Component } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import Api from '../../lib/Api';
+import LocalStorage from '../../lib/LocalStorage';
+import history from '../../lib/history';
+import { formDataSerializer } from '../../lib/Utils';
 
 import {
-	withStyles,
-	MenuItem,
-	Button,
-	Typography,
+    withStyles,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    FormHelperText,
+    Typography,
+    Button
 } from '@material-ui/core';
-
-import {
-	ValidatorForm,
-	TextValidator,
-} from 'react-material-ui-form-validator';
-
-import FileList from './FileList';
-
-import { Editor } from '@tinymce/tinymce-react';
-
-import { formDataSerializer, getError } from '../../lib/Utils';
-
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Autocomplete from '../common/Autocomplete';
 import AsyncAutocomplete from '../common/AsyncAutocomplete';
-import Api from '../../lib/Api';
-import history from '../../lib/history';
+import FileList from './FileList';
+import { Editor } from '@tinymce/tinymce-react';
 import { withSnackbar } from 'notistack';
 
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
+const validationSchema = Yup.object().shape({
+    title: Yup.string()
+        .max(50, 'Sono consentiti al massimo 50 caratteri per il titolo')
+        .required('Devi inserire un titolo'),
+    categories: Yup.array()
+        .min(1, 'Devi scegliere almeno una categoria')
+        .of(
+            Yup.object().shape({
+                label: Yup.string().required(),
+                value: Yup.string().required(),
+            })
+        ),
+    status: Yup.string()
+        .required('Devi scegliere lo stato del progetto'),
+    description: Yup.string()
+        .required('Devi inserire una descrizione per il progetto'),
+});
+
 class ProjectForm extends Component {
-	state = {
-		id: null || this.props.id,
-		title: this.props.title || '',
-		description: this.props.description || '',
-		status: this.props.status || '',
-		files: null,
-		oldFiles: this.props.files || [],
-		categories: this.props.categories || [],
-		admin: this.props.admin || '',
-		collaborators: this.props.collaborators || [],
-		results: this.props.results || null,
-		errors: [],
-	}
+    state = {
+        categoriesOptions: [],
+    }
 
-	handleChange = value => event => {
-		let fileList = event.target.files;
+    FORM_VALUES = {
+        id: this.props.id || '',
+        title: this.props.title || '',
+        categories: this.props.categories || [],
+        status: this.props.status || '',
+        description: this.props.description || '',
+        documents: [],
+        oldDocuments: this.props.documents || [],
+        collaborators: this.props.collaborators || [],
+        edit: this.props.edit || false,
+    }
 
-		if (fileList) {
-			let files = Object.keys(fileList).map(key => fileList[key]);
-			this.setState({files});
-		} else {
-			this.setState({[value]: event.target.value});
-		}
-	}
-	
-	handleAutocomplete = name => value => {
-        this.setState({
-            [name]: value,
+    componentDidMount() {
+		Api.get('/categories').then(response => {
+            this.setState({
+                categoriesOptions: response.data.map(category => ({
+                    value: parseInt(category.id, 10),
+                    label: category.attributes.name
+                })),
+                loading: false,
+            });
         });
-    };
+    }
 
-	handleEditor = value => content => {
-		this.setState({[value]: content});
-	}
+    addFiles = props => event => {
+        let documents = props.values.documents;
+        let entries = Object.keys(event.target.files).map(key => event.target.files[key]);
+        
+        props.setFieldValue('documents', documents.concat(entries));
+    }
 
-	handleValidation = () => {
-		const { categories, errors, description } = this.state;
-		let newErrors = [];
-
-		if (categories.length < 1) {
-			newErrors.push({categories: 'Devi scegliere almeno una categoria'});
-		}
-
-		if (!description) {
-			newErrors.push({description: 'Devi inserire una descrizione del tuo progetto'});
-		}
-
-		this.setState({errors: newErrors.concat(errors)});
-	}
-
-	handleSubmit = event => {
-		event.preventDefault();
-
-		const { id, title, description, status, files, categories, collaborators, results, errors } = this.state;
-
-		if (errors.length < 1) {
-			let formData = new FormData();
-			let params = {
-				title,
-				description,
-				project_status_id: status,
-				categories: categories.map(category => category.value),
-			}
-
-			if (results) params.results = results;
-			if (files) params.documents = files;
-			if (collaborators) params.collaborators = collaborators.map(collaborator => collaborator.value);
-
-			formData = formDataSerializer('project', params, formData);
-
-			if (this.props.edit) {
-				Api.put('/projects/'+id, formData).then(response => {
-					response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
-					history.push(`/projects/${response.data.id}`)
-				}).catch(({errors}) => {
-					errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-				})
-			} else {
-				Api.post('/projects', formData).then(response => {
-					response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
-					history.push(`/projects/${response.data.id}`)
-				}).catch(({errors}) => {
-					errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-				});
-			}
-		}
-	}
-
-	removeErrors = value => () => {
-		const { errors } = this.state;
-		let newErrors = errors.filter(error => Object.keys(error)[0] !== value);
-		this.setState({ errors: newErrors });
-	}
-	
-	removeFile = (fileId, fileIndex) => {
-		const { oldFiles, files } = this.state;
+    removeFiles = props => (fileId, fileIndex) => {
+		let oldDocuments = props.values.oldDocuments;
+        let newDocuments = props.values.documents;
 
 		let updatedFiles;
 
 		if (fileId) {
-			updatedFiles = oldFiles.filter(oldFile => oldFile.id !== fileId);
-			this.setState({oldFiles: updatedFiles});
+            updatedFiles = oldDocuments.filter(oldFile => oldFile.id !== fileId);
+            props.setFieldValue('oldDocuments', updatedFiles);
 		} else {
-			updatedFiles = files.filter((file,index) => index !== fileIndex);
-			this.setState({files: updatedFiles});	
+			updatedFiles = newDocuments.filter((newDocument,index) => index !== fileIndex);
+			props.setFieldValue('documents', updatedFiles);
 		}
+    }
+
+    deleteFiles = props => fileId => {
+        let files = {
+            documents: [fileId]
+        };
+        
+        Api.delete(`/projects/${props.values.id}/documents`, files).then(response => {
+            this.removeFiles(props)(fileId, null);
+            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
+    }
+
+    handleAsyncOptions = endpoint => async inputValue => {
+		return Api.get(endpoint+inputValue).then(response => {
+			return response.data.filter(element => element.id !== LocalStorage.get('user').data.id).map(element => ({
+                value: element.id,
+                label: element.attributes.firstname + ' ' + element.attributes.lastname,
+            }));
+		}).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+        });
 	}
 
-	render() {
-		const { theme, classes, edit } = this.props;
-		const { id, title, description, status, oldFiles, files, categories, collaborators, results, errors } = this.state;
+    handleSubmit = (values, actions) => {
+        actions.setSubmitting(false);
 
-		return (
-			<ValidatorForm
-				ref={ref => this.form = ref}
-				className={classes.container}
+        let formData = new FormData();
+        let params = {
+            title: values.title,
+            description: values.description,
+            project_status_id: values.status,
+            categories: values.categories.map(category => category.value),
+        }
+
+        if (values.results) params.results = values.results;
+        if (values.documents) params.documents = values.documents;
+        if (values.collaborators) params.collaborators = values.collaborators.map(collaborator => collaborator.value);
+
+        formData = formDataSerializer('project', params, formData);
+
+        if (values.edit) {
+            Api.put(`/projects/${values.id}`, formData).then(response => {
+                response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+                history.push(`/projects/${response.data.id}`);
+            }).catch(({errors}) => {
+                errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+            })
+        } else {
+            Api.post('/projects', formData).then(response => {
+                response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
+                history.push(`/projects/${response.data.id}`);
+            }).catch(({errors}) => {
+                errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+            });
+        }
+    }
+
+    render() {
+        const { theme, classes } = this.props;
+        const { categoriesOptions } = this.state;
+
+        return (
+            <Formik
+                initialValues={this.FORM_VALUES}
                 onSubmit={this.handleSubmit}
-            >
-				<TextValidator
-					className={classes.mB}
-					label="Titolo"
-                    onChange={this.handleChange('title')}
-                    name="title"
-                    value={title}
-                    validators={['required']}
-                    errorMessages={['Dai un titolo al tuo progetto']}
-                />
-				<TextValidator
-					className={classes.mB}
-					label="Stato"
-					select
-                    onChange={this.handleChange('status')}
-                    name="status"
-                    value={status}
-                    validators={['required']}
-                    errorMessages={['Decidi lo stato del tuo progetto']}
-					>
-					<MenuItem value={1}>
-						Aperto
-					</MenuItem>
-					<MenuItem value={2}>
-						Chiuso
-					</MenuItem>
-					<MenuItem value={3}>
-						Terminato
-					</MenuItem>
-				</TextValidator>
-				<Typography color={getError('description', errors) ? 'error' : 'default'} variant="h6">Descrizione:</Typography>
-				<Editor
-					apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-					initialValue={description}
-					init={{
-						menubar: false,
-						elementpath: false,
-						skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
-						plugins: 'lists, link, emoticons, fullscreen',
-						toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
-						min_height: 280,
-					}}
-					onEditorChange={this.handleEditor('description')}
-					onFocus={this.removeErrors('description')}
-				/>
-				<Typography variant="caption" color="error">{getError('description', errors)}</Typography>
-				{status === 3 && <div>
-					<Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
-					<Editor
-						apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-						initialValue={results}
-						init={{
-							menubar: false,
-							elementpath: false,
-							skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
-							plugins: 'lists, link, emoticons, fullscreen',
-							toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
-							min_height: 280,
-						}}
-						onEditorChange={this.handleEditor('results')}
-					/>
-				</div>}
-				<Autocomplete
-					label="Categorie"
-					name="categories"
-					endpoint="/categories"
-					values={categories}
-					handleAutocomplete={this.handleAutocomplete}
-					errors={errors}
-					onFocus={this.removeErrors('categories')}
-				/>
-				<AsyncAutocomplete
-					label="Membri"
-					name="collaborators"
-					endpoint="/users?search="
-					values={collaborators}
-					handleAutocomplete={this.handleAutocomplete}
-				/>
-				<label htmlFor="upload-file-button">
-					<Button
-						type="button"
-						variant="contained"
-						color="primary"
-						component="span"
-						fullWidth
-						className={classes.button}
-					>
-						Carica file
-						<CloudUploadIcon className={classes.rightIcon} />
-					</Button>
-				</label>
-				<input
-					className={classes.input}
-					id="upload-file-button"
-					multiple
-					type="file"
-					onChange={this.handleChange('files')}
-				/>
-				<FileList removeFile={this.removeFile} projectId={id} files={files} />
-				<FileList removeFile={this.removeFile} projectId={id} files={oldFiles} old />
-				<Button
-					type="submit"
-					onClick={this.handleValidation}
-					variant="contained"
-					color="secondary"
-					fullWidth
-					className={classes.button}
-				>
-					{edit ? 'Salva modifiche' : 'Crea progetto'}
-				</Button>
-			</ValidatorForm>
-		)
-	}
+                validationSchema={validationSchema}
+                validateOnBlur
+                render={props =>
+                    <form onSubmit={props.handleSubmit}>
+                        <TextField
+                            id="title"
+                            label="Titolo"
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            value={props.values.title}
+                            helperText={props.touched.title ? props.errors.title : null}
+                            error={props.errors.title && props.touched.title}
+                            className={classes.formField}
+                        />
+                        <FormControl
+                            error={props.errors.status && props.touched.status}
+                            className={classes.formField}
+                        >
+                            <InputLabel htmlFor="status">Status</InputLabel>
+                            <Select
+                                native
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                value={props.values.status}
+                                inputProps={{
+                                    id: 'status',
+                                }}
+                            >
+                                <option value="" disabled />
+                                <option value={1}>Aperto</option>
+                                <option value={2}>Chiuso</option>
+                                <option value={3}>Terminato</option>
+                            </Select>
+                            {props.touched.status && props.errors.status ? <FormHelperText>{props.errors.status}</FormHelperText> : null}
+                        </FormControl>
+                        <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="h6">Descrizione:</Typography>
+                        <Editor
+                            id="description"
+                            apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
+                            initialValue={props.values.description}
+                            init={{
+                                menubar: false,
+                                elementpath: false,
+                                skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
+                                plugins: 'lists, link, emoticons, fullscreen',
+                                toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
+                                min_height: 280,
+                            }}
+                            onEditorChange={value => props.setFieldValue('description', value)}
+                            onBlur={props.handleBlur}
+                        />
+                        { props.touched.description && props.errors.description
+                        ? <Typography variant="caption" color="error">{props.errors.description}</Typography>
+                        : null }
+                        <Autocomplete
+                            id="categories"
+                            label="Categorie"
+                            onChange={value => props.setFieldValue('categories', value)}
+                            onBlur={() => props.setFieldTouched('categories')}
+                            value={props.values.categories}
+                            helperText={props.touched.categories ? props.errors.categories : null}
+                            error={props.errors.categories && props.touched.categories}
+                            options={categoriesOptions}
+                            placeholder="Seleziona una categoria..."
+                            isMulti
+                        />
+                        <AsyncAutocomplete
+                            id="collaborators"
+                            label="Membri"
+                            onChange={value => props.setFieldValue('collaborators', value)}
+                            onBlur={() => props.setFieldTouched('collaborators')}
+                            value={props.values.collaborators}
+                            loadOptions={this.handleAsyncOptions('/users?search=')}
+                            placeholder="Seleziona una categoria..."
+                            isMulti
+                        />
+                        {props.values.status === "3" && <div>
+                            <Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
+                            <Editor
+                                id="results"
+                                apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
+                                initialValue={props.values.results}
+                                init={{
+                                    menubar: false,
+                                    elementpath: false,
+                                    skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
+                                    plugins: 'lists, link, emoticons, fullscreen',
+                                    toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
+                                    min_height: 280,
+                                }}
+                                onEditorChange={value => props.setFieldValue('results', value)}
+                                onBlur={props.handleBlur}
+                            />
+                        </div>}
+                        <FileList
+                            deleteFiles={this.deleteFiles(props)}
+                            removeFiles={this.removeFiles(props)}
+                            files={props.values.oldDocuments}
+                            old
+                        />
+                        <label htmlFor="files">
+                            <Button
+                                type="button"
+                                variant="contained"
+                                color="primary"
+                                component="span"
+                                fullWidth
+                                className={classes.button}
+                            >
+                                Carica file
+                                <CloudUploadIcon className={classes.rightIcon} />
+                            </Button>
+                        </label>
+                        <input
+                            id="files"
+                            type="file"
+                            onChange={this.addFiles(props)}
+                            onBlur={() => props.setFieldTouched('documents')}
+                            className={classes.input}
+                            multiple
+                        />
+                        <FileList
+                            removeFiles={this.removeFiles(props)}
+                            files={props.values.documents}
+                        />
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            className={classes.button}
+                        >
+                            {props.values.edit ? 'Salva modifiche' : 'Crea progetto'}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="contained"
+                            color="secondary"
+                            fullWidth
+                            className={classes.button}
+                            onClick={() => history.goBack()}
+                        >
+                            Annulla
+                        </Button>
+                    </form>
+                }
+            />
+        )
+    }
 }
 
 const styles = theme => ({
-	container: {
-		display: 'flex',
-		flexWrap: 'wrap',
-		flexDirection: 'column',
-	},
-	mB: {
-		marginBottom: theme.spacing.unit * 2,
-	},
-	mT: {
-		marginTop: theme.spacing.unit * 2,
-	},
-	button: {
-		marginTop: theme.spacing.unit * 2,
-		marginBottom: theme.spacing.unit * 2,
-	},
-	input: {
-		display: 'none',
-	},
-	rightIcon: {
-		marginLeft: theme.spacing.unit,
-	},
-	formControl: {
-		margin: theme.spacing.unit,
-		minWidth: 120,
-		maxWidth: 300,
-	},
-	  chips: {
-		display: 'flex',
-		flexWrap: 'wrap',
-	},
-	  chip: {
-		margin: theme.spacing.unit / 4,
-	},
-})
+    formField : {
+        width: '100%',
+        marginBottom: theme.spacing.unit * 2,
+    },
+    input: {
+        display: 'none',
+    },
+    button: {
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+    }
+});
 
-export default withSnackbar(withStyles(styles, { withTheme: true })(ProjectForm));
+export default withSnackbar(withStyles(styles, {withTheme: true})(ProjectForm));

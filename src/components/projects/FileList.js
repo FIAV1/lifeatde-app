@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { intToBytes, bytesToSize } from '../../lib/Utils';
+
 import {
     Typography,
     IconButton,
@@ -10,14 +12,11 @@ import {
 	ListItemText,
 	ListItemSecondaryAction,
 } from '@material-ui/core';
-
-import { intToBytes, bytesToSize } from '../../lib/Utils';
+import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
+import { withSnackbar } from 'notistack';
 
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Api from '../../lib/Api';
-import { withSnackbar } from 'notistack';
-import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
 
 class FileList extends Component {
     state = {
@@ -32,25 +31,14 @@ class FileList extends Component {
         });
     };
 
-    deleteFile = fileId => {
-        let files = {
-            documents: [fileId]
-        };
+    handleDelete = () => {
+        this.props.deleteFiles(this.state.fileId);
 
-        Api.delete(`/projects/${this.props.projectId}/documents`, files).then(response => {
-            this.props.removeFile(fileId, null);
-            response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
-        }).catch(({errors}) => {
-            errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-        });
-        this.setState({
-            confirmationDialogIsOpen: false,
-            fileId: null,
-        });
-    };
+        this.setState({confirmationDialogIsOpen: false});
+    }
 
     render() {
-        const { files, old } = this.props;
+        const { files, old, removeFiles } = this.props;
 
         if (!files) return null;
 
@@ -70,7 +58,7 @@ class FileList extends Component {
                                     secondary={<Typography variant="body1" noWrap>{file.size ? intToBytes(file.size) : bytesToSize(file.byte_size)}</Typography>}
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton onClick={old ? this.openConfirmationDialog(file.id) : () => this.props.removeFile(null, index)} aria-label="Elimina">
+                                    <IconButton onClick={old ? this.openConfirmationDialog(file.id) : () => removeFiles(null, index)} aria-label="Elimina">
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -82,8 +70,7 @@ class FileList extends Component {
                     open={this.state.confirmationDialogIsOpen}
                     title={"Eliminare il file?"}
                     body={"Questa operazione è irreversibile, una volta eliminato il file non sarà più possibile recuperarlo."}
-                    target={this.state.fileId}
-                    onClickDelete={this.deleteFile}
+                    onClickDelete={this.handleDelete}
                     onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
                 />
 
