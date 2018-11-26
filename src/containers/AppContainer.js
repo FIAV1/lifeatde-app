@@ -234,8 +234,10 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         marginTop: '64px',
         padding: theme.spacing.unit*2,
+        paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing.unit,
+            paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
         },
         minWidth: 'calc(100vw - 72px)',
         [theme.breakpoints.down('xs')]: {
