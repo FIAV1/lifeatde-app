@@ -4,7 +4,6 @@ import Api from '../lib/Api';
 import {
     withStyles,
     Typography,
-    Button,
     Divider
 } from '@material-ui/core';
 
@@ -51,7 +50,7 @@ class ProjectCardsContainer extends Component {
 
     render() {
         const { loading, projects, users } = this.state;
-        const { classes, history } = this.props;
+        const { classes } = this.props;
 
         if(loading) {
             return <Loader />

@@ -14,7 +14,6 @@ import { withSnackbar } from 'notistack';
 import CategoryFilter from './CategoryFilter';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 class Filter extends Component {
     state =  {
