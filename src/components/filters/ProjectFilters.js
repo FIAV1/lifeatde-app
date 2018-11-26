@@ -4,7 +4,6 @@ import Api from '../../lib/Api';
 import { encodeSearchString } from '../../lib/Utils';
 
 import {
-    withStyles,
     ExpansionPanel,
     ExpansionPanelSummary,
     Typography,
@@ -41,14 +40,14 @@ class Filter extends Component {
 
     render() {
         const { loading } = this.state;
-        const { classes, filters } = this.props;
+        const { filters } = this.props;
 
         if (loading) return null;
 
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<FilterListIcon />}>
-                    <Typography variant="caption"  className={classes.heading}>FILTRA</Typography>
+                    <Typography variant="caption">FILTRA</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     { filters.find(filter => filter === 'categories')
@@ -61,8 +60,5 @@ class Filter extends Component {
     }
 }
  
-const styles = theme => ({
 
-})
-
-export default withSnackbar(withStyles(styles)(Filter));
+export default withSnackbar(Filter);

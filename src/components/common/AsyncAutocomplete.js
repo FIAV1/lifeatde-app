@@ -253,8 +253,8 @@ AsyncAutocomplete.defaultProps = {
     placeholder: 'Select...',
     noOptionsMessage: 'No options',
     isMulti: false,
-    onChange: event => console.log(event),
-    onBlur: event => console.log(event),
+    onChange: () => null,
+    onBlur: () => null,
 }
 
 export default withSnackbar(withStyles(styles, { withTheme: true })(AsyncAutocomplete));
