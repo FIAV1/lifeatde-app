@@ -119,7 +119,7 @@ class StudyGroupForm extends Component {
                                 error={props.errors.description && props.touched.description}
                                 className={classes.formField}
                                 multiline
-                                rowMax="100"
+                                rowsMax="100"
                                 variant="outlined"
                             />
                             <Button
@@ -137,7 +137,7 @@ class StudyGroupForm extends Component {
                                 color="secondary"
                                 fullWidth
                                 className={classes.button}
-                                onClick={() => history.goBack()}
+                                onClick={() => history.push('/study_groups')}
                             >
                                 Annulla
                             </Button>
@@ -175,7 +175,11 @@ const styles = theme => ({
 		display: 'flex',
 		flexWrap: 'wrap',
 		flexDirection: 'column',
-	},
+    },
+    formField: {
+        width: '100%',
+        marginBottom: theme.spacing.unit * 2,
+    },
 	button: {
 		marginTop: theme.spacing.unit * 2,
 		marginBottom: theme.spacing.unit * 2,

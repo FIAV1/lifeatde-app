@@ -26,6 +26,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SearchIcon from '@material-ui/icons/Search';
 import AsyncAvatar from '../components/common/AsyncAvatar';
 import Loader from '../components/common/Loader'
+import SpeedDials from '../components/common/SpeedDials';
 
 class AppContainer extends Component {
     state = {
@@ -104,25 +105,25 @@ class AppContainer extends Component {
                     <List>
                         <ListItem button onClick={() => history.push('/projects')}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-drafting-compass')} />
+                                <Icon color="action" className={'fas fa-drafting-compass'} />
                             </ListItemIcon>
                             <ListItemText primary="Progetti" />
                         </ListItem>
                         <ListItem button onClick={() => history.push('/study_groups')}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-handshake')} />
+                                <Icon color="action" className={'fas fa-handshake'} />
                             </ListItemIcon>
                             <ListItemText primary="Studio" />
                         </ListItem>
                         <ListItem button onClick={() => history.push('/books')}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-book')} />
+                                <Icon color="action" className={'fas fa-book'} />
                             </ListItemIcon>
                             <ListItemText primary="Libri" />
                         </ListItem>
                         <ListItem button onClick={() => history.push('/news')}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-bullhorn')} />
+                                <Icon color="action" className={'fas fa-bullhorn'} />
                             </ListItemIcon>
                             <ListItemText primary="News" />
                         </ListItem>
@@ -146,7 +147,7 @@ class AppContainer extends Component {
                         </ListItem>
                         <ListItem button onClick={this.props.changeThemeType}>
                             <ListItemIcon>
-                                <Icon color="action" className={classNames(classes.icon, 'fas fa-lightbulb')} />
+                                <Icon color="action" className={'fas fa-lightbulb'} />
                             </ListItemIcon>
                             <ListItemText inset primary="Tema scuro" />
                         </ListItem>
@@ -162,6 +163,7 @@ class AppContainer extends Component {
                     </List>
                 </Drawer>
                 <main className={classes.content}>
+                    <SpeedDials />
                     {this.props.children}
                 </main>
             </div>
@@ -226,13 +228,16 @@ const styles = theme => ({
         },
     },
     content: {
+        position: 'relative',
         flexGrow: 1,
         zIndex: theme.zIndex.drawer + 2,
         backgroundColor: theme.palette.background.default,
         marginTop: '64px',
         padding: theme.spacing.unit*2,
+        paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing.unit,
+            paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
         },
         minWidth: 'calc(100vw - 72px)',
         [theme.breakpoints.down('xs')]: {

@@ -300,7 +300,7 @@ class ProjectForm extends Component {
                             color="secondary"
                             fullWidth
                             className={classes.button}
-                            onClick={() => history.goBack()}
+                            onClick={() => history.push('/projects')}
                         >
                             Annulla
                         </Button>
