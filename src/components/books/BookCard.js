@@ -168,7 +168,7 @@ class BookCard extends Component {
                                 />
                             </Grid>
                             <Grid className={classes.item} item xs={12} sm={'auto'}>
-                                <PriceChip className={classes.priceChip} price={book.attributes.price} />
+                                <PriceChip price={book.attributes.price} />
                             </Grid>
                         </Grid>
                     </CardActions>
@@ -210,12 +210,6 @@ const styles = theme => ({
     gridList: {
         width: '100%',
     },
-    priceChip: {
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: 'auto',
-            backgroundColor:'red'
-        },
-    }
 });
 
 export default withSnackbar(withStyles(styles)(BookCard));
