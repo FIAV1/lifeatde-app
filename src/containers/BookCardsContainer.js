@@ -39,13 +39,11 @@ class BookCardsContainer extends Component {
         });
     }
 
-    removeBook = (bookId, userId) => {
+    removeBook = (bookId) => {
         let books = this.state.books.filter(book => book.id !== bookId);
-        let users = this.state.users.filter(user => user.id !== userId);
 
         this.setState({
             books,
-            users
         });
     };
 

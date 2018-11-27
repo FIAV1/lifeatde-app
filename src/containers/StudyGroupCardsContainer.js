@@ -46,13 +46,11 @@ class StudyGroupCardsContainer extends Component {
         });
     }
 
-    removeStudyGroup = (studyGroupId, userId) => {
+    removeStudyGroup = (studyGroupId) => {
         let books = this.state.studyGroups.filter(studyGroup => studyGroup.id !== studyGroupId);
-        let users = this.state.users.filter(user => user.id !== userId);
 
         this.setState({
             books,
-            users
         });
     };
 

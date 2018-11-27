@@ -34,13 +34,11 @@ class ProjectCardsContainer extends Component {
         });
     }
 
-    removeProject = (projectId, adminId) => {
+    removeProject = (projectId) => {
         let projects = this.state.projects.filter(project => project.id !== projectId);
-        let users = this.state.users.filter(user => user.id !== adminId);
 
         this.setState({
             projects,
-            users,
         });
     };
 
