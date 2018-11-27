@@ -19,6 +19,7 @@ import PermMediaIcon from '@material-ui/icons/PermMedia';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 class FileList extends Component {
+
     state = {
         confirmationDialogIsOpen: false,
         fileId: null,
@@ -35,7 +36,7 @@ class FileList extends Component {
         this.props.deleteFiles(this.state.fileId);
 
         this.setState({confirmationDialogIsOpen: false});
-    }
+    };
 
     render() {
         const { files, old, removeFiles } = this.props;

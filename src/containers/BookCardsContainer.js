@@ -23,7 +23,7 @@ class BookCardsContainer extends Component {
         loadingMore: false,
         courseId: LocalStorage.get('user').data.relationships.course.data.id,
         books: null,
-        users: null,
+        included: null,
         meta: null,
     };
 
@@ -33,7 +33,7 @@ class BookCardsContainer extends Component {
         Api.get(`/courses/${this.state.courseId}/books`).then(response => {
             this.setState({
                 books: response.data,
-                users: response.included,
+                included: response.included,
                 meta: response.meta,
                 loading: false
             });
@@ -45,9 +45,7 @@ class BookCardsContainer extends Component {
     removeBook = (bookId) => {
         let books = this.state.books.filter(book => book.id !== bookId);
 
-        this.setState({
-            books,
-        });
+        this.setState({books});
     };
 
     loadMore = endpoint => () => {
@@ -75,7 +73,7 @@ class BookCardsContainer extends Component {
 
     render() {
         const { classes } = this.props;
-        const { books, users, meta, loading, loadingMore } = this.state;
+        const { books, included, meta, loading, loadingMore } = this.state;
 
         if (loading) {
             return (
@@ -87,17 +85,9 @@ class BookCardsContainer extends Component {
             <div id="book-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4">
                     Libri
-                    <div>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
-                            <AddIcon/>
-                        </Button>
-                        <Button variant="fab" color="primary" aria-label="Filter" className={classes.button}>
-                            <FilterListIcon/>
-                        </Button>
-                    </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <BookCardList books={books} users={users} removeBook={this.removeBook}/>
+                <BookCardList books={books} included={included} removeBook={this.removeBook}/>
                 { meta.next
                 ? <LoadMoreButton
                     meta={meta}

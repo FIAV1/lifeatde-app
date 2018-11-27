@@ -79,7 +79,7 @@ class BookCard extends Component {
     }
 
     render() {
-        const { book, user, classes } = this.props;
+        const { book, user, course, classes } = this.props;
         const { photoTiles } = this.state;
 
         if(!user || !book) {
@@ -122,34 +122,34 @@ class BookCard extends Component {
                     <CardActionArea className={classes.cardContent} onClick={() => history.push(`/books/${book.id}`)}>
                         <CardContent>
                             <Typography noWrap gutterBottom variant="h6">{book.attributes.title}</Typography>
-                            <Typography noWrap variant="body1">{book.attributes.description}</Typography>
-                                <div className={classes.gridListContainer}>
-                                    { photoTiles ?
-                                        <GridList className={classes.gridList} cellHeight={160} cols={3}>
-                                            { photoTiles.map(tile => {
-                                                if (tile.loading) {
-                                                    return <div key={tile.id} style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        <CircularProgress size={50}/>
-                                                    </div>
-                                                }
-                                                if (tile.fileUrl) {
-                                                    return <GridListTile key={tile.id} cols={tile.cols}>
-                                                        <img src={tile.fileUrl} alt={`book-pic-${tile.id}`}/>
-                                                    </GridListTile>
-                                                }
-                                                return <GridListTile key={tile.id} cols={tile.cols}>
-                                                    <img src={imagePlaceholder} alt='book-placeholder-img'/>
-                                                </GridListTile>
-                                            })
+                            <Typography noWrap variant="body1">{book.attributes.description || <br/>}</Typography>
+                            <div className={classes.gridListContainer}>
+                                { photoTiles ?
+                                    <GridList className={classes.gridList} cellHeight={160} cols={3}>
+                                        { photoTiles.map(tile => {
+                                            if (tile.loading) {
+                                                return <div key={tile.id} style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <CircularProgress size={50}/>
+                                                </div>
                                             }
-                                        </GridList>
-                                        : null
-                                    }
-                                </div>
+                                            if (tile.fileUrl) {
+                                                return <GridListTile key={tile.id} cols={tile.cols}>
+                                                    <img src={tile.fileUrl} alt={`book-pic-${tile.id}`}/>
+                                                </GridListTile>
+                                            }
+                                            return <GridListTile key={tile.id} cols={tile.cols}>
+                                                <img src={imagePlaceholder} alt='book-placeholder-img'/>
+                                            </GridListTile>
+                                        })
+                                        }
+                                    </GridList>
+                                    : null
+                                }
+                            </div>
                         </CardContent>
                     </CardActionArea>
                     <Divider/>
@@ -162,9 +162,9 @@ class BookCard extends Component {
                                         label: classes.chipLabel
                                     }}
                                     label={
-                                        <Typography  variant='body1' noWrap>{book.attributes.course}</Typography>
+                                        <Typography variant='body1' noWrap>{course.attributes.name}</Typography>
                                     }
-                                    style={{backgroundColor: getCourseColor(book.attributes.course)}}
+                                    style={{backgroundColor: getCourseColor(course.attributes.name)}}
                                 />
                             </Grid>
                             <Grid className={classes.item} item xs={12} sm={4}>
