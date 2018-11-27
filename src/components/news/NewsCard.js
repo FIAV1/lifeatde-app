@@ -17,7 +17,7 @@ class NewsCard extends Component {
         const { classes, news } = this.props;
 
         return(
-            <Grid item xs={12} md={6} xl={4}>
+            <Grid item xs={12}>
                 <Card >
                     <CardHeader subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{news.attributes.created_at}</Moment>}/>
                     <CardContent className={classes.cardContent}>

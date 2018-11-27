@@ -14,6 +14,7 @@ import {
 
 import SwipeableViews from 'react-swipeable-views';
 import Loader from '../components/common/Loader';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import SearchIcon from '@material-ui/icons/Search';
 
 import ProjectCardList from '../components/projects/ProjectCardList';
@@ -38,12 +39,16 @@ class SearchContainer extends Component {
         loading: false,
         projects: null,
         projectsUsers: null,
+        projectsMeta: null,
         users: null,
         usersCourses: null,
+        usersMeta: null,
         studyGroups: null,
         studyGroupsUsers: null,
+        studyGroupsMeta: null,
         books: null,
         booksUsers: null,
+        booksMeta: null,
     };
     
     handleChangeTab = (event, value) => {
@@ -69,6 +74,7 @@ class SearchContainer extends Component {
             this.setState({
                 projects: response.data,
                 projectsUsers: response.included.filter(item => item.type === 'user')
+                projectsMeta: response.meta,
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -77,6 +83,7 @@ class SearchContainer extends Component {
             this.setState({
                 users: response.data,
                 usersCourses: response.included.filter(item => item.type === 'course')
+                usersMeta: response.meta,
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -85,6 +92,7 @@ class SearchContainer extends Component {
             this.setState({
                 books: response.data,
                 booksUsers: response.included.filter(item => item.type === 'user'),
+                booksMeta: response.meta,
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -93,6 +101,7 @@ class SearchContainer extends Component {
             this.setState({
                 studyGroups: response.data,
                 studyGroupsUsers: response.included.filter(item => item.type === 'user')
+                studyGroupsMeta: response.meta,
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -103,18 +112,130 @@ class SearchContainer extends Component {
     
     badgeValue = props => this.state[props] ? this.state[props].length : 0;
 
-    removeProject = (projectId, adminId) => {
+    removeProject = projectId => {
         let projects = this.state.projects.filter(project => project.id !== projectId);
-        let users = this.state.users.filter(user => user.id !== adminId);
 
         this.setState({
             projects,
-            users,
+        });
+    }
+
+    removeStudyGroup = studyGroupId => {
+        let studyGroups = this.state.studyGroups.filter(studyGroup => studyGroup.id !== studyGroupId);
+
+        this.setState({
+            studyGroups,
         });
     };
 
+    removeBook = (bookId) => {
+        let books = this.state.books.filter(book => book.id !== bookId);
+
+        this.setState({
+            books,
+        });
+    };
+
+    loadMore = endpoint => () => {
+        this.setState({loadingMore: true});
+        Api.get(endpoint).then(response => {
+            switch (response.data[0].type) {
+                case 'project':
+                    let projects = this.state.projects;
+                    let projectsUsers = this.state.projectsUsers;
+        
+                    projects = projects.concat(response.data);
+                    response.included.forEach(user => {
+                        if (!projectsUsers.find(el => el.id === user.id)) projectsUsers.push(user);
+                    });
+        
+                    this.setState({
+                        projects: projects,
+                        projectsUsers: projectsUsers,
+                        projectsMeta: response.meta,
+                    });
+
+                    this.swipeableActions.updateHeight();
+                    break;
+                case 'study_group':
+                    let studyGroups = this.state.studyGroups;
+                    let studyGroupsUsers = this.state.studyGroupsUsers;
+        
+                    studyGroups = studyGroups.concat(response.data);
+                    response.included.forEach(user => {
+                        if (!studyGroupsUsers.find(el => el.id === user.id)) studyGroupsUsers.push(user);
+                    });
+        
+                    this.setState({
+                        studyGroups: studyGroups,
+                        studyGroupsUsers: studyGroupsUsers,
+                        studyGroupsMeta: response.meta,
+                    });
+
+                    this.swipeableActions.updateHeight();
+                    break;
+                case 'user':
+                    let users = this.state.users;
+                    let usersCourses = this.state.usersCourses;
+                    
+        
+                    users = users.concat(response.data);
+                    response.included.forEach(course => {
+                        if (!usersCourses.find(el => el.id === course.id)) usersCourses.push(course);
+                    });
+        
+                    this.setState({
+                        users: users,
+                        usersCourses: usersCourses,
+                        usersMeta: response.meta,
+                    });
+
+                    this.swipeableActions.updateHeight();
+                    break;
+                case 'book':
+                    let books = this.state.books;
+                    let booksUsers = this.state.booksUsers;
+        
+                    books = books.concat(response.data);
+                    response.included.forEach(user => {
+                        if (!booksUsers.find(el => el.id === user.id)) booksUsers.push(user);
+                    });
+        
+                    this.setState({
+                        books: books,
+                        booksUsers: booksUsers,
+                        booksMeta: response.meta,
+                    });
+
+                    this.swipeableActions.updateHeight();
+                    break;
+                default:
+                    break;
+            }
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error, {variant: 'error'}));
+        }).finally(() => {
+            this.setState({loadingMore: false});
+        });
+    }
+
     render() {
-        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers, users, usersCourses} = this.state;
+        const {
+            loading,
+            loadingMore,
+            projects,
+            projectsUsers,
+            projectsMeta,
+            studyGroups,
+            studyGroupsUsers,
+            studyGroupsMeta,
+            books,
+            booksUsers,
+            booksMeta,
+            users,
+            usersCourses,
+            usersMeta,
+        } = this.state;
         const { classes, theme } = this.props;
 
         return(
@@ -192,11 +313,63 @@ class SearchContainer extends Component {
                                     index={this.state.value}
                                     onChangeIndex={this.handleChangeIndex}
                                     animateHeight
+                                    action={actions => { this.swipeableActions = actions; }}
                                 >
-                                    <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers} removeProject={this.removeProject}/></TabContainer>
-                                    <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
-                                    <TabContainer dir={theme.direction}><BookCardList books={books} users={booksUsers}/></TabContainer>
-                                    <TabContainer dir={theme.direction}><UserCardList users={users} courses={usersCourses}/></TabContainer>
+                                    <TabContainer dir={theme.direction}>
+                                        <ProjectCardList
+                                            projects={projects}
+                                            users={projectsUsers}
+                                            removeProject={this.removeProject}
+                                        />
+                                        { projectsMeta && projectsMeta.next
+                                        ? <LoadMoreButton
+                                            meta={projectsMeta}
+                                            endpoint={`/projects?search=${this.state.searchString}&page=`}
+                                            loadingMore={loadingMore}
+                                            loadMore={this.loadMore}
+                                        /> : null }
+                                    </TabContainer>
+                                    <TabContainer dir={theme.direction}>
+                                        <StudyGroupCardList
+                                            studyGroups={studyGroups}
+                                            users={studyGroupsUsers}
+                                            removeStudyGroup={this.removeStudyGroup}
+                                        />
+                                        { studyGroupsMeta && studyGroupsMeta.next
+                                        ? <LoadMoreButton
+                                            meta={studyGroupsMeta}
+                                            endpoint={`/study_groups?search=${this.state.searchString}&page=`}
+                                            loadingMore={loadingMore}
+                                            loadMore={this.loadMore}
+                                        /> : null }
+                                    </TabContainer>
+                                    <TabContainer dir={theme.direction}>
+                                        <BookCardList
+                                            books={books}
+                                            users={booksUsers}
+                                            removeBook={this.removeBook}
+                                        />
+                                        { booksMeta && booksMeta.next
+                                        ? <LoadMoreButton
+                                            meta={booksMeta}
+                                            endpoint={`/books?search=${this.state.searchString}&page=`}
+                                            loadingMore={loadingMore}
+                                            loadMore={this.loadMore}
+                                        /> : null }
+                                    </TabContainer>
+                                    <TabContainer dir={theme.direction}>
+                                        <UserCardList
+                                            users={users}
+                                            courses={usersCourses}
+                                        />
+                                        { usersMeta && usersMeta.next
+                                        ? <LoadMoreButton
+                                            meta={usersMeta}
+                                            endpoint={`/users?search=${this.state.searchString}&page=`}
+                                            loadingMore={loadingMore}
+                                            loadMore={this.loadMore}
+                                        /> : null }
+                                    </TabContainer>
                                 </SwipeableViews>
                         }
                     </Grid>

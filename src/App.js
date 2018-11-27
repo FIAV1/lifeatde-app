@@ -12,6 +12,8 @@ import NewsCardsContainer from './containers/NewsCardsContainer';
 import SearchContainer from './containers/SearchContainer';
 import BookCardsContainer from './containers/BookCardsContainer';
 import BookContainer from './containers/BookContainer';
+import BookNewContainer from './containers/BookNewContainer';
+import BookEditContainer from "./containers/BookEditContainer";
 import PrivateRoute from './components/common/PrivateRoute';
 import NoMatch from './components/common/NoMatch';
 import ProjectNewContainer from './containers/ProjectNewContainer';
@@ -38,7 +40,9 @@ class App extends Component {
 					<PrivateRoute exact path='/news' component={NewsCardsContainer}/>
 					<PrivateRoute exact path='/search' component={SearchContainer}/>
 					<PrivateRoute exact path='/books' component={BookCardsContainer}/>
+                    <PrivateRoute exact path='/books/new' component={BookNewContainer}/>
                     <PrivateRoute exact path='/books/:id' component={BookContainer}/>
+                    <PrivateRoute exact path='/books/:id/edit' component={BookEditContainer}/>
 					<PrivateRoute exact path='/users/:id' component={UserProfile} />
 					<PrivateRoute component={NoMatch} />
 				</Switch>

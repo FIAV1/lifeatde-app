@@ -18,8 +18,6 @@ import {
     GridListTile, Chip,
 } from '@material-ui/core';
 
-import ReactMarkdown from 'react-markdown';
-
 import ContactInfo from "../common/ContactInfo";
 import Api from "../../lib/Api";
 import imagePlaceholder from "../../img/image-placeholder.jpg";
@@ -95,7 +93,7 @@ class Book extends Component {
     }
 
     render() {
-        const { classes, book, user } = this.props;
+        const { classes, book, user, course } = this.props;
         const { photoTiles } = this.state;
         let lightboxImageSet = null;
 
@@ -122,8 +120,8 @@ class Book extends Component {
                                                 root: classes.courseChipRoot,
                                                 label: classes.courseChipLabel
                                             }}
-                                            style={{backgroundColor: getCourseColor(book.attributes.course)}}
-                                            label={<Typography noWrap variant={'body'}>{book.attributes.course}</Typography>}
+                                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                            label={<Typography noWrap variant={'body1'}>{course.attributes.name}</Typography>}
                                         />
                                         <PriceChip price={book.attributes.price}/>
                                     </div>
@@ -150,7 +148,11 @@ class Book extends Component {
                         <Divider />
                         <CardContent>
                             <Typography variant="overline">Descrizione</Typography>
-                            <ReactMarkdown className={classes.markdown} source={book.attributes.description}/>
+                            {
+                                book.attributes.description
+                                    ? <Typography variant="body1">{book.attributes.description}</Typography>
+                                    : <Typography variant="body1">Non è presente nessuna descrizione.</Typography>
+                            }
                         </CardContent>
                         <Divider />
                         <CardContent>
