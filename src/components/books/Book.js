@@ -19,8 +19,6 @@ import {
     GridListTile, Chip,
 } from '@material-ui/core';
 
-import ReactMarkdown from 'react-markdown';
-
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import Api from "../../lib/Api";
@@ -154,7 +152,7 @@ class Book extends Component {
                             <Typography variant="overline">Descrizione</Typography>
                             {
                                 book.attributes.description
-                                    ? <ReactMarkdown className={classes.markdown} source={book.attributes.description}/>
+                                    ? <Typography variant="body1">{book.attributes.description}</Typography>
                                     : <Typography variant="body1">Non è presente nessuna descrizione.</Typography>
                             }
                         </CardContent>
