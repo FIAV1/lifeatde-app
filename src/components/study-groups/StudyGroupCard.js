@@ -108,7 +108,16 @@ class StudyGroupCard extends Component {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Chip className={classes.chip} key={studyGroup.attributes.course} style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course}/>)}
+                        <Chip  classes={{
+                                root: classes.chipRoot,
+                                label: classes.chipLabel
+                            }}
+                            key={studyGroup.attributes.course}
+                            label={
+                                <Typography  variant='body1' noWrap>{studyGroup.attributes.course}</Typography>
+                            }
+                            style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}}
+                            />
                     </CardActions>
                 </Card>
             </Grid>
@@ -121,6 +130,14 @@ const styles = theme => ({
     cardContent: {
         width: '100%'
     },
+    chipRoot: {
+        maxWidth: '100%',
+    },
+    chipLabel:{
+        overflow: 'hidden',
+        paddingRight: 0,
+        marginRight: '12px',
+    }
 });
 
 export default withSnackbar(withStyles(styles)(StudyGroupCard));

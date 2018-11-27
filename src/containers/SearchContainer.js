@@ -19,6 +19,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ProjectCardList from '../components/projects/ProjectCardList';
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import BookCardList from "../components/books/BookCardList";
+import UserCardList from "../components/user/UserCardList";
 
 import { withSnackbar } from 'notistack';
 
@@ -38,6 +39,7 @@ class SearchContainer extends Component {
         projects: null,
         projectsUsers: null,
         users: null,
+        usersCourses: null,
         studyGroups: null,
         studyGroupsUsers: null,
         books: null,
@@ -72,7 +74,10 @@ class SearchContainer extends Component {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
-            this.setState({users: response.data})
+            this.setState({
+                users: response.data,
+                usersCourses: response.included
+            })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
@@ -109,7 +114,7 @@ class SearchContainer extends Component {
     };
 
     render() {
-        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers} = this.state;
+        const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers, users, usersCourses} = this.state;
         const { classes, theme } = this.props;
 
         return(
@@ -191,7 +196,7 @@ class SearchContainer extends Component {
                                     <TabContainer dir={theme.direction}><ProjectCardList projects={projects} users={projectsUsers} removeProject={this.removeProject}/></TabContainer>
                                     <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
                                     <TabContainer dir={theme.direction}><BookCardList books={books} users={booksUsers}/></TabContainer>
-                                    <TabContainer dir={theme.direction}>Utenti</TabContainer>
+                                    <TabContainer dir={theme.direction}><UserCardList users={users} courses={usersCourses}/></TabContainer>
                                 </SwipeableViews>
                         }
                     </Grid>
