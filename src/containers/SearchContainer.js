@@ -50,6 +50,10 @@ class SearchContainer extends Component {
         booksUsers: null,
         booksMeta: null,
     };
+
+    componentDidMount() {
+        document.title = 'LifeAtDe | Cerca in LifeAtDe...'
+    }
     
     handleChangeTab = (event, value) => {
         this.setState({ value });
@@ -73,7 +77,7 @@ class SearchContainer extends Component {
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {
             this.setState({
                 projects: response.data,
-                projectsUsers: response.included.filter(item => item.type === 'user')
+                projectsUsers: response.included.filter(item => item.type === 'user'),
                 projectsMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -82,7 +86,7 @@ class SearchContainer extends Component {
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
             this.setState({
                 users: response.data,
-                usersCourses: response.included.filter(item => item.type === 'course')
+                usersCourses: response.included.filter(item => item.type === 'course'),
                 usersMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -100,7 +104,7 @@ class SearchContainer extends Component {
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
                 studyGroups: response.data,
-                studyGroupsUsers: response.included.filter(item => item.type === 'user')
+                studyGroupsUsers: response.included.filter(item => item.type === 'user'),
                 studyGroupsMeta: response.meta,
             })
         }).catch(({errors}) => {

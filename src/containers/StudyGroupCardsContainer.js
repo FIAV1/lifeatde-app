@@ -90,7 +90,7 @@ class StudyGroupCardsContainer extends Component {
         return (
             <div id="studygroup-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4">
-                    Gruppi di Studio
+                    Gruppi di Studio in base al corso
                     <div>
                         <Button  onClick={() => history.push('/study_groups/new')} variant="fab" color="primary" aria-label="Add" className={classes.button}>
                             <AddIcon />

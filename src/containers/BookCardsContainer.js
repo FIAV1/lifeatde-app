@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import {
-    Button,
     Divider,
     Typography,
     withStyles
@@ -10,8 +9,6 @@ import {
 import Api from '../lib/Api';
 import LocalStorage from "../lib/LocalStorage";
 import BookCardList from '../components/books/BookCardList';
-import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Loader from "../components/common/Loader";
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import { withSnackbar } from 'notistack';
@@ -84,7 +81,7 @@ class BookCardsContainer extends Component {
         return(
             <div id="book-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4">
-                    Libri
+                    Libri in base al corso
                 </Typography>
                 <Divider className={classes.hr} />
                 <BookCardList books={books} included={included} removeBook={this.removeBook}/>

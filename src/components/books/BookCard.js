@@ -154,7 +154,7 @@ class BookCard extends Component {
                     </CardActionArea>
                     <Divider/>
                     <CardActions>
-                        <Grid container>
+                        <Grid container justify="space-between">
                             <Grid className={classes.item} item xs={12} sm={8}>
                                 <Chip 
                                     classes={{
@@ -167,8 +167,8 @@ class BookCard extends Component {
                                     style={{backgroundColor: getCourseColor(course.attributes.name)}}
                                 />
                             </Grid>
-                            <Grid className={classes.item} item xs={12} sm={4}>
-                                <PriceChip price={book.attributes.price} style={{marginLeft: 'auto'}}/>
+                            <Grid className={classes.item} item xs={12} sm={'auto'}>
+                                <PriceChip price={book.attributes.price} />
                             </Grid>
                         </Grid>
                     </CardActions>

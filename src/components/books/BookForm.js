@@ -2,25 +2,30 @@ import React, { Component } from 'react';
 
 import {
     withStyles,
-    Button, TextField, FormControl, FormHelperText,
+    Button,
+    TextField,
+    FormControl,
+    FormHelperText,
+    Typography,
+    Select,
+    InputLabel,
+    InputAdornment,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Divider,
 } from '@material-ui/core';
+import {Formik} from "formik";
+import * as Yup from "yup";
+import { withSnackbar } from 'notistack';
+import FileList from "../projects/FileList";
 
+import Api from '../../lib/Api';
+import LocalStorage from "../../lib/LocalStorage";
+import history from '../../lib/history';
 import { formDataSerializer } from '../../lib/Utils';
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import Api from '../../lib/Api';
-import history from '../../lib/history';
-import { withSnackbar } from 'notistack';
-import Select from "@material-ui/core/Select/Select";
-import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import FileList from "../projects/FileList";
-import LocalStorage from "../../lib/LocalStorage";
-import {Formik} from "formik";
-import * as Yup from "yup";
-import Grid from "@material-ui/core/Grid/Grid";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -138,6 +143,8 @@ class BookForm extends Component {
     };
 
     componentDidMount() {
+        document.title = `LifeAtDe | ${this.props.edit ? 'Modifica annuncio libro' : 'Crea annuncio libro'}`;
+
         Api.get('/courses').then(response => {
             this.setState({
                 availableCourses: response.data
@@ -152,143 +159,150 @@ class BookForm extends Component {
         const { availableCourses } = this.state;
 
         return(
-            <Formik
-                initialValues={this.FORM_VALUES}
-                onSubmit={this.handleSubmit}
-                validationSchema={validationSchema}
-                validateOnBlur
-                render={props =>
-                    <form onSubmit={props.handleSubmit}>
-                        <TextField
-                            id="title"
-                            label="Titolo"
-                            value={props.values.title}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            helperText={props.touched.title ? props.errors.title : null}
-                            error={props.errors.title && props.touched.title}
-                            className={classes.formField}
-                        />
-                        <TextField
-                            id="description"
-                            label="Descrizione"
-                            value={props.values.description}
-                            variant="outlined"
-                            multiline
-                            rows="5"
-                            rowsMax="100"
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            helperText={props.touched.description ? props.errors.description : null}
-                            error={props.errors.description && props.touched.description}
-                            className={classes.formField}
-                        />
-                        <FormControl
-                            error={props.errors.course_id && props.touched.course_id}
-                            className={classes.formField}
-                        >
-                            <InputLabel htmlFor="course_id">Corso</InputLabel>
-                            <Select
-                                native
-                                value={props.values.course_id}
-                                inputProps={{
-                                    id: 'course_id',
-                                }}
+            <div id="book-form">
+                <Typography component="h1" variant="h4" gutterBottom>
+                { edit
+                ? 'Modifica annuncio libro'
+                : 'Crea annuncio libro' }
+                </Typography>
+                <Divider className={classes.divider} />
+                <Formik
+                    initialValues={this.FORM_VALUES}
+                    onSubmit={this.handleSubmit}
+                    validationSchema={validationSchema}
+                    validateOnBlur
+                    render={props =>
+                        <form onSubmit={props.handleSubmit}>
+                            <TextField
+                                id="title"
+                                label="Titolo"
+                                value={props.values.title}
                                 onChange={props.handleChange}
                                 onBlur={props.handleBlur}
+                                helperText={props.touched.title ? props.errors.title : null}
+                                error={props.errors.title && props.touched.title}
+                                className={classes.formField}
+                            />
+                            <TextField
+                                id="description"
+                                label="Descrizione"
+                                value={props.values.description}
+                                variant="outlined"
+                                multiline
+                                rows="5"
+                                rowsMax="100"
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                helperText={props.touched.description ? props.errors.description : null}
+                                error={props.errors.description && props.touched.description}
+                                className={classes.formField}
+                            />
+                            <FormControl
+                                error={props.errors.course_id && props.touched.course_id}
+                                className={classes.formField}
                             >
-                                {
-                                    availableCourses.map(course => (
-                                        <option key={course.id} value={course.id}>{course.attributes.name}</option>
-                                    ))
-                                }
-                            </Select>
-                            {props.touched.course_id && props.errors.course_id ? <FormHelperText>{props.errors.course_id}</FormHelperText> : null}
-                        </FormControl>
-                        <TextField
-                            id="price"
-                            label="Prezzo"
-                            value={props.values.price}
-                            InputProps = {{
-                                endAdornment: <InputAdornment position="end">€</InputAdornment>,
-                            }}
-                            disabled={props.values.free}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            helperText={props.touched.price ? props.errors.price : null}
-                            className={classes.priceText}
-                        />
-                        <FormControlLabel
-                            className={classes.checkbox}
-                            label="Gratis"
-                            control={
-                                <Checkbox
-                                    value="free"
-                                    checked={props.values.free}
-                                    onChange={() => this.setFree(props)}
-                                    color="primary"
-                                />
-                            }
-                        />
-                        <FileList
-                            deleteFiles={this.deleteFiles(props)}
-                            removeFiles={this.removeFiles(props)}
-                            files={props.values.oldPhotos}
-                            old
-                        />
-                        <FileList
-                            removeFiles={this.removeFiles(props)}
-                            files={props.values.photos}
-                        />
-                        <label htmlFor="upload-file-button">
-                            <Button
-                                type="button"
-                                variant="contained"
-                                color="primary"
-                                component="span"
-                                fullWidth
-                                className={classes.button}
-                            >
-                                Carica foto
-                                <CloudUploadIcon className={classes.rightIcon} />
-                            </Button>
-                        </label>
-                        <input
-                            id="upload-file-button"
-                            type="file"
-                            multiple
-                            onChange={this.addFiles(props)}
-                            onBlur={() => props.setFieldTouched('photos')}
-                            className={classes.input}
-                        />
-                        <Grid container spacing={16}>
-                            <Grid item xs={12} sm={6}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="secondary"
-                                    fullWidth
+                                <InputLabel htmlFor="course_id">Corso</InputLabel>
+                                <Select
+                                    native
+                                    value={props.values.course_id}
+                                    inputProps={{
+                                        id: 'course_id',
+                                    }}
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
                                 >
-                                    {edit ? 'Salva modifiche' : 'Metti in vendita'}
-                                </Button>
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
+                                    {
+                                        availableCourses.map(course => (
+                                            <option key={course.id} value={course.id}>{course.attributes.name}</option>
+                                        ))
+                                    }
+                                </Select>
+                                {props.touched.course_id && props.errors.course_id ? <FormHelperText>{props.errors.course_id}</FormHelperText> : null}
+                            </FormControl>
+                            <TextField
+                                id="price"
+                                label="Prezzo"
+                                value={props.values.price}
+                                InputProps = {{
+                                    endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                                }}
+                                disabled={props.values.free}
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                helperText={props.touched.price ? props.errors.price : null}
+                                className={classes.priceText}
+                            />
+                            <FormControlLabel
+                                className={classes.checkbox}
+                                label="Gratis"
+                                control={
+                                    <Checkbox
+                                        value="free"
+                                        checked={props.values.free}
+                                        onChange={() => this.setFree(props)}
+                                        color="primary"
+                                    />
+                                }
+                            />
+                            <FileList
+                                deleteFiles={this.deleteFiles(props)}
+                                removeFiles={this.removeFiles(props)}
+                                files={props.values.oldPhotos}
+                                old
+                            />
+                            <FileList
+                                removeFiles={this.removeFiles(props)}
+                                files={props.values.photos}
+                            />
+                            <label htmlFor="upload-file-button">
                                 <Button
                                     type="button"
                                     variant="contained"
-                                    color="default"
+                                    component="span"
                                     fullWidth
-                                    onClick={() => history.push('/books')}
+                                    className={classes.button}
                                 >
-                                    Annulla
+                                    Carica foto
+                                    <CloudUploadIcon className={classes.rightIcon} />
                                 </Button>
-                            </Grid>
-                        </Grid>
+                            </label>
+                            <input
+                                id="upload-file-button"
+                                type="file"
+                                multiple
+                                onChange={this.addFiles(props)}
+                                onBlur={() => props.setFieldTouched('photos')}
+                                className={classes.input}
+                            />
+                            <Grid container spacing={16}>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                    >
+                                        {edit ? 'Salva modifiche' : 'Metti in vendita'}
+                                    </Button>
+                                </Grid>
 
-                    </form>
-                }
-            />
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={() => history.push('/books')}
+                                    >
+                                        Annulla
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                        </form>
+                    }
+                />
+            </div>
         )
     }
 }
@@ -304,6 +318,9 @@ const styles = theme => ({
     },
     input: {
         display: 'none',
+    },
+    divider: {
+        marginBottom: theme.spacing.unit * 2,
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
