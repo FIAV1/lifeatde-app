@@ -32,7 +32,7 @@ class BookCardList extends Component {
                             key={book.id}
                             book={book}
                             user={this.getBookOwner(book, users)}
-                            removeBook={this.props.onBookDelete}
+                            removeBook={this.props.removeBook}
                         />)
                 }
             </Grid>

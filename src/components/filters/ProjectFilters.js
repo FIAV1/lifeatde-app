@@ -29,7 +29,7 @@ class Filter extends Component {
         let searchString = encodeSearchString('project', params);
 
         Api.get(`/projects${searchString ? '/by_categories?' + searchString : ''}`).then(response => {
-            this.props.onFilter(response.data);
+            this.props.onFilter(response.data, response.meta);
             this.setState({byCategories: response});
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
