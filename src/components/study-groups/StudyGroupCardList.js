@@ -30,7 +30,7 @@ class StudyGroupCardList extends Component {
                            key={studyGroup.id}
                            studyGroup={studyGroup}
                            user={this.getAdmin(studyGroup, users)}
-                           removeStudyGroup={this.props.onStudyGroupDelete}
+                           removeStudyGroup={this.props.removeStudyGroup}
                        />)
                 }
             </Grid>

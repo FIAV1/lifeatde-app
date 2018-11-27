@@ -15,8 +15,6 @@ class UserCardList extends Component {
 
         const { users, courses } = this.props;
 
-        console.log(courses)
-        
         if(!users || users.length === 0) {
             return(
                 <Typography variant="subtitle1">

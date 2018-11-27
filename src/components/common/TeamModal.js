@@ -14,7 +14,9 @@ import {
     Icon,
 } from '@material-ui/core';
 
-import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward';
+import fimage from "../../img/federico_frigo.png"
+import gimage from "../../img/giovanni_fiorini.png"
+import nimage from "../../img/niccolò_fontana.png"
 
 const animation = (props) => (
     <Slide direction="up" {...props}/>
@@ -55,24 +57,18 @@ class TeamModal extends Component {
                 >
                     <List>
                         <ListItem>
-                            <Avatar>
-                                <AccessibleForwardIcon />
-                            </Avatar>
-                            <ListItemText primary="Federico Frigo" secondary="Js lover <3" />
+                            <Avatar alt="Federico Frigo" src={fimage}/>
+                            <ListItemText primary="Federico Frigo" secondary="Chief Design Officer" />
                         </ListItem>
                         <Divider />
                         <ListItem>
-                            <Avatar>
-                                <AccessibleForwardIcon />
-                            </Avatar>
-                            <ListItemText primary="Giovanni Fiorini" secondary="'Kiki, do you love me?" />
+                            <Avatar alt="Giovanni Fiorini" src={gimage}/>   
+                            <ListItemText primary="Giovanni Fiorini" secondary="Chief Operating Officer" />
                         </ListItem>
                         <Divider />
                         <ListItem>
-                            <Avatar>
-                                <AccessibleForwardIcon />
-                            </Avatar>
-                            <ListItemText primary="Niccolò Fontana" secondary="Gonna fuck some names" />
+                            <Avatar alt="Niccolò Fontana" src={nimage}/>  
+                            <ListItemText primary="Niccolò Fontana" secondary="Chief Technology Officer" />
                         </ListItem>
                     </List>
                 </Dialog>

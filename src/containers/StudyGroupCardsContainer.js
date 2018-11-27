@@ -15,7 +15,7 @@ import LocalStorage from '../lib/LocalStorage';
 
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import Loader from '../components/common/Loader';
-
+import LoadMoreButton from '../components/common/LoadMoreButton';
 
 import history from '../lib/history';
 
@@ -25,20 +25,21 @@ class StudyGroupCardsContainer extends Component {
 
     state = {
         loading: true,
-        course: null,
+        loadingMore: false,
+        courseId: LocalStorage.get('user').data.relationships.course.data.id,
         studyGroups: null,
-        users: null
+        users: null,
+        meta: null,
     };
 
     componentDidMount() {
         document.title =  'LifeAtDe | Gruppi di Studio';
 
-        const courseId = LocalStorage.get('user').data.relationships.course.data.id;
-
-        Api.get(`/courses/${courseId}/study_groups`).then(response => {
+        Api.get(`/courses/${this.state.courseId}/study_groups`).then(response => {
             this.setState({
                 studyGroups: response.data,
                 users: response.included,
+                meta: response.meta,
                 loading: false,
             })
         }).catch(({errors}) => {
@@ -54,10 +55,33 @@ class StudyGroupCardsContainer extends Component {
         });
     };
 
+    loadMore = endpoint => () => {
+        this.setState({loadingMore: true});
+        Api.get(endpoint).then(response => {
+            let studyGroups = this.state.studyGroups;
+            let users = this.state.users;
+
+            studyGroups = studyGroups.concat(response.data);
+            response.included.forEach(user => {
+                if (!users.find(el => el.id === user.id)) users.push(user);
+            });
+
+            this.setState({
+                studyGroups: studyGroups,
+                users: users,
+                meta: response.meta,
+            });
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error, {variant: 'error'}));
+        }).finally(() => {
+            this.setState({loadingMore: false});
+        });
+    }
+
     render() {
 
-        const {loading, studyGroups, users} = this.state;
-        const {classes} = this.props;
+        const { loading, loadingMore, studyGroups, users, meta } = this.state;
+        const { classes } = this.props;
 
         if(loading) {
             return <Loader />
@@ -77,7 +101,14 @@ class StudyGroupCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <StudyGroupCardList studyGroups={studyGroups} users={users} onStudyGroupDelete={this.removeStudyGroup}/>
+                <StudyGroupCardList studyGroups={studyGroups} users={users} removeStudyGroup={this.removeStudyGroup}/>
+                { meta.next
+                ? <LoadMoreButton
+                    meta={meta}
+                    endpoint={`/courses/${this.state.courseId}/study_groups?page=`}
+                    loadingMore={loadingMore}
+                    loadMore={this.loadMore}
+                /> : null }
             </div>
         );
     }
