@@ -9,6 +9,7 @@ import {
 
 import ProjectCardList from '../components/projects/ProjectCardList';
 import Loader from '../components/common/Loader';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import ProjectFilters from '../components/filters/ProjectFilters';
 
 import { withSnackbar } from 'notistack';
@@ -16,8 +17,10 @@ import { withSnackbar } from 'notistack';
 class ProjectCardsContainer extends Component {
     state = {
         loading: true,
+        loadingMore: false,
         projects: null,
-        users: null
+        users: null,
+        meta: null,
     };
 
     componentDidMount() {
@@ -27,6 +30,7 @@ class ProjectCardsContainer extends Component {
             this.setState({
                 projects: response.data,
                 users: response.included,
+                meta: response.meta,
                 loading: false
             });
         }).catch(({errors}) => {
@@ -42,12 +46,38 @@ class ProjectCardsContainer extends Component {
         });
     };
 
-    handleFilter = property => filteredItems => {
-        this.setState({[property]: filteredItems});
+    handleFilter = property => (filteredItems, filteredItemsMeta) => {
+        this.setState({
+            [property]: filteredItems,
+            meta: filteredItemsMeta,
+        });
+    }
+
+    loadMore = endpoint => () => {
+        this.setState({loadingMore: true});
+        Api.get(endpoint).then(response => {
+            let projects = this.state.projects;
+            let users = this.state.users;
+
+            projects = projects.concat(response.data);
+            response.included.forEach(user => {
+                if (!users.find(el => el.id === user.id)) users.push(user);
+            })
+
+            this.setState({
+                projects: projects,
+                users: users,
+                meta: response.meta,
+            })
+        }).catch(({errors}) => {
+            errors.forEach(error => this.props.enqueueSnackbar(error, {variant: 'error'}));
+        }).finally(() => {
+            this.setState({loadingMore: false});
+        });
     }
 
     render() {
-        const { loading, projects, users } = this.state;
+        const { loading, loadingMore, projects, users, meta } = this.state;
         const { classes } = this.props;
 
         if(loading) {
@@ -64,7 +94,18 @@ class ProjectCardsContainer extends Component {
                     onFilter={this.handleFilter('projects')}
                 />
                 <Divider className={classes.hr} />
-                <ProjectCardList projects={projects} users={users} removeProject={this.removeProject} />
+                <ProjectCardList
+                    projects={projects}
+                    users={users}
+                    removeProject={this.removeProject}
+                />
+                { meta.next
+                ? <LoadMoreButton
+                    meta={meta}
+                    endpoint="/projects?page="
+                    loadingMore={loadingMore}
+                    loadMore={this.loadMore}
+                /> : null }
             </div>
         );
     }
