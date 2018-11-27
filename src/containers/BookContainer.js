@@ -20,7 +20,8 @@ class BookContainer extends Component {
         Api.get('/books/' + this.props.match.params.id).then(response => {
             this.setState({
                 book: response.data,
-                user: response.included.shift(),
+                user: response.included.find(relationship => relationship.type === 'user'),
+                course: response.included.find(relationship => relationship.type === 'course'),
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.book.attributes.title}`);
         }).catch(({errors}) => {
@@ -29,7 +30,7 @@ class BookContainer extends Component {
     }
 
     render() {
-        const { loading, book, user} = this.state;
+        const { loading, book, user, course } = this.state;
 
         if(loading) {
             return <Loader />
@@ -38,7 +39,7 @@ class BookContainer extends Component {
         return(
             <Grid container>
                 <Grid item xs={12}>
-                    <Book book={book} user={user} />
+                    <Book book={book} user={user} course={course} />
                 </Grid>
             </Grid>
         );

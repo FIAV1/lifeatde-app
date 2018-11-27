@@ -9,12 +9,20 @@ import BookCard from './BookCard';
 
 class BookCardList extends Component {
 
-    getBookOwner = (book, users) => {
-        return users.find( user => user.id === book.relationships.user.data.id);
+    getBookOwner = (book, included) => {
+        return included
+            .filter(relationship => relationship.type === 'user')
+            .find(user => user.id === book.relationships.user.data.id)
+    };
+
+    getBookCourse = (book, included) => {
+        return included
+            .filter(relationship => relationship.type === 'course')
+            .find(course => course.id === book.relationships.course.data.id)
     };
 
     render() {
-        const { books, users } = this.props;
+        const { books, included } = this.props;
 
         if (!books || books.length === 0) {
             return (
@@ -31,7 +39,8 @@ class BookCardList extends Component {
                         <BookCard
                             key={book.id}
                             book={book}
-                            user={this.getBookOwner(book, users)}
+                            user={this.getBookOwner(book, included)}
+                            course={this.getBookCourse(book, included)}
                             removeBook={this.props.onBookDelete}
                         />)
                 }

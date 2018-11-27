@@ -18,9 +18,9 @@ import { withSnackbar } from 'notistack';
 class BookCardsContainer extends Component {
 
     state = {
-        loading: true,
         books: null,
-        users: null
+        included: null,
+        loading: true
     };
 
     componentDidMount() {
@@ -31,7 +31,7 @@ class BookCardsContainer extends Component {
         Api.get(`/courses/${courseId}/books`).then(response => {
             this.setState({
                 books: response.data,
-                users: response.included,
+                included: response.included,
                 loading: false
             });
         }).catch(({errors}) => {
@@ -42,14 +42,12 @@ class BookCardsContainer extends Component {
     removeBook = (bookId) => {
         let books = this.state.books.filter(book => book.id !== bookId);
 
-        this.setState({
-            books,
-        });
+        this.setState({books});
     };
 
     render() {
-        const { classes } = this.props;
-        const { books, users, loading } = this.state;
+        const { classes, history } = this.props;
+        const { books, included, loading } = this.state;
 
         if (loading) {
             return (
@@ -62,7 +60,7 @@ class BookCardsContainer extends Component {
                 <Typography className={classes.header} component="h1" variant="h4">
                     Libri
                     <div>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
+                        <Button onClick={() => history.push('/books/new')} variant="fab" color="primary" aria-label="Add" className={classes.button}>
                             <AddIcon/>
                         </Button>
                         <Button variant="fab" color="primary" aria-label="Filter" className={classes.button}>
@@ -71,7 +69,7 @@ class BookCardsContainer extends Component {
                     </div>
                 </Typography>
                 <Divider className={classes.hr} />
-                <BookCardList books={books} users={users} onBookDelete={this.removeBook}/>
+                <BookCardList books={books} included={included} onBookDelete={this.removeBook}/>
             </div>
         )
     }
