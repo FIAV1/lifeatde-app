@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import {
-    Button,
     Divider,
     Typography,
     withStyles
@@ -10,11 +9,10 @@ import {
 import Api from '../lib/Api';
 import LocalStorage from "../lib/LocalStorage";
 import BookCardList from '../components/books/BookCardList';
-import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Loader from "../components/common/Loader";
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import { withSnackbar } from 'notistack';
+import BooksFilters from '../components/filters/BooksFilters';
 
 class BookCardsContainer extends Component {
 
@@ -47,6 +45,13 @@ class BookCardsContainer extends Component {
 
         this.setState({books});
     };
+
+    handleFilter = property => (filteredItems, filteredItemsMeta) => {
+        this.setState({
+            [property]: filteredItems,
+            meta: filteredItemsMeta,
+        });
+    }
 
     loadMore = endpoint => () => {
         this.setState({loadingMore: true});
@@ -86,6 +91,10 @@ class BookCardsContainer extends Component {
                 <Typography className={classes.header} component="h1" variant="h4">
                     Libri
                 </Typography>
+                <BooksFilters
+                    filters={['courses']}
+                    onFilter={this.handleFilter('books')}
+                />
                 <Divider className={classes.hr} />
                 <BookCardList books={books} included={included} removeBook={this.removeBook}/>
                 { meta.next
@@ -115,6 +124,5 @@ const styles = theme => ({
         margin: '0 0 20px',
     },
 });
-
 
 export default withSnackbar(withStyles(styles)(BookCardsContainer));

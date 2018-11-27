@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Api from '../../lib/Api';
-import { encodeSearchString } from '../../lib/Utils';
 
 import {
     ExpansionPanel,
@@ -10,27 +9,23 @@ import {
     ExpansionPanelDetails,
 } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
-import CategoryFilter from './CategoryFilter';
+import CourseFilter from './CourseFilter';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-class Filter extends Component {
+class BooksFilters extends Component {
     state =  {
-        categoryFilters: null,
-        byCategories: null,
+        courseFilter: null,
+        byCourse: null,
     }
 
-    filterByCategory = property => filters => {
-        this.setState({[property]: filters});
+    filterByCourse = property => filter => {
+        this.setState({[property]: filter});
 
-        let params = {
-            categories: filters,
-        }
-        let searchString = encodeSearchString('project', params);
-
-        Api.get(`/projects${searchString ? '/by_categories?' + searchString : ''}`).then(response => {
+        Api.get(`/courses/${filter}/books`).then(response => {
+            console.log(response)
             this.props.onFilter(response.data, response.meta);
-            this.setState({byCategories: response});
+            this.setState({byCourse: response});
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         })
@@ -50,9 +45,9 @@ class Filter extends Component {
                     <Typography variant="caption">FILTRA</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    { filters.find(filter => filter === 'categories')
-                    ? <CategoryFilter
-                        filterFn={this.filterByCategory('categoryFilters')}
+                    { filters.find(filter => filter === 'courses')
+                    ? <CourseFilter
+                        filterFn={this.filterByCourse('courseFilter')}
                     /> : null }
                 </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -60,4 +55,4 @@ class Filter extends Component {
     }
 }
 
-export default withSnackbar(Filter);
+export default withSnackbar(BooksFilters);
