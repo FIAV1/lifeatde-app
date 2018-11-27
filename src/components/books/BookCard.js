@@ -162,9 +162,9 @@ class BookCard extends Component {
                                         label: classes.chipLabel
                                     }}
                                     label={
-                                        <Typography  variant='body1' noWrap>{book.attributes.course}</Typography>
+                                        <Typography variant='body1' noWrap>{course.attributes.name}</Typography>
                                     }
-                                    style={{backgroundColor: getCourseColor(book.attributes.course)}}
+                                    style={{backgroundColor: getCourseColor(course.attributes.name)}}
                                 />
                             </Grid>
                             <Grid className={classes.item} item xs={12} sm={4}>

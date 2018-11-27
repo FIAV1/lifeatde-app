@@ -46,10 +46,9 @@ const validationSchema = Yup.object().shape({
 class ProjectForm extends Component {
     state = {
         categoriesOptions: [],
-    }
+    };
 
     FORM_VALUES = {
-        id: this.props.id || '',
         title: this.props.title || '',
         categories: this.props.categories || [],
         status: this.props.status || '',
@@ -57,8 +56,7 @@ class ProjectForm extends Component {
         documents: [],
         oldDocuments: this.props.documents || [],
         collaborators: this.props.collaborators || [],
-        edit: this.props.edit || false,
-    }
+    };
 
     componentDidMount() {
 		Api.get('/categories').then(response => {
@@ -77,35 +75,31 @@ class ProjectForm extends Component {
         let entries = Object.keys(event.target.files).map(key => event.target.files[key]);
         
         props.setFieldValue('documents', documents.concat(entries));
-    }
+    };
 
     removeFiles = props => (fileId, fileIndex) => {
 		let oldDocuments = props.values.oldDocuments;
         let newDocuments = props.values.documents;
 
-		let updatedFiles;
-
 		if (fileId) {
-            updatedFiles = oldDocuments.filter(oldFile => oldFile.id !== fileId);
-            props.setFieldValue('oldDocuments', updatedFiles);
+            props.setFieldValue('oldDocuments', oldDocuments.filter(oldFile => oldFile.id !== fileId));
 		} else {
-			updatedFiles = newDocuments.filter((newDocument,index) => index !== fileIndex);
-			props.setFieldValue('documents', updatedFiles);
+			props.setFieldValue('documents', newDocuments.filter((newDocument,index) => index !== fileIndex));
 		}
-    }
+    };
 
     deleteFiles = props => fileId => {
         let files = {
             documents: [fileId]
         };
         
-        Api.delete(`/projects/${props.values.id}/documents`, files).then(response => {
+        Api.delete(`/projects/${this.props.id}/documents`, files).then(response => {
             this.removeFiles(props)(fileId, null);
             response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
-    }
+    };
 
     handleAsyncOptions = endpoint => async inputValue => {
 		return Api.get(endpoint+inputValue).then(response => {
@@ -116,7 +110,7 @@ class ProjectForm extends Component {
 		}).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
-	}
+	};
 
     handleSubmit = (values, actions) => {
         actions.setSubmitting(false);
@@ -127,7 +121,7 @@ class ProjectForm extends Component {
             description: values.description,
             project_status_id: values.status,
             categories: values.categories.map(category => category.value),
-        }
+        };
 
         if (values.results) params.results = values.results;
         if (values.documents) params.documents = values.documents;
@@ -135,8 +129,8 @@ class ProjectForm extends Component {
 
         formData = formDataSerializer('project', params, formData);
 
-        if (values.edit) {
-            Api.put(`/projects/${values.id}`, formData).then(response => {
+        if (this.props.edit) {
+            Api.put(`/projects/${this.props.id}`, formData).then(response => {
                 response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
                 history.push(`/projects/${response.data.id}`);
             }).catch(({errors}) => {
@@ -150,10 +144,10 @@ class ProjectForm extends Component {
                 errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
             });
         }
-    }
+    };
 
     render() {
-        const { theme, classes } = this.props;
+        const { theme, classes, edit } = this.props;
         const { categoriesOptions } = this.state;
 
         return (
@@ -292,7 +286,7 @@ class ProjectForm extends Component {
                             fullWidth
                             className={classes.button}
                         >
-                            {props.values.edit ? 'Salva modifiche' : 'Crea progetto'}
+                            {edit ? 'Salva modifiche' : 'Crea progetto'}
                         </Button>
                         <Button
                             type="button"
@@ -322,6 +316,9 @@ const styles = theme => ({
     button: {
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
+    },
+    rightIcon: {
+        marginLeft: theme.spacing.unit,
     }
 });
 

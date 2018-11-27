@@ -42,11 +42,8 @@ class App extends Component {
 					<PrivateRoute exact path='/books' component={BookCardsContainer}/>
                     <PrivateRoute exact path='/books/new' component={BookNewContainer}/>
                     <PrivateRoute exact path='/books/:id' component={BookContainer}/>
-<<<<<<< HEAD
-					<PrivateRoute exact path='/users/:id' component={UserProfile} />
-=======
                     <PrivateRoute exact path='/books/:id/edit' component={BookEditContainer}/>
->>>>>>> * Implementate create e edit di un libro
+					<PrivateRoute exact path='/users/:id' component={UserProfile} />
 					<PrivateRoute component={NoMatch} />
 				</Switch>
 			</AppContainer>
