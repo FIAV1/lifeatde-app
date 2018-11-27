@@ -81,7 +81,7 @@ class BookCard extends Component {
     render() {
         const { book, user, course, classes } = this.props;
         const { photoTiles } = this.state;
-
+        
         if(!user || !book) {
             return null;
         }

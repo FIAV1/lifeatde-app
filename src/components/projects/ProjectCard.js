@@ -57,7 +57,7 @@ class ProjectCard extends Component {
 
     render() {
         const { classes, project, admin } = this.props;
-
+        
         if(!admin || !project) {
             return null;
         }

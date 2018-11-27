@@ -73,7 +73,7 @@ class SearchContainer extends Component {
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {
             this.setState({
                 projects: response.data,
-                projectsUsers: response.included,
+                projectsUsers: response.included.filter(item => item.type === 'user')
                 projectsMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -82,7 +82,7 @@ class SearchContainer extends Component {
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
             this.setState({
                 users: response.data,
-                usersCourses: response.included,
+                usersCourses: response.included.filter(item => item.type === 'course')
                 usersMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -91,7 +91,7 @@ class SearchContainer extends Component {
         await Api.get(`/books?search=${this.state.searchString}`).then(response => {
             this.setState({
                 books: response.data,
-                booksUsers: response.included,
+                booksUsers: response.included.filter(item => item.type === 'user'),
                 booksMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -100,7 +100,7 @@ class SearchContainer extends Component {
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
                 studyGroups: response.data,
-                studyGroupsUsers: response.included,
+                studyGroupsUsers: response.included.filter(item => item.type === 'user')
                 studyGroupsMeta: response.meta,
             })
         }).catch(({errors}) => {

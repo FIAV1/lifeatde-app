@@ -14,7 +14,7 @@ class UserCardList extends Component {
     render() {
 
         const { users, courses } = this.props;
-
+      
         if(!users || users.length === 0) {
             return(
                 <Typography variant="subtitle1">
