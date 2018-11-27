@@ -4,20 +4,14 @@ import Api from '../lib/Api';
 import {
     withStyles,
     Typography,
-    Button,
     Divider
 } from '@material-ui/core';
-
-import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
 
 import LocalStorage from '../lib/LocalStorage';
 
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import Loader from '../components/common/Loader';
 import LoadMoreButton from '../components/common/LoadMoreButton';
-
-import history from '../lib/history';
 
 import { withSnackbar } from 'notistack';
 

@@ -61,7 +61,7 @@ class Filter extends Component {
         )
     }
 }
- 
+
 const styles = theme => ({
     typography: {
         display:'flex',
