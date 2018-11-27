@@ -85,14 +85,6 @@ class StudyGroupCardsContainer extends Component {
             <div id="studygroup-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4">
                     Gruppi di Studio in base al corso
-                    <div>
-                        <Button  onClick={() => history.push('/study_groups/new')} variant="fab" color="primary" aria-label="Add" className={classes.button}>
-                            <AddIcon />
-                        </Button>
-                        <Button variant="fab" color="primary" aria-label="Add" className={classes.button}>
-                            <FilterListIcon />
-                        </Button>
-                    </div>
                 </Typography>
                 <Divider className={classes.hr} />
                 <StudyGroupCardList studyGroups={studyGroups} users={users} removeStudyGroup={this.removeStudyGroup}/>

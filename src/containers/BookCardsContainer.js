@@ -88,7 +88,7 @@ class BookCardsContainer extends Component {
 
         return(
             <div id="book-cards-container">
-                <Typography className={classes.header} component="h1" variant="h4">
+                <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
                     Libri in base al corso
                 </Typography>
                 <BooksFilters
