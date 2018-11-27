@@ -15,7 +15,9 @@ import {
     Select,
     FormHelperText,
     Typography,
-    Button
+    Button,
+    Grid,
+    Divider,
 } from '@material-ui/core';
 import Autocomplete from '../common/Autocomplete';
 import AsyncAutocomplete from '../common/AsyncAutocomplete';
@@ -59,6 +61,8 @@ class ProjectForm extends Component {
     };
 
     componentDidMount() {
+        document.title = `LifeAtDe | ${this.props.edit ? 'Modifica progetto' : 'Crea progetto'}`;
+
 		Api.get('/categories').then(response => {
             this.setState({
                 categoriesOptions: response.data.map(category => ({
@@ -151,91 +155,56 @@ class ProjectForm extends Component {
         const { categoriesOptions } = this.state;
 
         return (
-            <Formik
-                initialValues={this.FORM_VALUES}
-                onSubmit={this.handleSubmit}
-                validationSchema={validationSchema}
-                validateOnBlur
-                render={props =>
-                    <form onSubmit={props.handleSubmit}>
-                        <TextField
-                            id="title"
-                            label="Titolo"
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            value={props.values.title}
-                            helperText={props.touched.title ? props.errors.title : null}
-                            error={props.errors.title && props.touched.title}
-                            className={classes.formField}
-                        />
-                        <FormControl
-                            error={props.errors.status && props.touched.status}
-                            className={classes.formField}
-                        >
-                            <InputLabel htmlFor="status">Status</InputLabel>
-                            <Select
-                                native
+            <div id="project-form">
+                <Typography component="h1" variant="h4" gutterBottom>
+                { edit
+                ? 'Modifica progetto'
+                : 'Crea nuovo progetto'}
+                </Typography>
+                <Divider className={classes.divider} />
+                <Formik
+                    initialValues={this.FORM_VALUES}
+                    onSubmit={this.handleSubmit}
+                    validationSchema={validationSchema}
+                    validateOnBlur
+                    render={props =>
+                        <form onSubmit={props.handleSubmit}>
+                            <TextField
+                                id="title"
+                                label="Titolo"
                                 onChange={props.handleChange}
                                 onBlur={props.handleBlur}
-                                value={props.values.status}
-                                inputProps={{
-                                    id: 'status',
-                                }}
+                                value={props.values.title}
+                                helperText={props.touched.title ? props.errors.title : null}
+                                error={props.errors.title && props.touched.title}
+                                className={classes.formField}
+                            />
+                            <FormControl
+                                error={props.errors.status && props.touched.status}
+                                className={classes.formField}
                             >
-                                <option value="" disabled />
-                                <option value={1}>Aperto</option>
-                                <option value={2}>Chiuso</option>
-                                <option value={3}>Terminato</option>
-                            </Select>
-                            {props.touched.status && props.errors.status ? <FormHelperText>{props.errors.status}</FormHelperText> : null}
-                        </FormControl>
-                        <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="h6">Descrizione:</Typography>
-                        <Editor
-                            id="description"
-                            apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-                            initialValue={props.values.description}
-                            init={{
-                                menubar: false,
-                                elementpath: false,
-                                skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
-                                plugins: 'lists, link, emoticons, fullscreen',
-                                toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
-                                min_height: 280,
-                            }}
-                            onEditorChange={value => props.setFieldValue('description', value)}
-                            onBlur={props.handleBlur}
-                        />
-                        { props.touched.description && props.errors.description
-                        ? <Typography variant="caption" color="error">{props.errors.description}</Typography>
-                        : null }
-                        <Autocomplete
-                            id="categories"
-                            label="Categorie"
-                            onChange={value => props.setFieldValue('categories', value)}
-                            onBlur={() => props.setFieldTouched('categories')}
-                            value={props.values.categories}
-                            helperText={props.touched.categories ? props.errors.categories : null}
-                            error={props.errors.categories && props.touched.categories}
-                            options={categoriesOptions}
-                            placeholder="Seleziona una categoria..."
-                            isMulti
-                        />
-                        <AsyncAutocomplete
-                            id="collaborators"
-                            label="Membri"
-                            onChange={value => props.setFieldValue('collaborators', value)}
-                            onBlur={() => props.setFieldTouched('collaborators')}
-                            value={props.values.collaborators}
-                            loadOptions={this.handleAsyncOptions('/users?search=')}
-                            placeholder="Seleziona una categoria..."
-                            isMulti
-                        />
-                        {props.values.status === "3" && <div>
-                            <Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
+                                <InputLabel htmlFor="status">Status</InputLabel>
+                                <Select
+                                    native
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.status}
+                                    inputProps={{
+                                        id: 'status',
+                                    }}
+                                >
+                                    <option value="" disabled />
+                                    <option value={1}>Aperto</option>
+                                    <option value={2}>Chiuso</option>
+                                    <option value={3}>Terminato</option>
+                                </Select>
+                                {props.touched.status && props.errors.status ? <FormHelperText>{props.errors.status}</FormHelperText> : null}
+                            </FormControl>
+                            <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="h6">Descrizione:</Typography>
                             <Editor
-                                id="results"
+                                id="description"
                                 apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-                                initialValue={props.values.results}
+                                initialValue={props.values.description}
                                 init={{
                                     menubar: false,
                                     elementpath: false,
@@ -244,63 +213,109 @@ class ProjectForm extends Component {
                                     toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
                                     min_height: 280,
                                 }}
-                                onEditorChange={value => props.setFieldValue('results', value)}
+                                onEditorChange={value => props.setFieldValue('description', value)}
                                 onBlur={props.handleBlur}
                             />
-                        </div>}
-                        <FileList
-                            deleteFiles={this.deleteFiles(props)}
-                            removeFiles={this.removeFiles(props)}
-                            files={props.values.oldDocuments}
-                            old
-                        />
-                        <label htmlFor="files">
-                            <Button
-                                type="button"
-                                variant="contained"
-                                color="primary"
-                                component="span"
-                                fullWidth
-                                className={classes.button}
-                            >
-                                Carica file
-                                <CloudUploadIcon className={classes.rightIcon} />
-                            </Button>
-                        </label>
-                        <input
-                            id="files"
-                            type="file"
-                            onChange={this.addFiles(props)}
-                            onBlur={() => props.setFieldTouched('documents')}
-                            className={classes.input}
-                            multiple
-                        />
-                        <FileList
-                            removeFiles={this.removeFiles(props)}
-                            files={props.values.documents}
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            className={classes.button}
-                        >
-                            {edit ? 'Salva modifiche' : 'Crea progetto'}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            color="secondary"
-                            fullWidth
-                            className={classes.button}
-                            onClick={() => history.push('/projects')}
-                        >
-                            Annulla
-                        </Button>
-                    </form>
-                }
-            />
+                            { props.touched.description && props.errors.description
+                            ? <Typography variant="caption" color="error">{props.errors.description}</Typography>
+                            : null }
+                            <Autocomplete
+                                id="categories"
+                                label="Categorie"
+                                onChange={value => props.setFieldValue('categories', value)}
+                                onBlur={() => props.setFieldTouched('categories')}
+                                value={props.values.categories}
+                                helperText={props.touched.categories ? props.errors.categories : null}
+                                error={props.errors.categories && props.touched.categories}
+                                options={categoriesOptions}
+                                placeholder="Seleziona una categoria..."
+                                isMulti
+                            />
+                            <AsyncAutocomplete
+                                id="collaborators"
+                                label="Membri"
+                                onChange={value => props.setFieldValue('collaborators', value)}
+                                onBlur={() => props.setFieldTouched('collaborators')}
+                                value={props.values.collaborators}
+                                loadOptions={this.handleAsyncOptions('/users?search=')}
+                                placeholder="Seleziona una categoria..."
+                                isMulti
+                            />
+                            {props.values.status === "3" && <div>
+                                <Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
+                                <Editor
+                                    id="results"
+                                    apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
+                                    initialValue={props.values.results}
+                                    init={{
+                                        menubar: false,
+                                        elementpath: false,
+                                        skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
+                                        plugins: 'lists, link, emoticons, fullscreen',
+                                        toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
+                                        min_height: 280,
+                                    }}
+                                    onEditorChange={value => props.setFieldValue('results', value)}
+                                    onBlur={props.handleBlur}
+                                />
+                            </div>}
+                            <FileList
+                                deleteFiles={this.deleteFiles(props)}
+                                removeFiles={this.removeFiles(props)}
+                                files={props.values.oldDocuments}
+                                old
+                            />
+                            <label htmlFor="files">
+                                <Button
+                                    type="button"
+                                    variant="contained"
+                                    component="span"
+                                    fullWidth
+                                    className={classes.button}
+                                >
+                                    Carica file
+                                    <CloudUploadIcon className={classes.rightIcon} />
+                                </Button>
+                            </label>
+                            <input
+                                id="files"
+                                type="file"
+                                onChange={this.addFiles(props)}
+                                onBlur={() => props.setFieldTouched('documents')}
+                                className={classes.input}
+                                multiple
+                            />
+                            <FileList
+                                removeFiles={this.removeFiles(props)}
+                                files={props.values.documents}
+                            />
+                            <Grid container spacing={16}>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                    >
+                                        {edit ? 'Salva modifiche' : 'Crea progetto'}
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={() => history.push('/projects')}
+                                    >
+                                        Annulla
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    }
+                />
+            </div>
         )
     }
 }
@@ -312,6 +327,9 @@ const styles = theme => ({
     },
     input: {
         display: 'none',
+    },
+    divider: {
+        marginBottom: theme.spacing.unit * 2,
     },
     button: {
         marginTop: theme.spacing.unit * 2,

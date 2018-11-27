@@ -89,7 +89,7 @@ class Project extends Component {
                                 content: classes.headerContent,
                                 action: classes.headerAction,
                             }}
-                            title={<Typography className={classes.title} component="h1" noWrap>{project.attributes.title}</Typography>}
+                            title={<Typography component="h1" variant="h4">{project.attributes.title}</Typography>}
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{project.attributes.created_at}</Moment>
@@ -193,12 +193,6 @@ const ChipList = ({categories, classes}) => {
 };
 
 const styles = theme => ({
-    title: {
-        fontSize: '2rem',
-        [theme.breakpoints.up('md')]: {
-            fontSize: '3rem'
-        }
-    },
     headerContent: {
         width: `calc(100% - ${theme.spacing.unit*2}px - 72px)`,
     },

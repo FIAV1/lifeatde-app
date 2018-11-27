@@ -50,6 +50,10 @@ class SearchContainer extends Component {
         booksUsers: null,
         booksMeta: null,
     };
+
+    componentDidMount() {
+        document.title = 'LifeAtDe | Cerca in LifeAtDe...'
+    }
     
     handleChangeTab = (event, value) => {
         this.setState({ value });
