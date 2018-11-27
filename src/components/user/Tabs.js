@@ -13,6 +13,7 @@ import {
 import SwipeableViews from 'react-swipeable-views';
 import Loader from '../common/Loader';
 
+import ProjectFilters from '../filters/ProjectFilters';
 import ProjectCardList from '../projects/ProjectCardList';
 import StudyGroupCardList from '../study-groups/StudyGroupCardList';
 import BookCardList from "../books/BookCardList";
@@ -88,6 +89,10 @@ class SearchContainer extends Component {
         });
     }
 
+    handleFilter = property => filteredItems => {
+        this.setState({[property]: filteredItems});
+    }
+
     render() {
         const { loading, projects, projectsUsers, studyGroups, studyGroupsUsers, books, booksUsers} = this.state;
         const { classes, theme } = this.props;
@@ -140,7 +145,13 @@ class SearchContainer extends Component {
                                 onChangeIndex={this.handleChangeIndex}
                                 animateHeight
                             >
-                                <TabContainer dir={theme.direction}><ProjectCardList removeProject={this.removeProject} projects={projects} users={projectsUsers}/></TabContainer>
+                                <TabContainer dir={theme.direction}>
+                                    <ProjectFilters
+                                        filters={['categories']}
+                                        onFilter={this.handleFilter('projects')}
+                                    />
+                                    <ProjectCardList removeProject={this.removeProject} projects={projects} users={projectsUsers}/>
+                                </TabContainer>
                                 <TabContainer dir={theme.direction}><StudyGroupCardList studyGroups={studyGroups} users={studyGroupsUsers}/></TabContainer>
                                 <TabContainer dir={theme.direction}><BookCardList books={books} users={booksUsers}/></TabContainer>
                             </SwipeableViews>

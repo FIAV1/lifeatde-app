@@ -48,7 +48,7 @@ class ProjectCard extends Component {
 
     deleteProject = () => {
         Api.delete(`/projects/${this.props.project.id}`).then(response => {
-            this.props.removeProject(this.props.project.id, this.props.admin.id);
+            this.props.removeProject(this.props.project.id);
             response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));

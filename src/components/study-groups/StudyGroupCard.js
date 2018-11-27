@@ -49,7 +49,7 @@ class StudyGroupCard extends Component {
 
     deleteStudyGroup = () => {
         Api.delete(`/study_groups/${this.props.studyGroup.id}`).then(response => {
-            this.props.removeStudyGroup(this.props.studyGroup.id, this.props.user.id);
+            this.props.removeStudyGroup(this.props.studyGroup.id);
             response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));

@@ -50,7 +50,7 @@ class BookCard extends Component {
 
     deleteBook = () => {
         Api.delete(`/books/${this.props.book.id}`, null).then(response => {
-            this.props.removeBook(this.props.book.id, this.props.user.id);
+            this.props.removeBook(this.props.book.id);
             response.meta.messages.forEach(message => this.props.enqueueSnackbar(message, {variant: 'success'}));
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -154,8 +154,23 @@ class BookCard extends Component {
                     </CardActionArea>
                     <Divider/>
                     <CardActions>
-                        <Chip className={classes.courseChip} style={{backgroundColor: getCourseColor(book.attributes.course)}} label={book.attributes.course}/>
-                        <PriceChip price={book.attributes.price} style={{marginLeft: 'auto'}}/>
+                        <Grid container>
+                            <Grid className={classes.item} item xs={12} sm={8}>
+                                <Chip 
+                                    classes={{
+                                        root: classes.chipRoot,
+                                        label: classes.chipLabel
+                                    }}
+                                    label={
+                                        <Typography  variant='body1' noWrap>{book.attributes.course}</Typography>
+                                    }
+                                    style={{backgroundColor: getCourseColor(book.attributes.course)}}
+                                />
+                            </Grid>
+                            <Grid className={classes.item} item xs={12} sm={4}>
+                                <PriceChip price={book.attributes.price} style={{marginLeft: 'auto'}}/>
+                            </Grid>
+                        </Grid>
                     </CardActions>
                 </Card>
             </Grid>
@@ -168,8 +183,18 @@ const styles = theme => ({
     cardContent: {
         width: '100%'
     },
-    courseChip: {
-        color: theme.palette.common.white,
+    item: {
+        display: 'flex',
+        paddingRight: theme.spacing.unit,
+    },
+    chipRoot: {
+        maxWidth: '100%',
+        marginBottom: theme.spacing.unit
+    },
+    chipLabel:{
+        overflow: 'hidden',
+        paddingRight: 0,
+        marginRight: '12px',
     },
     gridListContainer: {
         display: 'flex',

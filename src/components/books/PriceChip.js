@@ -28,6 +28,7 @@ const styles = theme => ({
     priceChip: {
         backgroundColor: green[700],
         color: theme.palette.common.white,
+        marginBottom: theme.spacing.unit,
     },
 });
 
