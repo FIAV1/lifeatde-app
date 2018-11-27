@@ -14,8 +14,6 @@ class UserCardList extends Component {
     render() {
 
         const { users, courses } = this.props;
-
-        console.log(courses)
         
         if(!users || users.length === 0) {
             return(

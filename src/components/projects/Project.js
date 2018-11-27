@@ -20,16 +20,15 @@ import {
     Button,
     Collapse,
     Typography,
-    IconButton,
 } from '@material-ui/core';
 
 import ReactMarkdown from 'react-markdown';
 import ProjectTeam from './ProjectTeam';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/Email';
 import DocumentList from './DocumentList';
+
+import ContactInfo from "../common/ContactInfo";
 
 import Api from '../../lib/Api';
 import history from '../../lib/history';
@@ -140,24 +139,7 @@ class Project extends Component {
                         </CardContent>
                         <Divider />
                         <CardContent>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Typography variant="overline">Contatta l'amministratore</Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    {
-                                        admin.attributes.phone
-                                        ? <IconButton href={`tel:${admin.attributes.phone}`} aria-label="telefono">
-                                            <PhoneIcon />
-                                        </IconButton>
-                                        : null
-                                    }
-                                    <IconButton href={`mailto:${admin.attributes.email}`} aria-label="email">
-                                        <EmailIcon />
-                                    </IconButton>
-                                    <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${admin.attributes.email}`}</Typography>
-                                </Grid>
-                            </Grid>
+                            <ContactInfo phone={admin.attributes.phone} email={admin.attributes.email} admin={true}/>
                         </CardContent>
                         <Divider />
                         <CardContent>

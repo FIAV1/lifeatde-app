@@ -14,15 +14,13 @@ import {
     CardHeader,
     CardActionArea,
     Grid,
-    IconButton,
     Typography,
     CardContent,
     CardActions,
     Chip
 } from '@material-ui/core';
 
-import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/Email';
+import ContactInfo from "../common/ContactInfo";
 
 class UserCard extends Component {
 
@@ -45,26 +43,8 @@ class UserCard extends Component {
                             title={ <Typography  variant='body1' noWrap>{user.attributes.firstname + " " + user.attributes.lastname}</Typography> }
                         />
                     </CardActionArea>
-                    <CardContent className={classes.cardContent}>
-                        <Grid container>
-                            {
-                                user.attributes.phone
-                                    ?
-                                    <Grid item xs={12}>
-                                        <IconButton href={`tel:${user.attributes.phone}`} aria-label="telefono">
-                                            <PhoneIcon />
-                                        </IconButton>
-                                        <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.phone}`}</Typography>
-                                    </Grid>
-                                    : null
-                            }
-                            <Grid item xs={12}>
-                                <IconButton href={`mailto:${user.attributes.email}`} aria-label="email">
-                                    <EmailIcon />
-                                </IconButton>
-                                <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.email}`}</Typography>
-                            </Grid>
-                        </Grid>
+                    <CardContent >
+                        <ContactInfo phone={user.attributes.phone} email={user.attributes.email} admin={false}/>
                     </CardContent>
                     <CardActions>
                         <Chip  classes={{

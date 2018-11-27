@@ -68,7 +68,7 @@ class SearchContainer extends Component {
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {
             this.setState({
                 projects: response.data,
-                projectsUsers: response.included
+                projectsUsers: response.included.filter(item => item.type === 'user')
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -76,7 +76,7 @@ class SearchContainer extends Component {
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
             this.setState({
                 users: response.data,
-                usersCourses: response.included
+                usersCourses: response.included.filter(item => item.type === 'course')
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -84,7 +84,7 @@ class SearchContainer extends Component {
         await Api.get(`/books?search=${this.state.searchString}`).then(response => {
             this.setState({
                 books: response.data,
-                booksUsers: response.included,
+                booksUsers: response.included.filter(item => item.type === 'user'),
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
@@ -92,7 +92,7 @@ class SearchContainer extends Component {
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
                 studyGroups: response.data,
-                studyGroupsUsers: response.included
+                studyGroupsUsers: response.included.filter(item => item.type === 'user')
             })
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));

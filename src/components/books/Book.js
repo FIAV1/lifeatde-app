@@ -13,7 +13,6 @@ import {
     CardHeader,
     CardContent,
     Typography,
-    IconButton,
     GridList,
     CircularProgress,
     GridListTile, Chip,
@@ -21,8 +20,7 @@ import {
 
 import ReactMarkdown from 'react-markdown';
 
-import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/Email';
+import ContactInfo from "../common/ContactInfo";
 import Api from "../../lib/Api";
 import imagePlaceholder from "../../img/image-placeholder.jpg";
 import Lightbox from 'react-images';
@@ -209,28 +207,7 @@ class Book extends Component {
                         </CardContent>
                         <Divider />
                         <CardContent>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Typography variant="overline">Contatta l'utente</Typography>
-                                </Grid>
-                                {
-                                    user.attributes.phone
-                                        ?
-                                        <Grid item xs={12}>
-                                            <IconButton href={`tel:${user.attributes.phone}`} aria-label="telefono">
-                                                <PhoneIcon />
-                                            </IconButton>
-                                            <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.phone}`}</Typography>
-                                        </Grid>
-                                        : null
-                                }
-                                <Grid item xs={12}>
-                                    <IconButton href={`mailto:${user.attributes.email}`} aria-label="email">
-                                        <EmailIcon />
-                                    </IconButton>
-                                    <Typography variant="subtitle1" noWrap className={classes.contactInfo}>{`${user.attributes.email}`}</Typography>
-                                </Grid>
-                            </Grid>
+                            <ContactInfo phone={user.attributes.phone} email={user.attributes.email} admin={false}/>
                         </CardContent>
                     </Card>
                 </Grid>

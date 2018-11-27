@@ -50,7 +50,7 @@ export default class AsyncAvatar extends Component {
     render() {
         const { user, avatarClass } = this.props;
         const { loading, url } = this.state;
-
+        
         if (loading) return <Loader />
 
         return (
