@@ -66,20 +66,23 @@ class StudyGroupForm extends Component {
         }
     }
 
+    componentDidMount() {
+        document.title = `LifeAtDe | ${this.props.edit ? 'Modifica gruppo di studio' : 'Crea gruppo di studio'}`;
+    }
 
     render() {
 		const { classes, edit } = this.props;
 		const { course } = this.state;
 
         return (
-            <div id="news-cards-container">
+            <div id="study-group-form">
                 <Grid container justify='space-between'>
                     <Grid item >
-                        <Typography className={classes.header} component="h1" variant="h4" xs={12} md={6} xl={4}>
+                        <Typography className={classes.header} component="h1" variant="h4" xs={12} sm={6}>
                         {edit ? 'Modifica il gruppo di studio' : 'Crea un gruppo di studio'}
                         </Typography>
                     </Grid>
-                    <Grid item className={classes.item} xs={12} sm={"auto"}>
+                    <Grid item className={classes.item} xs={12} sm={4}>
                         <Chip  classes={{
                             root: classes.chipRoot,
                             label: classes.chipLabel
@@ -122,25 +125,29 @@ class StudyGroupForm extends Component {
                                 rowsMax="100"
                                 variant="outlined"
                             />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className={classes.button}
-                            >
-                                {edit ? 'Salva modifiche' : 'Crea gruppo di studio'}
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="contained"
-                                color="secondary"
-                                fullWidth
-                                className={classes.button}
-                                onClick={() => history.push('/study_groups')}
-                            >
-                                Annulla
-                            </Button>
+                            <Grid container spacing={16}>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                    >
+                                        {edit ? 'Salva modifiche' : 'Crea gruppo di studio'}
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={() => history.push('/study_groups')}
+                                    >
+                                        Annulla
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </form>
                     }
                 />
@@ -179,10 +186,6 @@ const styles = theme => ({
     formField: {
         width: '100%',
         marginBottom: theme.spacing.unit * 2,
-    },
-	button: {
-		marginTop: theme.spacing.unit * 2,
-		marginBottom: theme.spacing.unit * 2,
     },
 })
 

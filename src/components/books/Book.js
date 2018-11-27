@@ -110,7 +110,7 @@ class Book extends Component {
                                 content: classes.headerContent,
                                 action: classes.headerAction,
                             }}
-                            title={<Typography className={classes.title} component="h1">{book.attributes.title}</Typography>}
+                            title={<Typography component="h1" variant="h4">{book.attributes.title}</Typography>}
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{book.attributes.created_at}</Moment>
@@ -219,12 +219,6 @@ class Book extends Component {
 }
 
 const styles = theme => ({
-    title: {
-        fontSize: '2rem',
-        [theme.breakpoints.up('md')]: {
-            fontSize: '3rem'
-        }
-    },
     headerContent: {
         width: `calc(100% - ${theme.spacing.unit*2}px - 72px)`,
     },

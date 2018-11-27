@@ -4,6 +4,7 @@ import Api from '../../lib/Api';
 import { encodeSearchString } from '../../lib/Utils';
 
 import {
+    withStyles,
     ExpansionPanel,
     ExpansionPanelSummary,
     Typography,
@@ -13,6 +14,7 @@ import { withSnackbar } from 'notistack';
 import CategoryFilter from './CategoryFilter';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 class Filter extends Component {
     state =  {
@@ -40,14 +42,14 @@ class Filter extends Component {
 
     render() {
         const { loading } = this.state;
-        const { filters } = this.props;
+        const { classes, filters } = this.props;
 
         if (loading) return null;
 
         return (
             <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<FilterListIcon />}>
-                    <Typography variant="caption">FILTRA</Typography>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.typography} variant="caption"><FilterListIcon className={classes.icon} /> FILTRA</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     { filters.find(filter => filter === 'categories')
@@ -60,5 +62,14 @@ class Filter extends Component {
     }
 }
  
+const styles = theme => ({
+    typography: {
+        display:'flex',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
+    }
+})
 
-export default withSnackbar(Filter);
+export default withSnackbar(withStyles(styles)(Filter));

@@ -195,7 +195,7 @@ class UserProfile extends Component {
                                 validateOnChange
                                 render={props =>
                                     <form ref={ref => this.form = ref} onSubmit={props.handleSubmit}>
-                                        <Typography variant="h5" align="center" noWrap gutterBottom>
+                                        <Typography component="h1" variant="h5" align="center" noWrap gutterBottom>
                                             {user.attributes.firstname} {user.attributes.lastname}
                                         </Typography>
                                         <div className={classes.bioWrapper}>

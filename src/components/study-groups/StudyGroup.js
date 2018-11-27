@@ -71,7 +71,7 @@ class StudyGroup extends Component {
                                 content: classes.headerContent,
                                 action: classes.headerAction,
                             }}
-                            title={<Typography className={classes.title} variant="h3" noWrap>{studyGroup.attributes.title}</Typography>}
+                            title={<Typography component="h1" variant="h4">{studyGroup.attributes.title}</Typography>}
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{studyGroup.attributes.created_at}</Moment>
@@ -126,12 +126,6 @@ class StudyGroup extends Component {
 }
 
 const styles = theme => ({
-    title: {
-        fontSize: '2rem',
-        [theme.breakpoints.up('md')]: {
-            fontSize: '3rem'
-        }
-    },
     headerContent: {
         width: `calc(100% - ${theme.spacing.unit*2}px - 72px)`,
     },

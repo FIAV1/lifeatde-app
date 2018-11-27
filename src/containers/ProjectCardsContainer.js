@@ -86,8 +86,8 @@ class ProjectCardsContainer extends Component {
 
         return(
             <div id="project-cards-container">
-                <Typography className={classes.header} variant="h4" gutterBottom>
-                    Progetti
+                <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
+                    Progetti in base alle preferenze
                 </Typography>
                 <ProjectFilters
                     filters={['categories']}
