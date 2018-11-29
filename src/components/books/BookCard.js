@@ -158,7 +158,7 @@ class BookCard extends Component {
                                         label: classes.chipLabel
                                     }}
                                     label={
-                                        <Typography variant='body1' noWrap>{course.attributes.name}</Typography>
+                                        <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                                     }
                                     style={{backgroundColor: getCourseColor(course.attributes.name)}}
                                 />
@@ -185,7 +185,8 @@ const styles = theme => ({
     },
     chipRoot: {
         maxWidth: '100%',
-        marginBottom: theme.spacing.unit
+        marginBottom: theme.spacing.unit,
+        color: theme.palette.common.white,
     },
     chipLabel:{
         overflow: 'hidden',

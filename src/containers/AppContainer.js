@@ -163,9 +163,9 @@ class AppContainer extends Component {
                     </List>
                 </Drawer>
                 <main className={classes.content}>
-                    <SpeedDials />
                     {this.props.children}
                 </main>
+                <SpeedDials />
             </div>
         );
     }

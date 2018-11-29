@@ -14,9 +14,9 @@ import {
     Icon,
 } from '@material-ui/core';
 
-import fimage from "../../img/federico_frigo.png"
-import gimage from "../../img/giovanni_fiorini.png"
-import nimage from "../../img/niccolò_fontana.png"
+import fimage from "../../img/federico_frigo.jpg"
+import gimage from "../../img/giovanni_fiorini.jpg"
+import nimage from "../../img/niccolò_fontana.jpg"
 
 const animation = (props) => (
     <Slide direction="up" {...props}/>

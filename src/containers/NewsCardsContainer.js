@@ -63,14 +63,15 @@ class NewsCardsContainer extends Component {
                         </Typography>
                     </Grid>
                     <Grid item className={classes.item} xs={12} sm={"auto"}>
-                        <Chip  classes={{
-                            root: classes.chipRoot,
-                            label: classes.chipLabel
-                        }}
-                        label={
-                            <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
-                        }
-                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                        <Chip 
+                            classes={{
+                                root: classes.chipRoot,
+                                label: classes.chipLabel
+                            }}
+                            label={
+                                <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
+                            }
+                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
                         />
                     </Grid>
                 </Grid>
@@ -96,6 +97,7 @@ const styles = theme => ({
     },
     chipRoot: {
         maxWidth: '100%',
+        color: theme.palette.common.white,
     },
     chipLabel:{
         overflow: 'hidden',

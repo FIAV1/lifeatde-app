@@ -73,7 +73,15 @@ class StudyGroup extends Component {
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{studyGroup.attributes.created_at}</Moment>
-                                    <Chip style={{backgroundColor: getCourseColor(course.attributes.name)}} label={course.attributes.name} />
+                                    <Chip
+                                        classes={{
+                                            root: classes.chipRoot
+                                        }}
+                                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                        label={
+                                            <Typography color="inherit" variant="body1">{course.attributes.name}</Typography>
+                                        }
+                                    />
                                 </div>
                             }
                             action={
@@ -134,6 +142,9 @@ const styles = theme => ({
         display: 'block',
         color: theme.palette.text.hint,
         margin: theme.spacing.unit,
+    },
+    chipRoot: {
+        color: theme.palette.common.white,
     },
 })
 
