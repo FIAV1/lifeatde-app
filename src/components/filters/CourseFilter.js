@@ -26,7 +26,8 @@ class CourseFilter extends Component {
 
     handleChange = property => event => {
         this.setState({[property]: event.target.value}, () => {
-            this.props.filterFn(this.state[property]);
+            console.log(this.state.coursesOptions.find(courseOption => courseOption.id === this.state[property]))
+            this.props.filterFn({label: this.state.coursesOptions.find(courseOption => courseOption.id === this.state[property]).attributes.name, value: this.state[property]});
         });
     }
 

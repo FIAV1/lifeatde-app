@@ -15,6 +15,8 @@ import LoadMoreButton from '../components/common/LoadMoreButton';
 
 import { withSnackbar } from 'notistack';
 
+import InfoIcon from '@material-ui/icons/Info';
+
 class StudyGroupCardsContainer extends Component {
 
     state = {
@@ -84,7 +86,11 @@ class StudyGroupCardsContainer extends Component {
         return (
             <div id="studygroup-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
-                    Gruppi di Studio in base al corso
+                    Gruppi di Studio
+                </Typography>
+                <Typography className={classes.info} component="h2" variant="caption" gutterBottom>
+                    <InfoIcon className={classes.icon} />
+                    I gruppi di studio sono mostrati in base al corso di studi a cui l'utente è iscritto.
                 </Typography>
                 <Divider className={classes.hr} />
                 <StudyGroupCardList
@@ -112,6 +118,13 @@ const styles = theme => ({
     },
     hr: {
         margin: '0 0 20px',
+    },
+    info: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
     },
     button: {
         width: '40px',

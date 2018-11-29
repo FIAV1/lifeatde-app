@@ -25,12 +25,12 @@ class Filter extends Component {
         this.setState({[property]: filters});
 
         let params = {
-            categories: filters,
+            categories: filters.map(filter => filter.value),
         }
         let searchString = encodeSearchString('project', params);
 
         Api.get(`/projects${searchString ? '/by_categories?' + searchString : ''}`).then(response => {
-            this.props.onFilter(response.data, response.included, response.meta);
+            this.props.onFilter(response.data, response.included, response.meta, filters.map(filter => filter.label).join(', '));
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });

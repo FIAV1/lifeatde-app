@@ -186,7 +186,7 @@ class UserProfile extends Component {
                             Modifica
                         </Button> : null }
                     </Grid>
-                    <Grid item xs={12} sm={7} md={8} lg={9} xl={10}>
+                    <Grid item xs={12} sm={7} md={8} lg={7} xl={6}>
                         <Paper className={classes.paper}>
                             <Formik
                                 initialValues={this.state}
@@ -194,7 +194,7 @@ class UserProfile extends Component {
                                 validationSchema={validationSchema}
                                 validateOnChange
                                 render={props =>
-                                    <form ref={ref => this.form = ref} onSubmit={props.handleSubmit}>
+                                    <form onSubmit={props.handleSubmit}>
                                         <Typography component="h1" variant="h5" align="center" noWrap gutterBottom>
                                             {user.attributes.firstname} {user.attributes.lastname}
                                         </Typography>
@@ -314,10 +314,11 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'stretch',
         position: 'relative',
-        border: '1px dashed',
+        border: '1px solid',
         borderColor: theme.palette.text.primary,
         borderRadius: theme.spacing.unit,
         padding: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 3,
         marginBottom: theme.spacing.unit * 2,
     },
     bio: {
@@ -332,6 +333,8 @@ const styles = theme => ({
         left: '-12px',
         color: theme.palette.text.primary,
         backgroundColor: theme.palette.background.paper,
+        width: '30px',
+        height: '30px',
     },
     phone: {
         display: 'flex',

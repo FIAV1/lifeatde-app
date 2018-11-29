@@ -11,8 +11,11 @@ import LocalStorage from "../lib/LocalStorage";
 import BookCardList from '../components/books/BookCardList';
 import Loader from "../components/common/Loader";
 import LoadMoreButton from '../components/common/LoadMoreButton';
-import { withSnackbar } from 'notistack';
 import BooksFilters from '../components/filters/BooksFilters';
+
+import { withSnackbar } from 'notistack';
+
+import InfoIcon from '@material-ui/icons/Info';
 
 class BookCardsContainer extends Component {
 
@@ -23,6 +26,7 @@ class BookCardsContainer extends Component {
         books: null,
         included: null,
         meta: null,
+        currentFilter: null
     };
 
     componentDidMount() {
@@ -46,11 +50,12 @@ class BookCardsContainer extends Component {
         this.setState({books});
     };
 
-    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta) => {
+    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta, filters) => {
         this.setState({
             [property]: filteredItems,
             included: filteredItemsIncluded,
             meta: filteredItemsMeta,
+            currentFilter: filters,
         });
     }
 
@@ -79,7 +84,7 @@ class BookCardsContainer extends Component {
 
     render() {
         const { classes } = this.props;
-        const { books, included, meta, loading, loadingMore } = this.state;
+        const { books, included, meta, loading, loadingMore, currentFilter } = this.state;
 
         if (loading) {
             return (
@@ -90,7 +95,13 @@ class BookCardsContainer extends Component {
         return(
             <div id="book-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
-                    Libri in base al corso
+                    Materiale in vendita
+                </Typography>
+                <Typography className={classes.info} component="h2" variant="caption" gutterBottom>
+                    <InfoIcon className={classes.icon} />
+                    { currentFilter
+                    ? `Il materiale in vendita è mostrato in base al corso di studi: ${currentFilter}`
+                    : 'Il materiale in vendita è mostrato in base al corso di studi a cui l\'utente è iscritto.' }
                 </Typography>
                 <BooksFilters
                     filters={['courses']}
@@ -127,6 +138,13 @@ const styles = theme => ({
     },
     hr: {
         margin: '0 0 20px',
+    },
+    info: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
     },
 });
 

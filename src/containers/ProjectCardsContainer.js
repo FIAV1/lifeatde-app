@@ -14,6 +14,8 @@ import ProjectFilters from '../components/filters/ProjectFilters';
 
 import { withSnackbar } from 'notistack';
 
+import InfoIcon from '@material-ui/icons/Info';
+
 class ProjectCardsContainer extends Component {
     state = {
         loading: true,
@@ -21,6 +23,7 @@ class ProjectCardsContainer extends Component {
         projects: null,
         included: null,
         meta: null,
+        currentFilter: null,
     };
 
     componentDidMount() {
@@ -46,11 +49,12 @@ class ProjectCardsContainer extends Component {
         });
     };
 
-    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta) => {
+    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta, filters) => {
         this.setState({
             [property]: filteredItems,
             included: filteredItemsIncluded,
             meta: filteredItemsMeta,
+            currentFilter: filters,
         });
     }
 
@@ -78,7 +82,7 @@ class ProjectCardsContainer extends Component {
     }
 
     render() {
-        const { loading, loadingMore, projects, included, meta } = this.state;
+        const { loading, loadingMore, projects, included, meta, currentFilter } = this.state;
         const { classes } = this.props;
 
         if(loading) {
@@ -88,7 +92,13 @@ class ProjectCardsContainer extends Component {
         return(
             <div id="project-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
-                    Progetti in base alle preferenze
+                    Progetti
+                </Typography>
+                <Typography className={classes.info} component="h2" variant="caption" gutterBottom>
+                    <InfoIcon className={classes.icon} />
+                    { currentFilter && currentFilter.length
+                    ? `I progetti sono mostrati in base alle categorie: ${currentFilter}`
+                    : 'I progetti sono mostrati in base alle preferenze espresse dall\'utente.' }
                 </Typography>
                 <ProjectFilters
                     filters={['categories']}
@@ -117,6 +127,13 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
+    },
+    info: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
     },
     hr: {
         margin: '0 0 20px',
