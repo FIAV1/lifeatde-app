@@ -56,9 +56,9 @@ class ProjectCard extends Component {
     };
 
     render() {
-        const { classes, project, admin } = this.props;
+        const { classes, project, admin, categories } = this.props;
         
-        if(!admin || !project) {
+        if(!project) {
             return null;
         }
 
@@ -78,22 +78,21 @@ class ProjectCard extends Component {
                         }
                         subheader={<Moment parse="YYYY-MM-DD HH:mm" locale="it" fromNow>{project.attributes.created_at}</Moment>}
                         action={
-                            this.state.authUser.id === admin.id ?
-                                <div>
-                                    <EditDeleteActions
-                                        onClickEdit={this.handleClickEdit}
-                                        onClickDelete={this.openConfirmationDialog}
-                                    />
-                                    <DeleteConfirmationDialog
-                                        open={this.state.confirmationDialogIsOpen}
-                                        title={"Vuoi eliminare il progetto?"}
-                                        body={"Questa operazione è irrevesribile, una volta cancellato il progetto non sarai più in grado di ripristinarlo."}
-                                        onClickDelete={this.deleteProject}
-                                        onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
-                                    />
-                                </div>
-                            :
-                                null
+                            this.state.authUser.id === admin.id
+                            ? <div>
+                                <EditDeleteActions
+                                    onClickEdit={this.handleClickEdit}
+                                    onClickDelete={this.openConfirmationDialog}
+                                />
+                                <DeleteConfirmationDialog
+                                    open={this.state.confirmationDialogIsOpen}
+                                    title={"Vuoi eliminare il progetto?"}
+                                    body={"Questa operazione è irrevesribile, una volta cancellato il progetto non sarai più in grado di ripristinarlo."}
+                                    onClickDelete={this.deleteProject}
+                                    onClose={() => {this.setState({confirmationDialogIsOpen: false})}}
+                                />
+                            </div>
+                            : null
                         }
                     />
                     <CardActionArea className={classes.cardActionArea} onClick={() => history.push(`/projects/${project.id}`)}>
@@ -102,7 +101,7 @@ class ProjectCard extends Component {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <CategoriesMenu id={project.id} elements={project.attributes.categories} />
+                        <CategoriesMenu id={project.id} elements={categories} />
                     </CardActions>
                 </Card>
             </Grid>

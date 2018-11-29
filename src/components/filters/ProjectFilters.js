@@ -19,7 +19,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 class Filter extends Component {
     state =  {
         categoryFilters: null,
-        byCategories: null,
     }
 
     filterByCategory = property => filters => {
@@ -31,13 +30,10 @@ class Filter extends Component {
         let searchString = encodeSearchString('project', params);
 
         Api.get(`/projects${searchString ? '/by_categories?' + searchString : ''}`).then(response => {
-            this.props.onFilter(response.data, response.meta);
-            this.setState({byCategories: response});
+            this.props.onFilter(response.data, response.included, response.meta);
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
-        })
-
-        
+        });
     }
 
     render() {
@@ -49,7 +45,10 @@ class Filter extends Component {
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.typography} variant="caption"><FilterListIcon className={classes.icon} /> FILTRA</Typography>
+                    <Typography className={classes.typography} variant="caption">
+                        <FilterListIcon className={classes.icon} />
+                        FILTRA
+                    </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     { filters.find(filter => filter === 'categories')

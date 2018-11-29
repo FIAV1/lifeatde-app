@@ -14,29 +14,30 @@ import { withSnackbar } from 'notistack';
 class ProjectContainer extends Component {
     state = {
         loading: true,
-        project: null,
+        projects: null,
+        categories: null,
         admin: null,
         collaborators: null,
+        projectStatus: null,
     }
     
-    getCollaborators = (collaborators, team) => {
-        let collaboratorsKey = collaborators.data.map(collaborator => collaborator.id);
+    getProjectStatus = projectStatusId => 
+        this.state.included.find(item => item.type === 'project_status' && item.id === projectStatusId);
 
-        return team.filter(member => collaboratorsKey.indexOf(member.id) > -1);
-    }
+    getAdmin = adminIds =>
+        this.state.included.filter(item => item.type === 'user' && adminIds.find(adminId => item.id === adminId.id))[0];
 
-    getAdmin = (admins, team) => {
-        let adminsKey = admins.data.map(admin => admin.id);
+    getCollaborators = collaboratorIds =>
+        this.state.included.filter(item => item.type === 'user' && collaboratorIds.find(collaboratorId => item.id === collaboratorId.id));
 
-        return team.filter(member => adminsKey.indexOf(member.id) > -1)[0];
-    }
+    getCategories = categoryIds =>
+        this.state.included.filter(item => item.type === 'category' && categoryIds.find(categoryId => item.id === categoryId.id));
 
     componentDidMount() {
         Api.get('/projects/' + this.props.match.params.id).then(response => {
             this.setState({
                 project: response.data,
-                collaborators: this.getCollaborators(response.data.relationships.collaborators, response.included),
-                admin: this.getAdmin(response.data.relationships.admins, response.included),
+                included: response.included,
                 loading: false
             }, () => document.title = `LifeAtDe | ${this.state.project.attributes.title}`);
         }).catch(({errors}) => {
@@ -45,7 +46,7 @@ class ProjectContainer extends Component {
     }
 
     render() {
-        const { loading, project, admin, collaborators} = this.state;
+        const { loading, project } = this.state;
 
         if(loading) {
             return <Loader />
@@ -54,7 +55,13 @@ class ProjectContainer extends Component {
         return(
             <Grid container>
                 <Grid item xs={12}>
-                    <Project project={project} admin={admin} collaborators={collaborators} />
+                    <Project
+                        project={project}
+                        projectStatus={this.getProjectStatus(project.relationships.project_status.data.id)}
+                        admin={this.getAdmin(project.relationships.admins.data)}
+                        collaborators={this.getCollaborators(project.relationships.collaborators.data)}
+                        categories={this.getCategories(project.relationships.categories.data)}
+                    />
                 </Grid>
             </Grid>
         );

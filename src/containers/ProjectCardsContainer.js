@@ -19,17 +19,17 @@ class ProjectCardsContainer extends Component {
         loading: true,
         loadingMore: false,
         projects: null,
-        users: null,
+        included: null,
         meta: null,
     };
 
     componentDidMount() {
         document.title =  'LifeAtDe | Progetti';
 
-        Api.get('/projects').then((response) => {
+        Api.get('/projects').then(response => {
             this.setState({
                 projects: response.data,
-                users: response.included,
+                included: response.included,
                 meta: response.meta,
                 loading: false
             });
@@ -46,9 +46,10 @@ class ProjectCardsContainer extends Component {
         });
     };
 
-    handleFilter = property => (filteredItems, filteredItemsMeta) => {
+    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta) => {
         this.setState({
             [property]: filteredItems,
+            included: filteredItemsIncluded,
             meta: filteredItemsMeta,
         });
     }
@@ -57,18 +58,18 @@ class ProjectCardsContainer extends Component {
         this.setState({loadingMore: true});
         Api.get(endpoint).then(response => {
             let projects = this.state.projects;
-            let users = this.state.users;
+            let included = this.state.included;
 
             projects = projects.concat(response.data);
-            response.included.forEach(user => {
-                if (!users.find(el => el.id === user.id)) users.push(user);
-            })
+            response.included.forEach(newItem => {
+                if (!included.find(oldItem => newItem.id === oldItem.id)) included.push(newItem);
+            });
 
             this.setState({
-                projects: projects,
-                users: users,
+                projects,
+                included,
                 meta: response.meta,
-            })
+            });
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error, {variant: 'error'}));
         }).finally(() => {
@@ -77,7 +78,7 @@ class ProjectCardsContainer extends Component {
     }
 
     render() {
-        const { loading, loadingMore, projects, users, meta } = this.state;
+        const { loading, loadingMore, projects, included, meta } = this.state;
         const { classes } = this.props;
 
         if(loading) {
@@ -96,7 +97,7 @@ class ProjectCardsContainer extends Component {
                 <Divider className={classes.hr} />
                 <ProjectCardList
                     projects={projects}
-                    users={users}
+                    included={included}
                     removeProject={this.removeProject}
                 />
                 { meta.next

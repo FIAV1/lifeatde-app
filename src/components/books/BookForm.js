@@ -203,6 +203,9 @@ class BookForm extends Component {
                             >
                                 <InputLabel htmlFor="course_id">Corso</InputLabel>
                                 <Select
+                                    classes={{
+                                        select: classes.select
+                                    }}
                                     native
                                     value={props.values.course_id}
                                     inputProps={{
@@ -331,6 +334,11 @@ const styles = theme => ({
     priceText: {
         width: '100px',
     },
+    select: {
+        '&>option': {
+            backgroundColor: theme.palette.background.paper,
+        }
+    }
 });
 
 export default withSnackbar(withStyles(styles, { withTheme: true })(BookForm));

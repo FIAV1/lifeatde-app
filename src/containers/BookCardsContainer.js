@@ -46,9 +46,10 @@ class BookCardsContainer extends Component {
         this.setState({books});
     };
 
-    handleFilter = property => (filteredItems, filteredItemsMeta) => {
+    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta) => {
         this.setState({
             [property]: filteredItems,
+            included: filteredItemsIncluded,
             meta: filteredItemsMeta,
         });
     }
@@ -57,16 +58,16 @@ class BookCardsContainer extends Component {
         this.setState({loadingMore: true});
         Api.get(endpoint).then(response => {
             let books = this.state.books;
-            let users = this.state.users;
+            let included = this.state.included;
 
             books = books.concat(response.data);
-            response.included.forEach(user => {
-                if (!users.find(el => el.id === user.id)) users.push(user);
+            response.included.forEach(newItem => {
+                if (!included.find(oldItem => newItem.id === oldItem.id)) included.push(newItem);
             });
 
             this.setState({
-                books: books,
-                users: users,
+                books,
+                included,
                 meta: response.meta,
             });
         }).catch(({errors}) => {
@@ -96,7 +97,11 @@ class BookCardsContainer extends Component {
                     onFilter={this.handleFilter('books')}
                 />
                 <Divider className={classes.hr} />
-                <BookCardList books={books} included={included} removeBook={this.removeBook}/>
+                <BookCardList
+                    books={books}
+                    included={included}
+                    removeBook={this.removeBook}
+                />
                 { meta.next
                 ? <LoadMoreButton
                     meta={meta}

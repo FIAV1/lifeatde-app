@@ -68,17 +68,15 @@ class Project extends Component {
         });
     };
 
-    isAdmin = admin => {
-        return admin.id === LocalStorage.get('user').data.id
-    };
-
     render() {
-        const { classes, project, admin, collaborators } = this.props;
+        const { classes, project, projectStatus, admin, collaborators, categories } = this.props;
         const { teamExpanded } = this.state;
 
-        if (!project || !admin) {
+        if (!project) {
             return null;
         }
+
+        const isAdmin = admin.id === LocalStorage.get('user').data.id;
 
         return(
             <Grid container justify="center">
@@ -93,11 +91,11 @@ class Project extends Component {
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{project.attributes.created_at}</Moment>
-                                    <Chip className={classes.status} style={{backgroundColor: getStatusColor(project.attributes.status.name)}} label={project.attributes.status.name} />
+                                    <Chip className={classes.status} style={{backgroundColor: getStatusColor(projectStatus.attributes.name)}} label={projectStatus.attributes.name} />
                                 </div>
                             }
                             action={
-                                this.isAdmin(admin)
+                                isAdmin
                                 ? <div>
                                     <EditDeleteActions
                                         onClickEdit={this.handleClickEdit}
@@ -148,7 +146,7 @@ class Project extends Component {
                                     <Typography variant="overline">Categorie</Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <ChipList categories={project.attributes.categories} classes={classes} />
+                                    <ChipList categories={categories} classes={classes} />
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -186,7 +184,7 @@ const ChipList = ({categories, classes}) => {
     return categories.map(category =>
         <Chip
             key={category.id}
-            label={category.name}
+            label={category.attributes.name}
             className={classes.chip}
         />
     );

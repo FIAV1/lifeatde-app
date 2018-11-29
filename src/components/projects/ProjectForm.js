@@ -52,12 +52,12 @@ class ProjectForm extends Component {
 
     FORM_VALUES = {
         title: this.props.title || '',
-        categories: this.props.categories || [],
-        status: this.props.status || '',
+        categories: this.props.edit ? this.props.categories.map(category => ({value: parseInt(category.id, 10), label: category.attributes.name})) : [],
+        status: this.props.edit ? this.props.projectStatus.id : '',
         description: this.props.description || '',
         documents: [],
         oldDocuments: this.props.documents || [],
-        collaborators: this.props.collaborators || [],
+        collaborators: this.props.edit ? this.props.collaborators.map(collaborator => ({value: parseInt(collaborator.id, 10), label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})) : [],
     };
 
     componentDidMount() {
@@ -108,7 +108,7 @@ class ProjectForm extends Component {
     handleAsyncOptions = endpoint => async inputValue => {
 		return Api.get(endpoint+inputValue).then(response => {
 			return response.data.filter(element => element.id !== LocalStorage.get('user').data.id).map(element => ({
-                value: element.id,
+                value: parseInt(element.id, 10),
                 label: element.attributes.firstname + ' ' + element.attributes.lastname,
             }));
 		}).catch(({errors}) => {
@@ -186,6 +186,9 @@ class ProjectForm extends Component {
                                 <InputLabel htmlFor="status">Status</InputLabel>
                                 <Select
                                     native
+                                    classes={{
+                                        select: classes.select
+                                    }}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
                                     value={props.values.status}
@@ -337,6 +340,11 @@ const styles = theme => ({
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
+    },
+    select: {
+        '&>option': {
+            backgroundColor: theme.palette.background.paper,
+        }
     }
 });
 

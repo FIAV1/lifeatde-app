@@ -22,7 +22,7 @@ class StudyGroupCardsContainer extends Component {
         loadingMore: false,
         courseId: LocalStorage.get('user').data.relationships.course.data.id,
         studyGroups: null,
-        users: null,
+        included: null,
         meta: null,
     };
 
@@ -32,7 +32,7 @@ class StudyGroupCardsContainer extends Component {
         Api.get(`/courses/${this.state.courseId}/study_groups`).then(response => {
             this.setState({
                 studyGroups: response.data,
-                users: response.included,
+                included: response.included,
                 meta: response.meta,
                 loading: false,
             })
@@ -42,10 +42,10 @@ class StudyGroupCardsContainer extends Component {
     }
 
     removeStudyGroup = (studyGroupId) => {
-        let books = this.state.studyGroups.filter(studyGroup => studyGroup.id !== studyGroupId);
+        let studyGroups = this.state.studyGroups.filter(studyGroup => studyGroup.id !== studyGroupId);
 
         this.setState({
-            books,
+            studyGroups,
         });
     };
 
@@ -53,16 +53,16 @@ class StudyGroupCardsContainer extends Component {
         this.setState({loadingMore: true});
         Api.get(endpoint).then(response => {
             let studyGroups = this.state.studyGroups;
-            let users = this.state.users;
+            let included = this.state.included;
 
             studyGroups = studyGroups.concat(response.data);
-            response.included.forEach(user => {
-                if (!users.find(el => el.id === user.id)) users.push(user);
+            response.included.forEach(newItem => {
+                if (!included.find(oldItem => newItem.id === oldItem.id)) included.push(newItem);
             });
 
             this.setState({
-                studyGroups: studyGroups,
-                users: users,
+                studyGroups,
+                included,
                 meta: response.meta,
             });
         }).catch(({errors}) => {
@@ -74,7 +74,7 @@ class StudyGroupCardsContainer extends Component {
 
     render() {
 
-        const { loading, loadingMore, studyGroups, users, meta } = this.state;
+        const { loading, loadingMore, studyGroups, included, meta } = this.state;
         const { classes } = this.props;
 
         if(loading) {
@@ -83,11 +83,15 @@ class StudyGroupCardsContainer extends Component {
 
         return (
             <div id="studygroup-cards-container">
-                <Typography className={classes.header} component="h1" variant="h4">
+                <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
                     Gruppi di Studio in base al corso
                 </Typography>
                 <Divider className={classes.hr} />
-                <StudyGroupCardList studyGroups={studyGroups} users={users} removeStudyGroup={this.removeStudyGroup}/>
+                <StudyGroupCardList
+                    studyGroups={studyGroups}
+                    included={included}
+                    removeStudyGroup={this.removeStudyGroup}
+                />
                 { meta.next
                 ? <LoadMoreButton
                     meta={meta}

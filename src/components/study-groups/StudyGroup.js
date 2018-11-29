@@ -16,7 +16,6 @@ import {
     Typography,
 } from '@material-ui/core';
 
-import ReactMarkdown from 'react-markdown';
 import Anchor from "../common/Anchor";
 import EditDeleteActions from "../common/EditDeleteActions";
 import DeleteConfirmationDialog from "../common/DeleteConfirmationDialog";
@@ -29,14 +28,9 @@ import Api from "../../lib/Api";
 import { withSnackbar } from 'notistack';
 
 class StudyGroup extends Component {
-
     state = {
         confirmationDialogIsOpen: false,
         studyGroupId: null,
-    };
-
-    isAuthUserAdmin = () => {
-        return LocalStorage.get('user').data.id === this.props.user.id;
     };
 
     handleClickEdit = () => {
@@ -60,7 +54,11 @@ class StudyGroup extends Component {
     };
 
     render() {
-        const { classes, studyGroup, user } = this.props;
+        const { classes, studyGroup, admin, course } = this.props;
+
+        if (!studyGroup) return null;
+
+        const isAdmin = LocalStorage.get('user').data.id === admin.id;
 
         return(
             <Grid container justify="center">
@@ -75,11 +73,11 @@ class StudyGroup extends Component {
                             subheader={
                                 <div>
                                     <Moment className={classes.moment} parse="YYYY-MM-DD HH:mm" locale="it" format="ll" >{studyGroup.attributes.created_at}</Moment>
-                                    <Chip style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}} label={studyGroup.attributes.course} />
+                                    <Chip style={{backgroundColor: getCourseColor(course.attributes.name)}} label={course.attributes.name} />
                                 </div>
                             }
                             action={
-                                this.isAuthUserAdmin()
+                                isAdmin
                                     ? <div>
                                         <EditDeleteActions
                                             onClickEdit={this.handleClickEdit}
@@ -99,24 +97,24 @@ class StudyGroup extends Component {
                         <Divider />
                         <CardContent>
                             <Typography variant="overline">Descrizione</Typography>
-                            <ReactMarkdown className={classes.markdown} source={studyGroup.attributes.description}/>
+                            <Typography variant="body1">{studyGroup.attributes.description}</Typography>
                         </CardContent>
                         <Divider/>
                         <CardHeader 
                             avatar={
-                                <Anchor to={`/users/${user.id}`}>
-                                    <AsyncAvatar user={user} />
+                                <Anchor to={`/users/${admin.id}`}>
+                                    <AsyncAvatar user={admin} />
                                 </Anchor>
                             }
                             title={
-                                <Anchor to={`/users/${user.id}`}>
-                                    {user.attributes.firstname} {user.attributes.lastname}
+                                <Anchor to={`/users/${admin.id}`}>
+                                    {admin.attributes.firstname} {admin.attributes.lastname}
                                 </Anchor>
                             }
                         />
                         <Divider/>
                         <CardContent>
-                            <ContactInfo phone={user.attributes.phone} email={user.attributes.email} admin={false}/>
+                            <ContactInfo phone={admin.attributes.phone} email={admin.attributes.email} admin={false}/>
                         </CardContent>
                     </Card>
                 </Grid>
@@ -136,9 +134,6 @@ const styles = theme => ({
         display: 'block',
         color: theme.palette.text.hint,
         margin: theme.spacing.unit,
-    },
-    markdown: {
-        color: theme.palette.text.primary,
     },
 })
 

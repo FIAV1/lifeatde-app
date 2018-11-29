@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import Api from '../../lib/Api';
 
 import {
+    withStyles,
     FormControl,
     InputLabel,
     Select,
 } from '@material-ui/core';
 
-export default class CourseFilter extends Component {
+class CourseFilter extends Component {
     state = {
         loading: true,
         coursesOptions: [],
@@ -30,14 +31,18 @@ export default class CourseFilter extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         const {loading, courses, coursesOptions } = this.state;
 
         if (loading) return null;
 
         return (
-            <FormControl>
+            <FormControl style={{width: '100%'}}>
                 <InputLabel htmlFor="courses-select">Corsi</InputLabel>
                 <Select
+                    classes={{
+                        select: classes.select
+                    }}
                     native
                     multiple
                     value={courses}
@@ -47,7 +52,7 @@ export default class CourseFilter extends Component {
                         id: 'courses-select',
                     }}
                 >
-                    <option value="a" />
+                    <option value="" disabled/>
                     { coursesOptions.map(course =>
                         <option
                             key={course.id}
@@ -61,4 +66,13 @@ export default class CourseFilter extends Component {
         )
     }
 }
-    
+
+const styles = theme => ({
+    select: {
+        '&>option': {
+            backgroundColor: theme.palette.background.paper,
+        }
+    }
+});
+
+export default withStyles(styles)(CourseFilter);

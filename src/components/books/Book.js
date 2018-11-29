@@ -59,10 +59,6 @@ class Book extends Component {
         });
     };
 
-    isAuthUserAdmin = () => {
-        return LocalStorage.get('user').data.id === this.props.user.id;
-    };
-
     closeLightbox = () => {
         this.setState({ lightboxIsOpen: false });
     };
@@ -97,6 +93,10 @@ class Book extends Component {
         const { photoTiles } = this.state;
         let lightboxImageSet = null;
 
+        if (!book) return null;
+
+        const isAdmin = LocalStorage.get('user').data.id === user.id;
+
         if (photoTiles) {
             lightboxImageSet = photoTiles.filter((tile) => !tile.loading ).map((tile) => ({src: tile.fileUrl}));
         }
@@ -128,7 +128,7 @@ class Book extends Component {
                                 </div>
                             }
                             action={
-                                this.isAuthUserAdmin()
+                                isAdmin
                                     ? <div>
                                         <EditDeleteActions
                                             onClickEdit={this.handleClickEdit}
