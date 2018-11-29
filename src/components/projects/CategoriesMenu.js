@@ -45,7 +45,7 @@ class CategoriesMenu extends Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    {elements.map(element => <MenuItem key={element.id} onClick={this.handleClose}>{element.name}</MenuItem>)}
+                    {elements.map(element => <MenuItem key={element.id} onClick={this.handleClose}>{element.attributes.name}</MenuItem>)}
                 </Menu>
             </div>
         );

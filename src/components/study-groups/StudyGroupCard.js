@@ -56,34 +56,32 @@ class StudyGroupCard extends Component {
         });
     };
 
-    isAuthUserAdmin = () => {
-        return LocalStorage.get('user').data.id === this.props.user.id;
-    };
-
     render() {
-        const { classes, studyGroup, user } = this.props;
+        const { classes, studyGroup, admin, course } = this.props;
 
-        if(!user || !studyGroup) {
+        if(!studyGroup) {
             return null;
         }
+
+        const isAdmin = LocalStorage.get('user').data.id === admin.id;
 
         return(
             <Grid item xs={12} md={6} xl={4}>
                 <Card>
                     <CardHeader
                         avatar={
-                            <Anchor to={`/users/${user.id}`}>
-                                 <AsyncAvatar user={user} />
+                            <Anchor to={`/users/${admin.id}`}>
+                                 <AsyncAvatar user={admin} />
                             </Anchor>
                         }
                         title={
-                            <Anchor to={`/users/${user.id}`}>
-                                {user.attributes.firstname} {user.attributes.lastname}
+                            <Anchor to={`/users/${admin.id}`}>
+                                {admin.attributes.firstname} {admin.attributes.lastname}
                             </Anchor>
                         }
                         subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{studyGroup.attributes.created_at}</Moment>}
                         action={
-                            this.isAuthUserAdmin() ?
+                            isAdmin ?
                                 <div>
                                     <EditDeleteActions
                                         onClickEdit={this.handleClickEdit}
@@ -108,16 +106,17 @@ class StudyGroupCard extends Component {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Chip  classes={{
+                        <Chip
+                            classes={{
                                 root: classes.chipRoot,
                                 label: classes.chipLabel
                             }}
-                            key={studyGroup.attributes.course}
+                            key={course.id}
                             label={
-                                <Typography  variant='body1' noWrap>{studyGroup.attributes.course}</Typography>
+                                <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                             }
-                            style={{backgroundColor: getCourseColor(studyGroup.attributes.course)}}
-                            />
+                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                        />
                     </CardActions>
                 </Card>
             </Grid>

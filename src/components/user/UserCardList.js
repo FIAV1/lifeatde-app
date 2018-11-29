@@ -7,13 +7,12 @@ import UserCard from './UserCard';
 
 class UserCardList extends Component {
 
-    getCourse = (user, courses) => {
-        return courses.find( course => course.id === user.relationships.course.data.id);
-    };
+    getCourse = courseId =>
+        this.props.included.find(item => item.type === 'course' && item.id === courseId);
 
     render() {
 
-        const { users, courses } = this.props;
+        const { users } = this.props;
       
         if(!users || users.length === 0) {
             return(
@@ -30,7 +29,7 @@ class UserCardList extends Component {
                        <UserCard
                            key={user.id}
                            user={user}
-                           course={this.getCourse(user, courses)}
+                           course={this.getCourse(user.relationships.course.data.id)}
                        />)
                 }
             </Grid>

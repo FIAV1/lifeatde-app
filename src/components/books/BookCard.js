@@ -57,10 +57,6 @@ class BookCard extends Component {
         });
     };
 
-    isAuthUserAdmin = () => {
-        return LocalStorage.get('user').data.id === this.props.user.id;
-    };
-
     componentDidMount() {
         let photoTiles = createPhotoTiles(this.props.book.attributes.photos, 3);
 
@@ -82,9 +78,9 @@ class BookCard extends Component {
         const { book, user, course, classes } = this.props;
         const { photoTiles } = this.state;
         
-        if(!user || !book) {
-            return null;
-        }
+        if(!book) return null;
+
+        const isAdmin = LocalStorage.get('user').data.id === user.id;
 
         return (
             <Grid item xs={12} md={6} xl={4}>
@@ -102,7 +98,7 @@ class BookCard extends Component {
                         }
                         subheader={<Moment locale="it" parse="YYYY-MM-DD HH:mm" fromNow>{book.attributes.created_at}</Moment>}
                         action={
-                            this.isAuthUserAdmin()
+                            isAdmin
                                 ? <div>
                                     <EditDeleteActions
                                         onClickEdit={this.handleClickEdit}

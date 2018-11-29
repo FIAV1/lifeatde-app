@@ -11,19 +11,19 @@ import Loader from '../components/common/Loader';
 
 class StudyGroupEditContainer extends Component {
 	state = {
-		title: '',
-        description: '',
+		id: null,
+		title: null,
+        description: null,
 		loading: true,
 	}
 
 	componentDidMount() {
 		Api.get('/study_groups/' + this.props.match.params.id).then(response => {
-			let study_groups = response.data;
+			let studyGroups = response.data;
 			this.setState({
-				id: study_groups.id,
-				title: study_groups.attributes.title,
-				description: study_groups.attributes.description,
-				study_groups: response.data,
+				id: studyGroups.id,
+				title: studyGroups.attributes.title,
+				description: studyGroups.attributes.description,
 				loading: false,
 			});
 		}).catch(({errors}) => {
@@ -42,7 +42,7 @@ class StudyGroupEditContainer extends Component {
 						id={id}
 						title={title}
 						description={description}
-						edit={true}
+						edit
 					/>
                 </Grid>
             </Grid>

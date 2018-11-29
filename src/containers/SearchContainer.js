@@ -38,16 +38,16 @@ class SearchContainer extends Component {
         value: 0,
         loading: false,
         projects: null,
-        projectsUsers: null,
+        projectsIncluded: null,
         projectsMeta: null,
         users: null,
-        usersCourses: null,
+        usersIncluded: null,
         usersMeta: null,
         studyGroups: null,
-        studyGroupsUsers: null,
+        studyGroupsIncluded: null,
         studyGroupsMeta: null,
         books: null,
-        booksUsers: null,
+        booksIncluded: null,
         booksMeta: null,
     };
 
@@ -77,7 +77,7 @@ class SearchContainer extends Component {
         await Api.get(`/projects?search=${this.state.searchString}`).then(response => {
             this.setState({
                 projects: response.data,
-                projectsUsers: response.included.filter(item => item.type === 'user'),
+                projectsIncluded: response.included,
                 projectsMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -86,7 +86,7 @@ class SearchContainer extends Component {
         await Api.get(`/users?search=${this.state.searchString}`).then(response => {
             this.setState({
                 users: response.data,
-                usersCourses: response.included.filter(item => item.type === 'course'),
+                usersIncluded: response.included,
                 usersMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -95,7 +95,7 @@ class SearchContainer extends Component {
         await Api.get(`/books?search=${this.state.searchString}`).then(response => {
             this.setState({
                 books: response.data,
-                booksUsers: response.included.filter(item => item.type === 'user'),
+                booksIncluded: response.included,
                 booksMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -104,7 +104,7 @@ class SearchContainer extends Component {
         await Api.get(`/study_groups?search=${this.state.searchString}`).then(response => {
             this.setState({
                 studyGroups: response.data,
-                studyGroupsUsers: response.included.filter(item => item.type === 'user'),
+                studyGroupsIncluded: response.included,
                 studyGroupsMeta: response.meta,
             })
         }).catch(({errors}) => {
@@ -146,16 +146,16 @@ class SearchContainer extends Component {
             switch (response.data[0].type) {
                 case 'project':
                     let projects = this.state.projects;
-                    let projectsUsers = this.state.projectsUsers;
+                    let projectsIncluded = this.state.projectsIncluded;
         
                     projects = projects.concat(response.data);
-                    response.included.forEach(user => {
-                        if (!projectsUsers.find(el => el.id === user.id)) projectsUsers.push(user);
+                    response.included.forEach(newItem => {
+                        if (!projectsIncluded.find(oldItem => newItem.id === oldItem.id)) projectsIncluded.push(newItem);
                     });
         
                     this.setState({
-                        projects: projects,
-                        projectsUsers: projectsUsers,
+                        projects,
+                        projectsIncluded,
                         projectsMeta: response.meta,
                     });
 
@@ -163,16 +163,16 @@ class SearchContainer extends Component {
                     break;
                 case 'study_group':
                     let studyGroups = this.state.studyGroups;
-                    let studyGroupsUsers = this.state.studyGroupsUsers;
+                    let studyGroupsIncluded = this.state.studyGroupsIncluded;
         
                     studyGroups = studyGroups.concat(response.data);
-                    response.included.forEach(user => {
-                        if (!studyGroupsUsers.find(el => el.id === user.id)) studyGroupsUsers.push(user);
+                    response.included.forEach(newItem => {
+                        if (!studyGroupsIncluded.find(oldItem => newItem.id === oldItem.id)) studyGroupsIncluded.push(newItem);
                     });
         
                     this.setState({
-                        studyGroups: studyGroups,
-                        studyGroupsUsers: studyGroupsUsers,
+                        studyGroups,
+                        studyGroupsIncluded,
                         studyGroupsMeta: response.meta,
                     });
 
@@ -180,17 +180,17 @@ class SearchContainer extends Component {
                     break;
                 case 'user':
                     let users = this.state.users;
-                    let usersCourses = this.state.usersCourses;
+                    let usersIncluded = this.state.usersIncluded;
                     
         
                     users = users.concat(response.data);
-                    response.included.forEach(course => {
-                        if (!usersCourses.find(el => el.id === course.id)) usersCourses.push(course);
+                    response.included.forEach(newItem => {
+                        if (!usersIncluded.find(oldItem => newItem.id === oldItem.id)) usersIncluded.push(newItem);
                     });
         
                     this.setState({
-                        users: users,
-                        usersCourses: usersCourses,
+                        users,
+                        usersIncluded,
                         usersMeta: response.meta,
                     });
 
@@ -198,16 +198,16 @@ class SearchContainer extends Component {
                     break;
                 case 'book':
                     let books = this.state.books;
-                    let booksUsers = this.state.booksUsers;
+                    let booksIncluded = this.state.booksIncluded;
         
                     books = books.concat(response.data);
-                    response.included.forEach(user => {
-                        if (!booksUsers.find(el => el.id === user.id)) booksUsers.push(user);
+                    response.included.forEach(newItem => {
+                        if (!booksIncluded.find(oldItem => newItem.id === oldItem.id)) booksIncluded.push(newItem);
                     });
         
                     this.setState({
-                        books: books,
-                        booksUsers: booksUsers,
+                        books,
+                        booksIncluded,
                         booksMeta: response.meta,
                     });
 
@@ -228,16 +228,16 @@ class SearchContainer extends Component {
             loading,
             loadingMore,
             projects,
-            projectsUsers,
+            projectsIncluded,
             projectsMeta,
             studyGroups,
-            studyGroupsUsers,
+            studyGroupsIncluded,
             studyGroupsMeta,
             books,
-            booksUsers,
+            booksIncluded,
             booksMeta,
             users,
-            usersCourses,
+            usersIncluded,
             usersMeta,
         } = this.state;
         const { classes, theme } = this.props;
@@ -322,7 +322,7 @@ class SearchContainer extends Component {
                                     <TabContainer dir={theme.direction}>
                                         <ProjectCardList
                                             projects={projects}
-                                            users={projectsUsers}
+                                            included={projectsIncluded}
                                             removeProject={this.removeProject}
                                         />
                                         { projectsMeta && projectsMeta.next
@@ -336,7 +336,7 @@ class SearchContainer extends Component {
                                     <TabContainer dir={theme.direction}>
                                         <StudyGroupCardList
                                             studyGroups={studyGroups}
-                                            users={studyGroupsUsers}
+                                            included={studyGroupsIncluded}
                                             removeStudyGroup={this.removeStudyGroup}
                                         />
                                         { studyGroupsMeta && studyGroupsMeta.next
@@ -350,7 +350,7 @@ class SearchContainer extends Component {
                                     <TabContainer dir={theme.direction}>
                                         <BookCardList
                                             books={books}
-                                            users={booksUsers}
+                                            included={booksIncluded}
                                             removeBook={this.removeBook}
                                         />
                                         { booksMeta && booksMeta.next
@@ -364,7 +364,7 @@ class SearchContainer extends Component {
                                     <TabContainer dir={theme.direction}>
                                         <UserCardList
                                             users={users}
-                                            courses={usersCourses}
+                                            included={usersIncluded}
                                         />
                                         { usersMeta && usersMeta.next
                                         ? <LoadMoreButton

@@ -5,14 +5,16 @@ import { Grid, Typography } from '@material-ui/core';
 import ProjectCard from './ProjectCard';
 
 class ProjectCardList extends Component {
+    getAdmin = adminIds =>
+        this.props.included.filter(item => item.type === 'user' && adminIds.find(adminId => item.id === adminId.id))[0];
 
-    getAdmin = (project, users) => {
-        return users.filter(user => project.relationships.admins.data.filter(admin => admin.id === user.id).length > 0)[0]
-    }
+    getCategories = categoryIds =>
+        this.props.included.filter(item => item.type === 'category' && categoryIds.find(categoryId => item.id === categoryId.id));
 
     render() {
-        const { projects, users } = this.props;
-        if((!projects || projects.length === 0) || (!users || users.length === 0)) {
+        const { projects } = this.props;
+
+        if(!projects || projects.length === 0) {
             return(
                 <Typography variant="subtitle1">
                     Non ci sono progetti da visualizzare.
@@ -22,8 +24,15 @@ class ProjectCardList extends Component {
 
         return(
             <Grid container spacing={16}>
-                {
-                    projects.map(project => <ProjectCard key={project.id} project={project} admin={this.getAdmin(project, users)} removeProject={this.props.removeProject} />)
+                { 
+                    projects.map(project =>
+                        <ProjectCard
+                            key={project.id}
+                            project={project}
+                            admin={this.getAdmin(project.relationships.admins.data)}
+                            categories={this.getCategories(project.relationships.categories.data)}
+                            removeProject={this.props.removeProject}
+                        />)
                 }
             </Grid>
 

@@ -11,51 +11,36 @@ import Loader from '../components/common/Loader';
 
 class ProjectEditContainer extends Component {
 	state = {
-		title: '',
-		description: '',
-		status: '',
-		documents: [],
-		categories: [],
-		admin: '',
-		collaborators: [],
-		results: '',
 		loading: true,
+		project: null,
+		included: null,
 	}
 
-	getCollaborators = (collaborators, team) => {
-        let collaboratorsKey = collaborators.data.map(collaborator => collaborator.id);
+	getProjectStatus = projectStatusId => 
+        this.state.included.find(item => item.type === 'project_status' && item.id === projectStatusId);
 
-        return team.filter(member => collaboratorsKey.indexOf(member.id) > -1);
-    }
+    getAdmin = adminIds =>
+        this.state.included.filter(item => item.type === 'user' && adminIds.find(adminId => item.id === adminId.id))[0];
 
-    getAdmin = (admins, team) => {
-        let adminsKey = admins.data.map(admin => admin.id);
+    getCollaborators = collaboratorIds =>
+        this.state.included.filter(item => item.type === 'user' && collaboratorIds.find(collaboratorId => item.id === collaboratorId.id));
 
-        return team.filter(member => adminsKey.indexOf(member.id) > -1)[0];
-    }
+    getCategories = categoryIds =>
+        this.state.included.filter(item => item.type === 'category' && categoryIds.find(categoryId => item.id === categoryId.id));
 
 	componentDidMount() {
 		Api.get('/projects/' + this.props.match.params.id).then(response => {
-			let project = response.data;
 			this.setState({
-				id: project.id,
-				title: project.attributes.title,
-				description: project.attributes.description,
-				status: project.attributes.status.id,
-				documents: project.attributes.documents,
-				categories: project.attributes.categories.map(category => ({value: category.id, label: category.name})),
-				project: response.data,
-                collaborators: this.getCollaborators(response.data.relationships.collaborators, response.included).map(collaborator => ({value: collaborator.id, label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})),
-                admin: this.getAdmin(response.data.relationships.admins, response.included),
-				results: project.attributes.results,
 				loading: false,
+				project: response.data,
+				included: response.included,
 			});
 		}).catch(({errors}) => {
 			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
 		});
 	}
 	render() {
-		const { id, title, description, status, documents, categories, admin, collaborators, results, loading } = this.state;
+		const { loading, project } = this.state;
 
 		if (loading) return <Loader />;
 
@@ -63,15 +48,15 @@ class ProjectEditContainer extends Component {
 			<Grid container justify="center">
                 <Grid item xs={12} md={8}>
                     <ProjectForm
-						id={id}
-						title={title}
-						description={description}
-						status={status}
-						documents={documents}
-						categories={categories}
-						collaborators={collaborators}
-						admin={admin}
-						results={results}
+						id={project.id}
+						title={project.attributes.title}
+						description={project.attributes.description}
+						projectStatus={this.getProjectStatus(project.relationships.project_status.data.id)}
+						documents={project.attributes.documents}
+						categories={this.getCategories(project.relationships.categories.data)}
+						collaborators={this.getCollaborators(project.relationships.collaborators.data)}
+						admin={this.getAdmin(project.relationships.admins.data)}
+						results={project.attributes.results}
 						edit
 					/>
                 </Grid>
