@@ -56,7 +56,7 @@ class UserCard extends Component {
                             label={
                                 <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                             }
-                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                            style={{backgroundColor: getCourseColor(course.id)}}
                         />
                     </CardActions>
                 </Card>

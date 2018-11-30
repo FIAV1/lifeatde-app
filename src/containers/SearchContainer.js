@@ -150,7 +150,7 @@ class SearchContainer extends Component {
         
                     projects = projects.concat(response.data);
                     response.included.forEach(newItem => {
-                        if (!projectsIncluded.find(oldItem => newItem.id === oldItem.id)) projectsIncluded.push(newItem);
+                        if (!projectsIncluded.find(oldItem => newItem.type === oldItem.type && newItem.id === oldItem.id)) projectsIncluded.push(newItem);
                     });
         
                     this.setState({
@@ -167,7 +167,7 @@ class SearchContainer extends Component {
         
                     studyGroups = studyGroups.concat(response.data);
                     response.included.forEach(newItem => {
-                        if (!studyGroupsIncluded.find(oldItem => newItem.id === oldItem.id)) studyGroupsIncluded.push(newItem);
+                        if (!studyGroupsIncluded.find(oldItem => newItem.type === oldItem.type && newItem.id === oldItem.id)) studyGroupsIncluded.push(newItem);
                     });
         
                     this.setState({
@@ -185,7 +185,7 @@ class SearchContainer extends Component {
         
                     users = users.concat(response.data);
                     response.included.forEach(newItem => {
-                        if (!usersIncluded.find(oldItem => newItem.id === oldItem.id)) usersIncluded.push(newItem);
+                        if (!usersIncluded.find(oldItem => newItem.type === oldItem.type && newItem.id === oldItem.id)) usersIncluded.push(newItem);
                     });
         
                     this.setState({
@@ -202,7 +202,7 @@ class SearchContainer extends Component {
         
                     books = books.concat(response.data);
                     response.included.forEach(newItem => {
-                        if (!booksIncluded.find(oldItem => newItem.id === oldItem.id)) booksIncluded.push(newItem);
+                        if (!booksIncluded.find(oldItem => newItem.type === oldItem.type && newItem.id === oldItem.id)) booksIncluded.push(newItem);
                     });
         
                     this.setState({

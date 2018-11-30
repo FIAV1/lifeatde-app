@@ -23,27 +23,27 @@ const getStatusColor = status => {
 };
 
 const getCourseColor = course => {
-    switch (course) {
+    switch (parseInt(course, 10)) {
 
-        case 'Ingegneria Elettronica e Informatica':
+        case 1:
             return yellow[700];
 
-        case 'Ingegneria Meccanica LT':
+        case 2:
             return red[700];
 
-        case 'Ingegneria Civile e Ambientale':
+        case 3:
             return green[700];
 
-        case 'Ingegneria Elettronica e delle Telecomunicazioni':
+        case 4:
             return purple[700];
 
-        case 'Ingegneria Informatica e dell\' Automazione':
+        case 5:
             return blue[700];
 
-        case 'Ingegneria Civile':
+        case 6:
             return blueGrey[700];
 
-        case 'Ingegneria Meccanica LM':
+        case 7:
             return orange[700];
         default:
             break;

@@ -98,7 +98,7 @@ class ProjectCardsContainer extends Component {
                     <InfoIcon className={classes.icon} />
                     { currentFilter && currentFilter.length
                     ? `I progetti sono mostrati in base alle categorie: ${currentFilter}`
-                    : 'I progetti sono mostrati in base alle preferenze espresse dall\'utente.' }
+                    : 'I progetti sono mostrati in base ai tuoi interessi.' }
                 </Typography>
                 <ProjectFilters
                     filters={['categories']}

@@ -39,6 +39,7 @@ class EditDeleteActions extends Component {
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleClick}
+                    onScrollCapture={this.handleClick}
                 >
                     <MenuItem onClick={onClickEdit} value="modifica">
                         <ListItemIcon>

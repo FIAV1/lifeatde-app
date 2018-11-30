@@ -7,12 +7,13 @@ import {
     InputLabel,
     Select,
 } from '@material-ui/core';
+import LocalStorage from '../../lib/LocalStorage';
 
 class CourseFilter extends Component {
     state = {
         loading: true,
         coursesOptions: [],
-        courses: '',
+        courses: LocalStorage.get('user').included.find(item => item.type === 'course').id,
     }
 
     componentDidMount() {
@@ -26,7 +27,6 @@ class CourseFilter extends Component {
 
     handleChange = property => event => {
         this.setState({[property]: event.target.value}, () => {
-            console.log(this.state.coursesOptions.find(courseOption => courseOption.id === this.state[property]))
             this.props.filterFn({label: this.state.coursesOptions.find(courseOption => courseOption.id === this.state[property]).attributes.name, value: this.state[property]});
         });
     }
@@ -53,7 +53,6 @@ class CourseFilter extends Component {
                         id: 'courses-select',
                     }}
                 >
-                    <option value="" disabled/>
                     { coursesOptions.map(course =>
                         <option
                             key={course.id}

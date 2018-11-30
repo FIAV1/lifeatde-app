@@ -91,7 +91,7 @@ class StudyGroupForm extends Component {
                         label={
                             <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                         }
-                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                        style={{backgroundColor: getCourseColor(course.id)}}
                         />
                     </Grid>
                 </Grid>
@@ -122,8 +122,9 @@ class StudyGroupForm extends Component {
                                 helperText={props.touched.description ? props.errors.description : null}
                                 error={props.errors.description && props.touched.description}
                                 className={classes.formField}
-                                multiline
+                                rows="5"
                                 rowsMax="100"
+                                multiline
                                 variant="outlined"
                             />
                             <Grid container spacing={16}>

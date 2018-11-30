@@ -101,7 +101,7 @@ class BookCardsContainer extends Component {
                     <InfoIcon className={classes.icon} />
                     { currentFilter
                     ? `Il materiale in vendita è mostrato in base al corso di studi: ${currentFilter}`
-                    : 'Il materiale in vendita è mostrato in base al corso di studi a cui l\'utente è iscritto.' }
+                    : 'Il materiale in vendita è mostrato in base al tuo corso di studi.' }
                 </Typography>
                 <BooksFilters
                     filters={['courses']}

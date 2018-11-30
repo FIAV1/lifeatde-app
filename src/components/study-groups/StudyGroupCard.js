@@ -115,7 +115,7 @@ class StudyGroupCard extends Component {
                             label={
                                 <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                             }
-                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                            style={{backgroundColor: getCourseColor(course.id)}}
                         />
                     </CardActions>
                 </Card>

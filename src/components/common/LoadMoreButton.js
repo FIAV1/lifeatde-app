@@ -12,16 +12,19 @@ class LoadMoreButton extends Component {
 		const { classes, endpoint, meta, loadingMore, loadMore } = this.props;
 
 		return (
+			<div>
 			<div className={classes.wrapper}>
 				<Button
 					type="button"
 					onClick={loadMore(`${endpoint}${meta.next}`)}
 					color="primary"
 					disabled={loadingMore}
+					variant="text"
 				>
 					<Typography color="primary" variant="caption">Carica altri...</Typography>
 				</Button>
 				{loadingMore && <CircularProgress size={24} className={classes.buttonProgress} />}
+			</div>
 			</div>
 		)
 	}

@@ -160,7 +160,7 @@ class BookCard extends Component {
                                     label={
                                         <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                                     }
-                                    style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                    style={{backgroundColor: getCourseColor(course.id)}}
                                 />
                             </Grid>
                             <Grid className={classes.item} item xs={12} sm={'auto'}>

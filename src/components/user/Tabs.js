@@ -8,6 +8,9 @@ import {
     Tabs,
     Tab,
     Badge,
+    FormGroup,
+    FormControlLabel,
+    Switch,
 } from '@material-ui/core';
 
 import SwipeableViews from 'react-swipeable-views';
@@ -41,6 +44,8 @@ class SearchContainer extends Component {
         books: null,
         booksIncluded: null,
         booksMeta: null,
+        adminFilter: true,
+        statusFilter: false,
     };
     
     handleChangeTab = (event, value) => {
@@ -51,8 +56,45 @@ class SearchContainer extends Component {
         this.setState({ value: index });
     };
 
+    getProjectEndpoint = type => {
+        let endpoint = `/users/${this.props.user.id}/projects`;
+        
+        if (this.state.adminFilter && this.state.statusFilter) {
+            endpoint += '?status=open&admin=1';
+        } else if (this.state.statusFilter) {
+            endpoint += '?status=open';
+        } else if (this.state.adminFilter) {
+            endpoint += '?admin=1'
+        }
+        
+        switch (type) {
+            case 'switch':
+                return endpoint;
+            case 'loadmore':
+                this.state.statusFilter || this.state.adminFilter ? endpoint += '&' : endpoint += '?'
+                return endpoint += 'page=';
+            default:
+                break;
+        }
+        
+    }
+
+    handleSwitch = property => () => {
+        this.setState({[property]: !this.state[property]}, () =>
+            Api.get(this.getProjectEndpoint('switch')).then(response => {
+                this.setState({
+                    projects: response.data,
+                    projectsIncluded: response.included,
+                    projectsMeta: response.meta,
+                })
+            }).catch(({errors}) => {
+                errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
+            })
+        );
+    }
+
     async componentDidMount() {
-        await Api.get(`/users/${this.props.userId}/projects`).then(response => {
+        await Api.get(`/users/${this.props.user.id}/projects`).then(response => {
             this.setState({
                 projects: response.data,
                 projectsIncluded: response.included,
@@ -61,7 +103,7 @@ class SearchContainer extends Component {
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
-        await Api.get(`/users/${this.props.userId}/books`).then(response => {
+        await Api.get(`/users/${this.props.user.id}/books`).then(response => {
             this.setState({
                 books: response.data,
                 booksIncluded: response.included,
@@ -70,7 +112,7 @@ class SearchContainer extends Component {
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
-        await Api.get(`/users/${this.props.userId}/study_groups`).then(response => {
+        await Api.get(`/users/${this.props.user.id}/study_groups`).then(response => {
             this.setState({
                 studyGroups: response.data,
                 studyGroupsIncluded: response.included,
@@ -188,7 +230,7 @@ class SearchContainer extends Component {
             booksIncluded,
             booksMeta,
         } = this.state;
-        const { classes, theme } = this.props;
+        const { classes, theme, user } = this.props;
 
         return(
             <Grid container spacing={16}>
@@ -240,6 +282,32 @@ class SearchContainer extends Component {
                             action={actions => { this.swipeableActions = actions; }}
                         >
                             <TabContainer dir={theme.direction}>
+                                <div>
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={this.state.adminFilter}
+                                                    onChange={this.handleSwitch('adminFilter')}
+                                                    value="adminFilter"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label={`Creati da ${user.attributes.firstname}`}
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={this.state.statusFilter}
+                                                    onChange={this.handleSwitch('statusFilter')}
+                                                    value="statusFilter"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Mostra solo aperti"
+                                        />
+                                    </FormGroup>
+                                </div>
                                 <ProjectCardList
                                     projects={projects}
                                     included={projectsIncluded}
@@ -248,7 +316,7 @@ class SearchContainer extends Component {
                                 { projectsMeta.next
                                 ? <LoadMoreButton
                                     meta={projectsMeta}
-                                    endpoint={`/users/${this.props.userId}/projects?page=`}
+                                    endpoint={this.getProjectEndpoint('loadmore')}
                                     loadingMore={loadingMore}
                                     loadMore={this.loadMore}
                                 /> : null }
@@ -262,7 +330,7 @@ class SearchContainer extends Component {
                                 { studyGroupsMeta.next
                                 ? <LoadMoreButton
                                     meta={studyGroupsMeta}
-                                    endpoint={`/users/${this.props.userId}/study_groups?page=`}
+                                    endpoint={`/users/${this.props.user.id}/study_groups?page=`}
                                     loadingMore={loadingMore}
                                     loadMore={this.loadMore}
                                 /> : null }
@@ -276,7 +344,7 @@ class SearchContainer extends Component {
                                 { booksMeta.next
                                 ? <LoadMoreButton
                                     meta={booksMeta}
-                                    endpoint={`/users/${this.props.userId}/books?page=`}
+                                    endpoint={`/users/${this.props.user.id}/books?page=`}
                                     loadingMore={loadingMore}
                                     loadMore={this.loadMore}
                                 /> : null }

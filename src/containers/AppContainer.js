@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import classNames from 'classnames';
 
 import LocalStorage from '../lib/LocalStorage';
 import Authentication from '../lib/Authentication';
 
 import {
     withStyles,
-    Drawer,
+    SwipeableDrawer,
     AppBar,
     Toolbar,
     List,
@@ -21,12 +20,12 @@ import {
 
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SearchIcon from '@material-ui/icons/Search';
 import AsyncAvatar from '../components/common/AsyncAvatar';
 import Loader from '../components/common/Loader'
 import SpeedDials from '../components/common/SpeedDials';
+
+const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 class AppContainer extends Component {
     state = {
@@ -35,13 +34,14 @@ class AppContainer extends Component {
         open: false,
     };
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
+    toggleDrawer = open => () => {
+        this.setState({ open });
     };
-    
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
+
+    handleClick = route => () => {
+        this.props.history.push(route);
+        this.setState({open: false});
+    }
 
     componentDidMount() {
         window.document.addEventListener('updateProfile', event => {
@@ -60,7 +60,7 @@ class AppContainer extends Component {
     }
     
     render() {
-        const { classes, theme, history } = this.props;
+        const { classes } = this.props;
         const { loading, user } = this.state;
 
         if(!Authentication.isAuthenticated()) {
@@ -73,14 +73,14 @@ class AppContainer extends Component {
             <div className={classes.root}>
                 <AppBar
                     position="absolute"
-                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+                    className={classes.appBar}
                 >
-                    <Toolbar disableGutters={!this.state.open}>
+                    <Toolbar disableGutters>
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            className={classNames(classes.menuButton, this.state.open && classes.hide)}
+                            onClick={this.toggleDrawer(true)}
+                            className={classes.menuButton}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -89,39 +89,34 @@ class AppContainer extends Component {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                    }}
+                <SwipeableDrawer
+                    anchor="left"
                     open={this.state.open}
+                    onClose={this.toggleDrawer(false)}
+                    onOpen={this.toggleDrawer(true)}
+                    disableBackdropTransition={!iOS}
+                    disableDiscovery={iOS}
                 >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                        </IconButton>
-                    </div>
-                    <Divider />
                     <List>
-                        <ListItem button onClick={() => history.push('/projects')}>
+                        <ListItem button onClick={this.handleClick('/projects')}>
                             <ListItemIcon>
                                 <Icon color="action" className={'fas fa-drafting-compass'} />
                             </ListItemIcon>
                             <ListItemText primary="Progetti" />
                         </ListItem>
-                        <ListItem button onClick={() => history.push('/study_groups')}>
+                        <ListItem button onClick={this.handleClick('/study_groups')} >
                             <ListItemIcon>
                                 <Icon color="action" className={'fas fa-handshake'} />
                             </ListItemIcon>
                             <ListItemText primary="Studio" />
                         </ListItem>
-                        <ListItem button onClick={() => history.push('/books')}>
+                        <ListItem button onClick={this.handleClick('/books')} >
                             <ListItemIcon>
                                 <Icon color="action" className={'fas fa-book'} />
                             </ListItemIcon>
                             <ListItemText primary="Libri" />
                         </ListItem>
-                        <ListItem button onClick={() => history.push('/news')}>
+                        <ListItem button onClick={this.handleClick('/news')} >
                             <ListItemIcon>
                                 <Icon color="action" className={'fas fa-bullhorn'} />
                             </ListItemIcon>
@@ -130,7 +125,7 @@ class AppContainer extends Component {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button onClick={() => history.push('/users/'+user.id)}>
+                        <ListItem button onClick={this.handleClick(`/users/${user.id}`)} >
                             <ListItemIcon>
                                 <AsyncAvatar
                                     avatarClass={classes.avatar}
@@ -154,24 +149,23 @@ class AppContainer extends Component {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button onClick={() => history.push('/search')}>
+                        <ListItem button onClick={this.handleClick('/search')} >
                             <ListItemIcon>
                                 <SearchIcon />
                             </ListItemIcon>
                             <ListItemText inset primary="Cerca" />
                         </ListItem>
                     </List>
-                </Drawer>
+                </SwipeableDrawer>
                 <main className={classes.content}>
                     {this.props.children}
+                    <div className={classes.spacer}></div>
                 </main>
                 <SpeedDials />
             </div>
         );
     }
 }
-
-const drawerWidth = 200;
 
 const styles = theme => ({
     root: {
@@ -180,21 +174,6 @@ const styles = theme => ({
         overflow: 'hidden',
         position: 'relative',
         display: 'flex',
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
     },
     menuButton: {
         marginLeft: theme.spacing.unit*2,
@@ -207,26 +186,6 @@ const styles = theme => ({
     hide: {
         display: 'none',
     },
-    drawerPaper: {
-        position: 'relative',
-        whiteSpace: 'nowrap',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing.unit * 7,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9,
-        },
-    },
     content: {
         position: 'relative',
         flexGrow: 1,
@@ -234,24 +193,26 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         marginTop: '64px',
         padding: theme.spacing.unit*2,
-        paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
+        paddingBottom: 0,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing.unit,
-            paddingBottom: `${theme.spacing.unit * 3 + 56}px`,
+            paddingBottom: 0,
         },
-        minWidth: 'calc(100vw - 72px)',
         [theme.breakpoints.down('xs')]: {
-            minWidth: 'calc(100vw - 56px)',
             marginTop: '56px',
         },
         overflowY: 'auto'
+    },
+    spacer: {
+        width: '100%',
+        height: `${theme.spacing.unit * 3 + 56}px`,
     },
     title: {
         color: theme.palette.common.white,
     },
     avatar: {
-        width: '28px',
-        height: '28px',
+        width: '24px',
+        height: '24px',
         fontSize: '12px',
     },
     toolbar: {

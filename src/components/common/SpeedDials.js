@@ -29,12 +29,6 @@ const styles = theme => ({
 	speedDialAction: {
 		position: 'relative',
 		zIndex: 2000,
-		'&::after': {
-			content: "'+'",
-			position: 'absolute',
-			top: 0,
-			left: 0,
-		}
 	}
 });
 

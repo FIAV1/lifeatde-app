@@ -77,7 +77,7 @@ class StudyGroup extends Component {
                                         classes={{
                                             root: classes.chipRoot
                                         }}
-                                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                        style={{backgroundColor: getCourseColor(course.id)}}
                                         label={
                                             <Typography color="inherit" variant="body1">{course.attributes.name}</Typography>
                                         }

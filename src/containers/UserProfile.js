@@ -33,17 +33,8 @@ import SchoolIcon from '@material-ui/icons/School';
 const validationSchema = Yup.object().shape({
     bio: Yup.string()
         .max(250, 'Sono consentiti al massimo 250 caratteri per la bio'),
-    categories: Yup.array()
-        .min(1, 'Devi scegliere almeno una categoria')
-        .of(
-            Yup.object().shape({
-                label: Yup.string().required(),
-                value: Yup.string().required(),
-            })
-        ),
     phone: Yup.number()
-        .min(1, 'Numero di telefono non valido')
-        .max(9999999999, 'Numero di telefono non valido'),
+        .max(9999999999, 'Il numero di telefono non è valido')
 });
 
 class UserProfile extends Component {
@@ -254,14 +245,12 @@ class UserProfile extends Component {
                                         { authUserProfile
                                         ? <Autocomplete
                                             id="categories"
-                                            label="Categorie"
+                                            label="Interessi"
                                             onChange={value => props.setFieldValue('categories', value)}
                                             onBlur={this.handleBlur(props, 'categories')}
                                             value={props.values.categories}
-                                            helperText={props.touched.categories ? props.errors.categories : null}
-                                            error={props.errors.categories && props.touched.categories}
                                             options={categoriesOptions}
-                                            placeholder="Seleziona una categoria..."
+                                            placeholder="Scegli i tuoi interessi..."
                                             isMulti
                                         /> : null }
                                     </form>
@@ -270,7 +259,7 @@ class UserProfile extends Component {
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
-                        <Tabs userId={user.id} />
+                        <Tabs user={user} />
                     </Grid>
                 </Grid>
             </div>

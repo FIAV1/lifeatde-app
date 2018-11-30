@@ -120,7 +120,7 @@ class Book extends Component {
                                                 root: classes.courseChipRoot,
                                                 label: classes.courseChipLabel
                                             }}
-                                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                            style={{backgroundColor: getCourseColor(course.id)}}
                                             label={<Typography color="inherit" noWrap variant={'body1'}>{course.attributes.name}</Typography>}
                                         />
                                         <PriceChip price={book.attributes.price}/>
@@ -204,7 +204,7 @@ class Book extends Component {
                                         />
                                     : null}
                                     </div>
-                                    : <Typography color="inherit" variant="body1">Non è presente nessuna foto.</Typography>
+                                    : <Typography variant="body1">Non è presente nessuna foto.</Typography>
                             }
                         </CardContent>
                         <Divider />
