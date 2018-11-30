@@ -24,7 +24,7 @@ export default class CategoryFilter extends Component {
 
     handleAutocomplete = property => value => {
         this.setState({[property]: value}, () => {
-            this.props.filterFn(this.state[property].map(item => item.value));
+            this.props.filterFn(this.state[property]);
         });
     }
 

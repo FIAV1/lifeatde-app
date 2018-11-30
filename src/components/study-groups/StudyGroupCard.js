@@ -113,9 +113,9 @@ class StudyGroupCard extends Component {
                             }}
                             key={course.id}
                             label={
-                                <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
+                                <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                             }
-                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                            style={{backgroundColor: getCourseColor(course.id)}}
                         />
                     </CardActions>
                 </Card>
@@ -136,6 +136,7 @@ const styles = theme => ({
         overflow: 'hidden',
         paddingRight: 0,
         marginRight: '12px',
+        color: theme.palette.common.white,
     }
 });
 

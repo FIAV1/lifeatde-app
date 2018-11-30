@@ -158,9 +158,9 @@ class BookCard extends Component {
                                         label: classes.chipLabel
                                     }}
                                     label={
-                                        <Typography variant='body1' noWrap>{course.attributes.name}</Typography>
+                                        <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                                     }
-                                    style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                                    style={{backgroundColor: getCourseColor(course.id)}}
                                 />
                             </Grid>
                             <Grid className={classes.item} item xs={12} sm={'auto'}>
@@ -185,7 +185,8 @@ const styles = theme => ({
     },
     chipRoot: {
         maxWidth: '100%',
-        marginBottom: theme.spacing.unit
+        marginBottom: theme.spacing.unit,
+        color: theme.palette.common.white,
     },
     chipLabel:{
         overflow: 'hidden',

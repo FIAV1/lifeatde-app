@@ -11,9 +11,12 @@ import LocalStorage from '../lib/LocalStorage';
 
 import StudyGroupCardList from '../components/study-groups/StudyGroupCardList';
 import Loader from '../components/common/Loader';
+import StudyGroupFilters from '../components/filters/StudyGroupFilters';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 
 import { withSnackbar } from 'notistack';
+
+import InfoIcon from '@material-ui/icons/Info';
 
 class StudyGroupCardsContainer extends Component {
 
@@ -24,6 +27,7 @@ class StudyGroupCardsContainer extends Component {
         studyGroups: null,
         included: null,
         meta: null,
+        currentFilter: '',
     };
 
     componentDidMount() {
@@ -48,6 +52,15 @@ class StudyGroupCardsContainer extends Component {
             studyGroups,
         });
     };
+
+    handleFilter = property => (filteredItems, filteredItemsIncluded, filteredItemsMeta, filters) => {
+        this.setState({
+            [property]: filteredItems,
+            included: filteredItemsIncluded,
+            meta: filteredItemsMeta,
+            currentFilter: filters,
+        });
+    }
 
     loadMore = endpoint => () => {
         this.setState({loadingMore: true});
@@ -74,7 +87,7 @@ class StudyGroupCardsContainer extends Component {
 
     render() {
 
-        const { loading, loadingMore, studyGroups, included, meta } = this.state;
+        const { loading, loadingMore, studyGroups, included, meta, currentFilter } = this.state;
         const { classes } = this.props;
 
         if(loading) {
@@ -84,8 +97,18 @@ class StudyGroupCardsContainer extends Component {
         return (
             <div id="studygroup-cards-container">
                 <Typography className={classes.header} component="h1" variant="h4" gutterBottom>
-                    Gruppi di Studio in base al corso
+                    Gruppi di studio
                 </Typography>
+                <Typography className={classes.info} component="h2" variant="caption" gutterBottom>
+                    <InfoIcon className={classes.icon} />
+                    { currentFilter
+                    ? `I gruppi di studio sono mostrati in base al corso di studi: ${currentFilter}`
+                    : 'I gruppi di studio sono mostrati in base al tuo corso di studi.' }
+                </Typography>
+                <StudyGroupFilters
+                    filters={['courses']}
+                    onFilter={this.handleFilter('studyGroups')}
+                />
                 <Divider className={classes.hr} />
                 <StudyGroupCardList
                     studyGroups={studyGroups}
@@ -112,6 +135,13 @@ const styles = theme => ({
     },
     hr: {
         margin: '0 0 20px',
+    },
+    info: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
     },
     button: {
         width: '40px',

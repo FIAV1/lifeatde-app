@@ -14,9 +14,10 @@ import {
     Icon,
 } from '@material-ui/core';
 
-import fimage from "../../img/federico_frigo.png"
-import gimage from "../../img/giovanni_fiorini.png"
-import nimage from "../../img/niccolò_fontana.png"
+import fimage from "../../img/federico_frigo.jpg";
+import gimage from "../../img/giovanni_fiorini.jpg";
+import nimage from "../../img/niccolò_fontana.jpg";
+import russ from "../../img/russ.jpg";
 
 const animation = (props) => (
     <Slide direction="up" {...props}/>
@@ -56,6 +57,11 @@ class TeamModal extends Component {
                     maxWidth="sm"
                 >
                     <List>
+                        <ListItem>
+                            <Avatar alt="Russ Hanneman" src={russ}/>
+                            <ListItemText primary="Russ Hanneman" secondary="Major Investor" />
+                        </ListItem>
+                        <Divider />
                         <ListItem>
                             <Avatar alt="Federico Frigo" src={fimage}/>
                             <ListItemText primary="Federico Frigo" secondary="Chief Design Officer" />

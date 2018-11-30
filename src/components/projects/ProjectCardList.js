@@ -5,6 +5,9 @@ import { Grid, Typography } from '@material-ui/core';
 import ProjectCard from './ProjectCard';
 
 class ProjectCardList extends Component {
+    getProjectStatus = projectStatusId => 
+        this.props.included.find(item => item.type === 'project_status' && item.id === projectStatusId);
+
     getAdmin = adminIds =>
         this.props.included.filter(item => item.type === 'user' && adminIds.find(adminId => item.id === adminId.id))[0];
 
@@ -29,6 +32,7 @@ class ProjectCardList extends Component {
                         <ProjectCard
                             key={project.id}
                             project={project}
+                            projectStatus={this.getProjectStatus(project.relationships.project_status.data.id)}
                             admin={this.getAdmin(project.relationships.admins.data)}
                             categories={this.getCategories(project.relationships.categories.data)}
                             removeProject={this.props.removeProject}

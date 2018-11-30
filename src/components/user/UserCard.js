@@ -47,7 +47,8 @@ class UserCard extends Component {
                         <ContactInfo phone={user.attributes.phone} email={user.attributes.email} admin={false}/>
                     </CardContent>
                     <CardActions>
-                        <Chip  classes={{
+                        <Chip
+                            classes={{
                                 root: classes.chipRoot,
                                 label: classes.chipLabel
                             }}
@@ -55,8 +56,8 @@ class UserCard extends Component {
                             label={
                                 <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
                             }
-                            style={{backgroundColor: getCourseColor(course.attributes.name)}}
-                            />
+                            style={{backgroundColor: getCourseColor(course.id)}}
+                        />
                     </CardActions>
                 </Card>
             </Grid>
@@ -87,6 +88,7 @@ const styles = theme => ({
         overflow: 'hidden',
         paddingRight: 0,
         marginRight: '12px',
+        color: theme.palette.common.white,
     }
 });
 

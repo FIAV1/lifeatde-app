@@ -22,7 +22,8 @@ import {
 import Autocomplete from '../common/Autocomplete';
 import AsyncAutocomplete from '../common/AsyncAutocomplete';
 import FileList from './FileList';
-import { Editor } from '@tinymce/tinymce-react';
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { withSnackbar } from 'notistack';
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -39,10 +40,10 @@ const validationSchema = Yup.object().shape({
                 value: Yup.string().required(),
             })
         ),
+    description: Yup.string()
+        .test('empty-editor', 'Devi inserire una descrizione del progetto', value => value !== '<p>&nbsp;</p>'),
     status: Yup.string()
         .required('Devi scegliere lo stato del progetto'),
-    description: Yup.string()
-        .required('Devi inserire una descrizione per il progetto'),
 });
 
 class ProjectForm extends Component {
@@ -53,11 +54,12 @@ class ProjectForm extends Component {
     FORM_VALUES = {
         title: this.props.title || '',
         categories: this.props.edit ? this.props.categories.map(category => ({value: parseInt(category.id, 10), label: category.attributes.name})) : [],
-        status: this.props.edit ? this.props.projectStatus.id : '',
+        status: this.props.edit ? this.props.projectStatus.id : 1,
         description: this.props.description || '',
         documents: [],
         oldDocuments: this.props.documents || [],
         collaborators: this.props.edit ? this.props.collaborators.map(collaborator => ({value: parseInt(collaborator.id, 10), label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})) : [],
+        results: this.props.edit ? this.props.results : '',
     };
 
     componentDidMount() {
@@ -122,12 +124,12 @@ class ProjectForm extends Component {
         let formData = new FormData();
         let params = {
             title: values.title,
-            description: values.description,
+            description: values.description === '<p>&nbsp;</p>' ? '' : values.description,
             project_status_id: values.status,
             categories: values.categories.map(category => category.value),
         };
 
-        if (values.results) params.results = values.results;
+        if (values.results !== '<p>&nbsp;</p>') params.results = values.results;
         if (values.documents) params.documents = values.documents;
         if (values.collaborators) params.collaborators = values.collaborators.map(collaborator => collaborator.value);
 
@@ -151,7 +153,7 @@ class ProjectForm extends Component {
     };
 
     render() {
-        const { theme, classes, edit } = this.props;
+        const { classes, edit } = this.props;
         const { categoriesOptions } = this.state;
 
         return (
@@ -196,28 +198,25 @@ class ProjectForm extends Component {
                                         id: 'status',
                                     }}
                                 >
-                                    <option value="" disabled />
                                     <option value={1}>Aperto</option>
                                     <option value={2}>Chiuso</option>
                                     <option value={3}>Terminato</option>
                                 </Select>
                                 {props.touched.status && props.errors.status ? <FormHelperText>{props.errors.status}</FormHelperText> : null}
                             </FormControl>
-                            <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="h6">Descrizione:</Typography>
-                            <Editor
+                            <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="subtitle2">Descrizione:</Typography>
+                            <CKEditor
                                 id="description"
-                                apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-                                initialValue={props.values.description}
-                                init={{
-                                    menubar: false,
-                                    elementpath: false,
-                                    skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
-                                    plugins: 'lists, link, emoticons, fullscreen',
-                                    toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
-                                    min_height: 280,
+                                editor={ ClassicEditor }
+                                data={props.values.description}
+                                onChange={( event, editor ) => {
+                                    const data = editor.getData();
+                                    props.setFieldValue('description', data)
                                 }}
-                                onEditorChange={value => props.setFieldValue('description', value)}
-                                onBlur={props.handleBlur}
+                                onBlur={() => props.setFieldTouched('description')}
+                                config={{
+                                    toolbar: ['heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo'],
+                                }}
                             />
                             { props.touched.description && props.errors.description
                             ? <Typography variant="caption" color="error">{props.errors.description}</Typography>
@@ -236,30 +235,28 @@ class ProjectForm extends Component {
                             />
                             <AsyncAutocomplete
                                 id="collaborators"
-                                label="Membri"
+                                label="Collaboratori"
                                 onChange={value => props.setFieldValue('collaborators', value)}
                                 onBlur={() => props.setFieldTouched('collaborators')}
                                 value={props.values.collaborators}
                                 loadOptions={this.handleAsyncOptions('/users?search=')}
-                                placeholder="Seleziona una categoria..."
+                                placeholder="Aggiungi collaboratori..."
                                 isMulti
                             />
                             {props.values.status === "3" && <div>
-                                <Typography className={classes.mT} variant="h6">Conclusioni:</Typography>
-                                <Editor
+                                <Typography className={classes.mT} variant="subtitle2">Conclusioni:</Typography>
+                                <CKEditor
                                     id="results"
-                                    apiKey="rbu4hj5ircwmuxgzfztjdj2bouzq9l16er0056w2zzw43kvv"
-                                    initialValue={props.values.results}
-                                    init={{
-                                        menubar: false,
-                                        elementpath: false,
-                                        skin_url: `${process.env.PUBLIC_URL}/tinymce/material-${theme.palette.type}`,
-                                        plugins: 'lists, link, emoticons, fullscreen',
-                                        toolbar: 'fullscreen | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist formatselect | blockquote link unlink | emoticons',
-                                        min_height: 280,
+                                    editor={ ClassicEditor }
+                                    data={props.values.results}
+                                    onChange={( event, editor ) => {
+                                        const data = editor.getData();
+                                        props.setFieldValue('results', data)
                                     }}
-                                    onEditorChange={value => props.setFieldValue('results', value)}
-                                    onBlur={props.handleBlur}
+                                    onBlur={() => props.setFieldTouched('results')}
+                                    config={{
+                                        toolbar: ['heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo'],
+                                    }}
                                 />
                             </div>}
                             <FileList

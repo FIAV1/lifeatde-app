@@ -9,6 +9,8 @@ import history from '../../lib/history';
 
 import Api from '../../lib/Api';
 
+import { getStatusColor } from '../../lib/Utils';
+
 import {
     withStyles,
     Card,
@@ -18,6 +20,7 @@ import {
     CardActionArea,
     Typography,
     Grid,
+    Chip,
 } from '@material-ui/core';
 
 import CategoriesMenu from './CategoriesMenu';
@@ -56,7 +59,7 @@ class ProjectCard extends Component {
     };
 
     render() {
-        const { classes, project, admin, categories } = this.props;
+        const { classes, project, projectStatus, admin, categories } = this.props;
         
         if(!project) {
             return null;
@@ -100,8 +103,12 @@ class ProjectCard extends Component {
                             <Typography noWrap gutterBottom variant="h5">{project.attributes.title}</Typography>
                         </CardContent>
                     </CardActionArea>
-                    <CardActions>
+                    <CardActions className={classes.cardActions}>
                         <CategoriesMenu id={project.id} elements={categories} />
+                        <Chip
+                            style={{backgroundColor: getStatusColor(projectStatus.attributes.name)}}
+                            label={projectStatus.attributes.name}
+                        />
                     </CardActions>
                 </Card>
             </Grid>
@@ -112,6 +119,10 @@ class ProjectCard extends Component {
 const styles = theme => ({
     cardActionArea: {
         width: '100%'
+    },
+    cardActions: {
+        display: 'flex',
+        justifyContent: 'space-between',
     },
     button:{
         marginLeft: 'auto',

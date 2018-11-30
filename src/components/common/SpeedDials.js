@@ -11,10 +11,11 @@ import history from '../../lib/history';
 
 const styles = theme => ({
 	speedDial: {
-		position: 'fixed',
+		position: 'absolute	',
+		zIndex: 2000,
 		'&$directionUp, &$directionLeft': {
 			bottom: theme.spacing.unit * 2,
-			right: theme.spacing.unit * 2,
+			right: theme.spacing.unit * 3,
 		},
 		'&$directionDown, &$directionRight': {
 			top: theme.spacing.unit * 2,
@@ -27,12 +28,7 @@ const styles = theme => ({
 	directionLeft: {},
 	speedDialAction: {
 		position: 'relative',
-		'&::after': {
-			content: "'+'",
-			position: 'absolute',
-			top: 0,
-			left: 0,
-		}
+		zIndex: 2000,
 	}
 });
 

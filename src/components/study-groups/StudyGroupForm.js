@@ -83,14 +83,15 @@ class StudyGroupForm extends Component {
                         </Typography>
                     </Grid>
                     <Grid item className={classes.item} xs={12} sm={4}>
-                        <Chip  classes={{
+                        <Chip 
+                        classes={{
                             root: classes.chipRoot,
                             label: classes.chipLabel
                         }}
                         label={
-                            <Typography  variant='body1' noWrap>{course.attributes.name}</Typography>
+                            <Typography color="inherit" variant='body1' noWrap>{course.attributes.name}</Typography>
                         }
-                        style={{backgroundColor: getCourseColor(course.attributes.name)}}
+                        style={{backgroundColor: getCourseColor(course.id)}}
                         />
                     </Grid>
                 </Grid>
@@ -121,8 +122,9 @@ class StudyGroupForm extends Component {
                                 helperText={props.touched.description ? props.errors.description : null}
                                 error={props.errors.description && props.touched.description}
                                 className={classes.formField}
-                                multiline
+                                rows="5"
                                 rowsMax="100"
+                                multiline
                                 variant="outlined"
                             />
                             <Grid container spacing={16}>
@@ -172,6 +174,7 @@ const styles = theme => ({
     },
     chipRoot: {
         maxWidth: '100%',
+        color: theme.palette.common.white,
     },
     chipLabel:{
         overflow: 'hidden',

@@ -21,10 +21,10 @@ class BooksFilters extends Component {
     }
 
     filterByCourse = property => filter => {
-        this.setState({[property]: filter});
+        this.setState({[property]: filter.value});
 
-        Api.get(`/courses/${filter}/books`).then(response => {
-            this.props.onFilter(response.data, response.included, response.meta);
+        Api.get(`/courses/${filter.value}/books`).then(response => {
+            this.props.onFilter(response.data, response.included, response.meta, filter.label);
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
