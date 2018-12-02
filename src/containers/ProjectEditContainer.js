@@ -10,7 +10,6 @@ import { withSnackbar } from 'notistack';
 import Loader from '../components/common/Loader';
 import LocalStorage from "../lib/LocalStorage";
 import history from "../lib/history";
-import Redirect from "react-router-dom/es/Redirect";
 
 class ProjectEditContainer extends Component {
 	state = {
