@@ -8,6 +8,8 @@ import StudyGroupForm from '../components/study-groups/StudyGroupForm';
 import Api from '../lib/Api';
 import { withSnackbar } from 'notistack';
 import Loader from '../components/common/Loader';
+import LocalStorage from "../lib/LocalStorage";
+import history from "../lib/history";
 
 class StudyGroupEditContainer extends Component {
 	state = {
@@ -18,14 +20,19 @@ class StudyGroupEditContainer extends Component {
 	}
 
 	componentDidMount() {
-		Api.get('/study_groups/' + this.props.match.params.id).then(response => {
-			let studyGroups = response.data;
-			this.setState({
-				id: studyGroups.id,
-				title: studyGroups.attributes.title,
-				description: studyGroups.attributes.description,
-				loading: false,
-			});
+		Api.get(`/study_groups/${this.props.match.params.id}`).then(response => {
+            const adminId = response.data.relationships.user.data.id;
+            if (adminId !== LocalStorage.get('user').id) {
+                history.push(`/study_groups/${this.props.match.params.id}`);
+            } else {
+                let studyGroups = response.data;
+                this.setState({
+                    id: studyGroups.id,
+                    title: studyGroups.attributes.title,
+                    description: studyGroups.attributes.description,
+                    loading: false,
+                });
+            }
 		}).catch(({errors}) => {
 			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
 		});

@@ -8,6 +8,8 @@ import Api from '../lib/Api';
 import { withSnackbar } from 'notistack';
 import Loader from '../components/common/Loader';
 import BookForm from "../components/books/BookForm";
+import LocalStorage from "../lib/LocalStorage";
+import history from '../lib/history';
 
 class BookEditContainer extends Component {
     state = {
@@ -20,17 +22,22 @@ class BookEditContainer extends Component {
     };
 
     componentDidMount() {
-        Api.get('/books/' + this.props.match.params.id).then(response => {
-            let book = response.data;
-            this.setState({
-                id: book.id,
-                title: book.attributes.title,
-                description: book.attributes.description,
-                photos: book.attributes.photos,
-                course: response.included.find(relationship => relationship.type === 'course'),
-                price: book.attributes.price,
-                loading: false,
-            });
+        Api.get(`/books/${this.props.match.params.id}`).then(response => {
+            const adminId = response.data.relationships.user.data.id;
+            if (adminId !== LocalStorage.get('user').id) {
+                history.push(`/books/${this.props.match.params.id}`);
+            } else {
+                let book = response.data;
+                this.setState({
+                    id: book.id,
+                    title: book.attributes.title,
+                    description: book.attributes.description,
+                    photos: book.attributes.photos,
+                    course: response.included.find(relationship => relationship.type === 'course'),
+                    price: book.attributes.price,
+                    loading: false,
+                });
+            }
         }).catch(({errors}) => {
             errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
         });
