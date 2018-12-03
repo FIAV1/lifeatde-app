@@ -8,6 +8,8 @@ import ProjectForm from '../components/projects/ProjectForm';
 import Api from '../lib/Api';
 import { withSnackbar } from 'notistack';
 import Loader from '../components/common/Loader';
+import LocalStorage from "../lib/LocalStorage";
+import history from "../lib/history";
 
 class ProjectEditContainer extends Component {
 	state = {
@@ -29,12 +31,17 @@ class ProjectEditContainer extends Component {
         this.state.included.filter(item => item.type === 'category' && categoryIds.find(categoryId => item.id === categoryId.id));
 
 	componentDidMount() {
-		Api.get('/projects/' + this.props.match.params.id).then(response => {
-			this.setState({
-				loading: false,
-				project: response.data,
-				included: response.included,
-			});
+		Api.get(`/projects/${this.props.match.params.id}`).then(response => {
+			const adminId = response.data.relationships.admins.data[0].id;
+            if (adminId !== LocalStorage.get('user').id) {
+                history.push(`/projects/${this.props.match.params.id}`, 302);
+            } else {
+                this.setState({
+                    loading: false,
+                    project: response.data,
+                    included: response.included,
+                });
+            }
 		}).catch(({errors}) => {
 			errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
 		});
