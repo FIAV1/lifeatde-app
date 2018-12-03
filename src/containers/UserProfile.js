@@ -192,13 +192,15 @@ class UserProfile extends Component {
                                         <div className={classes.bioWrapper}>
                                             <AccountCircleIcon className={classes.bioIcon} />
                                             { authUserProfile
-                                            ? <FormControl error={props.errors.bio && props.touched.bio}>
+                                            ? <FormControl
+                                                error={props.errors.bio && props.touched.bio}
+                                                className={classes.formField}
+                                            >
                                                 <InputBase
                                                     id="bio"
                                                     onChange={props.handleChange}
                                                     onBlur={this.handleBlur(props, 'bio')}
                                                     value={props.values.bio}
-                                                    className={classes.formField}
                                                     multiline
                                                 />
                                                 { props.touched.bio && props.errors.bio
@@ -220,14 +222,16 @@ class UserProfile extends Component {
                                         { authUserProfile
                                         ? <div className={classes.phone}>
                                             <PhoneIcon className={classes.icon} />
-                                            <FormControl error={props.errors.phone && props.touched.phone}>
+                                            <FormControl
+                                                error={props.errors.phone && props.touched.phone}
+                                                className={classes.formField}
+                                            >
                                                 <InputBase
                                                     id="phone"
                                                     type="number"
                                                     onChange={props.handleChange}
                                                     onBlur={this.handleBlur(props, 'phone')}
                                                     value={props.values.phone}
-                                                    className={classes.formField}
                                                     max="15"
                                                 />
                                                 { props.errors.phone && props.touched.phone
@@ -331,6 +335,9 @@ const styles = theme => ({
     },
     icon: {
         marginRight: theme.spacing.unit,
+    },
+    formField: {
+        width: '100%',
     },
 });
 
