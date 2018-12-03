@@ -33,7 +33,7 @@ class ProjectEditContainer extends Component {
 	componentDidMount() {
 		Api.get(`/projects/${this.props.match.params.id}`).then(response => {
 			const adminId = response.data.relationships.admins.data[0].id;
-            if (adminId !== LocalStorage.get('user').id) {
+            if (adminId !== LocalStorage.get('user').data.id) {
                 history.push(`/projects/${this.props.match.params.id}`, 302);
             } else {
                 this.setState({

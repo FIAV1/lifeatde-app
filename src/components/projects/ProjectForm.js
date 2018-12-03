@@ -22,8 +22,6 @@ import {
 import Autocomplete from '../common/Autocomplete';
 import AsyncAutocomplete from '../common/AsyncAutocomplete';
 import FileList from './FileList';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { withSnackbar } from 'notistack';
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -41,7 +39,7 @@ const validationSchema = Yup.object().shape({
             })
         ),
     description: Yup.string()
-        .test('empty-editor', 'Devi inserire una descrizione del progetto', value => value !== '<p>&nbsp;</p>'),
+        .required('Devi inserire una descrizione del progetto'),
     status: Yup.string()
         .required('Devi scegliere lo stato del progetto'),
 });
@@ -59,7 +57,7 @@ class ProjectForm extends Component {
         documents: [],
         oldDocuments: this.props.documents || [],
         collaborators: this.props.edit ? this.props.collaborators.map(collaborator => ({value: parseInt(collaborator.id, 10), label: `${collaborator.attributes.firstname} ${collaborator.attributes.lastname}`})) : [],
-        results: this.props.edit ? this.props.results : '',
+        results: this.props.results || '',
     };
 
     componentDidMount() {
@@ -124,12 +122,12 @@ class ProjectForm extends Component {
         let formData = new FormData();
         let params = {
             title: values.title,
-            description: values.description === '<p>&nbsp;</p>' ? '' : values.description,
+            description: values.description,
             project_status_id: values.status,
             categories: values.categories.map(category => category.value),
         };
 
-        if (values.results !== '<p>&nbsp;</p>') params.results = values.results;
+        if (values.results) params.results = values.results;
         if (values.documents) params.documents = values.documents;
         if (values.collaborators) params.collaborators = values.collaborators.map(collaborator => collaborator.value);
 
@@ -204,23 +202,20 @@ class ProjectForm extends Component {
                                 </Select>
                                 {props.touched.status && props.errors.status ? <FormHelperText>{props.errors.status}</FormHelperText> : null}
                             </FormControl>
-                            <Typography color={props.touched.description && props.errors.description ? 'error' : 'default'} variant="subtitle2">Descrizione:</Typography>
-                            <CKEditor
+                            <TextField
                                 id="description"
-                                editor={ ClassicEditor }
-                                data={props.values.description}
-                                onChange={( event, editor ) => {
-                                    const data = editor.getData();
-                                    props.setFieldValue('description', data)
-                                }}
-                                onBlur={() => props.setFieldTouched('description')}
-                                config={{
-                                    toolbar: ['heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo'],
-                                }}
+                                label="Descrizione"
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                value={props.values.description}
+                                helperText={props.touched.description ? props.errors.description : null}
+                                error={props.errors.description && props.touched.description}
+                                className={classes.formField}
+                                rows="5"
+                                rowsMax="100"
+                                multiline
+                                variant="outlined"
                             />
-                            { props.touched.description && props.errors.description
-                            ? <Typography variant="caption" color="error">{props.errors.description}</Typography>
-                            : null }
                             <Autocomplete
                                 id="categories"
                                 label="Categorie"
@@ -243,22 +238,20 @@ class ProjectForm extends Component {
                                 placeholder="Aggiungi collaboratori..."
                                 isMulti
                             />
-                            {props.values.status === "3" && <div>
-                                <Typography className={classes.mT} variant="subtitle2">Conclusioni:</Typography>
-                                <CKEditor
-                                    id="results"
-                                    editor={ ClassicEditor }
-                                    data={props.values.results}
-                                    onChange={( event, editor ) => {
-                                        const data = editor.getData();
-                                        props.setFieldValue('results', data)
-                                    }}
-                                    onBlur={() => props.setFieldTouched('results')}
-                                    config={{
-                                        toolbar: ['heading', '|', 'bold', 'italic', '|', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo'],
-                                    }}
-                                />
-                            </div>}
+                            { props.values.status === "3" && <TextField
+                                id="results"
+                                label="Risultati"
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                value={props.values.results}
+                                helperText={props.touched.results ? props.errors.results : null}
+                                error={props.errors.results && props.touched.results}
+                                className={classes.formField}
+                                rows="5"
+                                rowsMax="100"
+                                multiline
+                                variant="outlined"
+                            /> }
                             <FileList
                                 deleteFiles={this.deleteFiles(props)}
                                 removeFiles={this.removeFiles(props)}

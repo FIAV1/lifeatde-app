@@ -22,7 +22,6 @@ import {
     Typography,
 } from '@material-ui/core';
 
-import ReactMarkdown from 'react-markdown';
 import ProjectTeam from './ProjectTeam';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -115,7 +114,7 @@ class Project extends Component {
                         <Divider />
                         <CardContent>
                             <Typography variant="overline">Descrizione del progetto</Typography>
-                            <ReactMarkdown className={classes.markdown} source={project.attributes.description} escapeHtml={false}/>
+                            <Typography variant="body1">{project.attributes.description}</Typography>
                         </CardContent>
                         <Divider />
                         <CardContent>
@@ -129,11 +128,11 @@ class Project extends Component {
                         <Divider />
                         <CardContent>
                             <Typography variant="overline">Risultati</Typography>
-                            {
-                                project.attributes.results
-                                ? <ReactMarkdown className={classes.markdown} source={project.attributes.results} escapeHtml={false}/>
-                                : <Typography variant="body1">L'amministratore non ha ancora pubblicato i risultati.</Typography>
-                            }
+                            <Typography variant="body1">
+                            { project.attributes.results
+                            ? project.attributes.results
+                            : 'L\'amministratore non ha ancora pubblicato i risultati.'}
+                            </Typography>
                         </CardContent>
                         <Divider />
                         <CardContent>
@@ -225,9 +224,6 @@ const styles = theme => ({
     status: {
         margin: theme.spacing.unit,
         color: theme.palette.common.white,
-    },
-    markdown: {
-        color: theme.palette.text.primary,
     },
     icon: {
         marginRight: theme.spacing.unit,

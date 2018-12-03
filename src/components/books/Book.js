@@ -240,9 +240,6 @@ const styles = theme => ({
         paddingRight: 0,
         marginRight: '12px',
     },
-    markdown: {
-        color: theme.palette.text.primary,
-    },
     icon: {
         marginRight: theme.spacing.unit,
     },

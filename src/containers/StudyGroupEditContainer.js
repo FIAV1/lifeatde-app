@@ -22,7 +22,7 @@ class StudyGroupEditContainer extends Component {
 	componentDidMount() {
 		Api.get(`/study_groups/${this.props.match.params.id}`).then(response => {
             const adminId = response.data.relationships.user.data.id;
-            if (adminId !== LocalStorage.get('user').id) {
+            if (adminId !== LocalStorage.get('user').data.id) {
                 history.push(`/study_groups/${this.props.match.params.id}`);
             } else {
                 let studyGroups = response.data;
