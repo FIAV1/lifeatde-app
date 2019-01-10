@@ -94,7 +94,7 @@ class SearchContainer extends Component {
     }
 
     async componentDidMount() {
-        await Api.get(`/users/${this.props.user.id}/projects`).then(response => {
+        await Api.get(`/users/${this.props.user.id}/projects?admin=1`).then(response => {
             this.setState({
                 projects: response.data,
                 projectsIncluded: response.included,
