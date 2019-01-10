@@ -7,7 +7,7 @@ Since it is a frontend only application, we've also build the server counterpart
 The project was born from one of our ideas and aims to fulfill the requests of the Concurrent Programming Laboratory course, i.e. it is not a platform associated with the University of Ferrara.
 
 ## Demo
-A demo is available at [https://www.lifeatde.herokuapp.com](https://www.lifeatde.herokuapp.com)
+A demo is available at [https://lifeatde.herokuapp.com](https://lifeatde.herokuapp.com)
 
 Login available with:
 * Username: ```john.doe@student.unife.it```
