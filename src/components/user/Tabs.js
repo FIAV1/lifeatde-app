@@ -86,7 +86,8 @@ class SearchContainer extends Component {
                     projects: response.data,
                     projectsIncluded: response.included,
                     projectsMeta: response.meta,
-                })
+                });
+                this.swipeableActions.updateHeight();
             }).catch(({errors}) => {
                 errors.forEach(error => this.props.enqueueSnackbar(error.detail, {variant: 'error'}));
             })

@@ -397,6 +397,7 @@ const styles = theme => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.background.paper,
+        color: theme.palette.action.active,
         marginLeft: 0,
         width: '100%',
     },
