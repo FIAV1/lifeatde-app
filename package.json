@@ -9,7 +9,7 @@
 		"@material-ui/lab": "^4.0.0-alpha.56",
 		"formik": "^2.1.4",
 		"jwt-decode": "^2.2.0",
-		"moment": "^2.27.0",
+		"moment": "^2.29.2",
 		"moment-timezone": "^0.5.31",
 		"notistack": "^0.9.17",
 		"react": "^16.13.1",
